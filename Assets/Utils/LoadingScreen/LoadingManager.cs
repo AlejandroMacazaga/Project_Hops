@@ -6,11 +6,11 @@ namespace Utils.LoadingScreen
 {
     public class LoadingManager : PersistentSingleton<LoadingManager>
     {
-        public String oldScene;
-        public String newScene;
-        public String loadingScreenName = "LoadingScene";
+        public string oldScene;
+        public string newScene;
+        public string loadingScreenName = "LoadingScene";
 
-        public void LoadNewScene(String newSceneName)
+        public void LoadNewScene(string newSceneName)
         {
             oldScene = SceneManager.GetActiveScene().name;
             newScene = newSceneName;
