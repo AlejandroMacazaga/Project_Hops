@@ -1,5 +1,5 @@
-using Assets.Player;
 using Assets.Scripts.Entities;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Utils.StateMachine;
 
@@ -20,24 +20,20 @@ namespace Assets.Scripts.Player
         [Header("Movement values")]
         [SerializeField] private Vector2 currentDirection;
 
-        [Header("Animations")]
-        [SerializeField] private AnimationClip idleAnim;
-        [SerializeField] private AnimationClip walkAnim;
-        [SerializeField] private AnimationClip airAnim;
+
+        [SerializedDictionary("Name", "Animation Clips")]
+        public SerializedDictionary<string, AnimationClip> animations;
         public override void Awake() 
         {
             base.Awake();
             _character = GetComponent<CharacterController>();
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
-            _animationSystem = new AnimationSystem(Animator, idleAnim, walkAnim);
+            _animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
 
 
             #region State machine configuration
             _sm = new StateMachine();
-
-            PlayerIdleState idle = new(this);
-            PlayerAirState air = new(this, airAnim);
 
             #endregion
 
@@ -61,7 +57,9 @@ namespace Assets.Scripts.Player
             currentDirection = dir;
         }
 
-
-
+        public void PlayAnimation(AnimationClip animation, bool loop = false)
+        {
+            _animationSystem.PlayOneShot(animation, loop);
+        }
     }
 }
