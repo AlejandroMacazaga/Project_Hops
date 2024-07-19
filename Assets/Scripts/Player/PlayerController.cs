@@ -1,3 +1,4 @@
+using Assets.Player;
 using Assets.Scripts.Entities;
 using UnityEngine;
 using Utils.StateMachine;
@@ -8,29 +9,35 @@ namespace Assets.Scripts.Player
     public class PlayerController : EntityController
     {
         new PlayerData Data => (PlayerData)base.Data;
-        private Camera Camera;
-        private CharacterController Character;
-        private StateMachine PlayerStateMachine;
+        private Camera _camera;
+        private  CharacterController _character;
+        private StateMachine _sm;
+        private AnimationSystem _animationSystem;
 
         [Header("Input system")]
-        [SerializeField] private InputReader InputReader;
-
+        [SerializeField] private InputReader inputReader;
 
         [Header("Movement values")]
-        [SerializeField] private Vector2 CurrentDirection;
+        [SerializeField] private Vector2 currentDirection;
 
+        [Header("Animations")]
+        [SerializeField] private AnimationClip idleAnim;
+        [SerializeField] private AnimationClip walkAnim;
+        [SerializeField] private AnimationClip airAnim;
         public override void Awake() 
         {
             base.Awake();
-            Character = GetComponent<CharacterController>();
-            InputReader.EnablePlayerActions();
-            InputReader.Move += OnMove;
+            _character = GetComponent<CharacterController>();
+            inputReader.EnablePlayerActions();
+            inputReader.Move += OnMove;
+            _animationSystem = new AnimationSystem(Animator, idleAnim, walkAnim);
 
 
             #region State machine configuration
-            PlayerStateMachine = new StateMachine();
+            _sm = new StateMachine();
 
-
+            PlayerIdleState idle = new(this);
+            PlayerAirState air = new(this, airAnim);
 
             #endregion
 
@@ -38,14 +45,20 @@ namespace Assets.Scripts.Player
 
         }
 
+        private void Update()
+        {
+            _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
+        }
+
         private void OnDestroy()
         {
-            InputReader.Move -= OnMove;
+            inputReader.Move -= OnMove;
+            _animationSystem.Destroy();
         }
 
         private void OnMove(Vector2 dir)
         {
-            CurrentDirection = dir;
+            currentDirection = dir;
         }
 
 

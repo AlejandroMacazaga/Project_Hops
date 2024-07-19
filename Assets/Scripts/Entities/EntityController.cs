@@ -4,17 +4,18 @@ using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Assets.Scripts.Entities {
-    [RequireComponent(typeof(HealthComponent))]
+    [RequireComponent(typeof(HealthComponent), typeof(Animator))]
 
     public class EntityController : MonoBehaviour, IEntityController
     {
         [Header("Entity configuration")]
         [SerializeField] protected EntityData Data;
-        [SerializeField] protected AnimatorController Animator;
+        [SerializeField] protected Animator Animator;
         protected HealthComponent Health;
         public virtual void Awake()
         {
             PrepareHealth();
+            Animator = GetComponent<Animator>();
         }
 
         protected virtual void OnDeath()
