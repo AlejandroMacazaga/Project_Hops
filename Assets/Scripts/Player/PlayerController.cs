@@ -10,7 +10,7 @@ namespace Assets.Scripts.Player
     {
         new PlayerData Data => (PlayerData)base.Data;
         private Camera _camera;
-        private  CharacterController _character;
+        private CharacterController _character;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
 
