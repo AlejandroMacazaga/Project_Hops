@@ -7,9 +7,9 @@ namespace Assets.Scripts.Entities
 {
     public abstract class BaseEntityState : IState
     {
-        public readonly IEntityController Controller;
+        public readonly EntityController Controller;
 
-        public BaseEntityState(IEntityController controller)
+        public BaseEntityState(EntityController controller)
         {
             Controller = controller;
         }
