@@ -120,7 +120,6 @@ namespace Scripts.Player
         {
             var baseValue = GetBaseStat(statName);
             var modifiedValue = baseValue;
-
             foreach (var modifier in modifiers[statName])
             {
                 var flatSum = 0f;
@@ -136,18 +135,41 @@ namespace Scripts.Player
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                modifiedValue = flatSum;
-                modifiedValue *= (1 * percentSum / 100f);
+                Debug.Log(modifiedValue);
+                Debug.Log("FlatSum: " + flatSum);
+                Debug.Log("PercentSum: " + percentSum);
+                modifiedValue += flatSum;
+                modifiedValue *= percentSum;
+                Debug.Log(modifiedValue);
 
             }
-
             return modifiedValue;
         }
 
         private float GetBaseStat(string statName)
         {
-            return (float)baseStats.GetType().GetProperty(statName).GetValue(baseStats);
+            switch(statName) {
+                case "MaxHealth":
+                    return baseStats.HealthData.MaxHealthPoints;
+                case "MaxSpeed":
+                    return baseStats.MaxSpeed;
+                case "Acceleration":
+                    return baseStats.Acceleration;
+                case "JumpForce":
+                    return baseStats.JumpForce;
+                case "Gravity":
+                    return baseStats.Gravity;
+                case "RotationSpeed":
+                    return baseStats.RotationSpeed;
+                case "Damage":
+                    return baseStats.Damage;
+                case "AttackSpeed":
+                    return baseStats.AttackSpeed;
+                case "Defense":
+                    return baseStats.Defense;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 
