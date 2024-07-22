@@ -7,7 +7,7 @@ namespace Scripts.Player
     public abstract class PlayerBaseState : IState
     {
 
-        readonly PlayerController controller;
+        protected readonly PlayerController controller;
 
         protected PlayerBaseState(PlayerController controller)
         {
@@ -76,12 +76,12 @@ namespace Scripts.Player
 
         public override void OnEnter()
         {
-            
+            //controller.AnimationSystem.PlayOneShot(animation, true);
         }
 
         public override void OnExit()
         {
-
+            
         }
 
         public override void Update()
