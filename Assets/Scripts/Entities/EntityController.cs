@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace Assets.Scripts.Entities {
+namespace Scripts.Entities {
     [RequireComponent(typeof(HealthComponent), typeof(Animator))]
 
     public class EntityController : MonoBehaviour, IEntityController

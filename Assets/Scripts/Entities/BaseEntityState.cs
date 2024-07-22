@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-namespace Assets.Scripts.Entities
+namespace Scripts.Entities
 {
     public abstract class BaseEntityState : IState
     {
