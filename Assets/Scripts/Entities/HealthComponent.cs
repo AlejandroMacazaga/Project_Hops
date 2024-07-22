@@ -22,12 +22,12 @@ public class HealthComponent : MonoBehaviour
     {
         healthPoints += heal;
         if (healthPoints > maxHealthPoints) OnOverheal.Invoke(healthPoints - maxHealthPoints);
-    }
+    } 
 
     public void SetValues(HealthData data)
     {
-        healthPoints = data.healthPoints;
-        maxHealthPoints = data.maxHealthPoints;
+        healthPoints = data.HealthPoints;
+        maxHealthPoints = data.MaxHealthPoints;
     }
 
 
@@ -36,6 +36,6 @@ public class HealthComponent : MonoBehaviour
 [Serializable]
 public struct HealthData
 {
-    public float healthPoints,
-        maxHealthPoints;
+    public float HealthPoints,
+        MaxHealthPoints;
 }

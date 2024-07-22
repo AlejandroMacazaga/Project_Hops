@@ -2,7 +2,7 @@ using Assets.Scripts.Entities;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Utils.StateMachine;
-
+using Utils.AnimationSystem;
 namespace Assets.Scripts.Player
 {
     [RequireComponent(typeof(CharacterController))]
@@ -43,7 +43,13 @@ namespace Assets.Scripts.Player
 
         private void Update()
         {
+            _sm.Update();
             _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
+        }
+
+        private void FixedUpdate()
+        {
+            _sm.FixedUpdate();
         }
 
         private void OnDestroy()

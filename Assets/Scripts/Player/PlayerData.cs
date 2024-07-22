@@ -11,5 +11,11 @@ namespace Assets.Scripts.Player
         public float JumpForce;
         public float Gravity;
         public float RotationSpeed;
+        public float Damage;
+        public float AttackSpeed;
+        public float Defense;
+
+        
+        
     }
 }
