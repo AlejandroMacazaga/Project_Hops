@@ -23,7 +23,8 @@ public class StoryManager : PersistentSingleton<StoryManager>
             var storyEvent = storyEvents[storyIndex];
             storyEvent.isUnlocked = true;
             Debug.Log($"Story Event {eventName} unlocked!");
-            PlayerPrefs.SetInt(eventName, 1);
+            // todo: save the event
+
             // Trigger the event or handle any additional logic here
         }
         else

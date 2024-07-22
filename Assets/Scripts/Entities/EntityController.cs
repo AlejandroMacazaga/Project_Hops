@@ -27,7 +27,7 @@ namespace Assets.Scripts.Entities {
         protected virtual void PrepareHealth()
         {
             if (Health == null) Health = GetComponent<HealthComponent>();
-            Health.SetValues(Data.healthData);
+            Health.SetValues(Data.HealthData);
             Health.OnDeath += OnDeath;
         }
 

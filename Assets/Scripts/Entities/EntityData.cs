@@ -6,6 +6,6 @@ namespace Assets.Scripts.Entities
     [CreateAssetMenu(menuName = "Entity/EntityData")]
     public class EntityData : ScriptableObject
     {
-        public HealthData healthData;
+        public HealthData HealthData;
     }
 }
