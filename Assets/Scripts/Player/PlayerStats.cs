@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Utils.Timers;
 
-namespace Assets.Scripts.Player
+namespace Scripts.Player
 {
     public class StatModifier
     {

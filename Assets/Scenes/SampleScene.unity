@@ -154,13 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582f21e7b1250944682224f70f904ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 0}
-  Animator: {fileID: 0}
-  inputReader: {fileID: 0}
+  Data: {fileID: 11400000, guid: d8ad636f8f6da0b479f10a0066bd4e00, type: 2}
+  Animator: {fileID: 562270384}
+  inputReader: {fileID: 11400000, guid: 465b800f1fc883a4ca071ece7021ae51, type: 2}
   currentDirection: {x: 0, y: 0}
-  idleAnim: {fileID: 0}
-  walkAnim: {fileID: 0}
-  airAnim: {fileID: 0}
+  animations:
+    _serializedList:
+    - Key: walk
+      Value: {fileID: 0}
+    - Key: idle
+      Value: {fileID: 0}
 --- !u!95 &562270384
 Animator:
   serializedVersion: 5
