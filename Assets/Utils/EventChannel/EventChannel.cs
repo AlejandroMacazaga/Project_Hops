@@ -5,18 +5,18 @@ namespace Utils.EventChannel
 {
     public abstract class EventChannel<T> : ScriptableObject
     {
-        public HashSet<EventListener<T>> observers = new();
+        public readonly HashSet<EventListener<T>> Observers = new();
 
         public void Invoke(T instance)
         {
-            foreach (var observer in observers)
+            foreach (var observer in Observers)
             {
                 observer.Raise(instance);
             }
         }
 
-        public void Register(EventListener<T> observer) => observers.Add(observer);
-        public void Deregister(EventListener<T> observer) => observers.Remove(observer);
+        public void Register(EventListener<T> observer) => Observers.Add(observer);
+        public void Deregister(EventListener<T> observer) => Observers.Remove(observer);
     }
     public readonly struct Empty
     {

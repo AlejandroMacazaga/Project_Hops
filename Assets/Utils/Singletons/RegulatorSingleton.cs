@@ -13,9 +13,9 @@ namespace Utils.Singletons
         public static T Instance
         {
             get {
-                if (_instance != null) return _instance;
+                if (_instance) return _instance;
                 _instance = FindAnyObjectByType<T>();
-                if (_instance != null) return _instance;
+                if (_instance) return _instance;
                 var obj = new GameObject(typeof(T).Name + " Auto Instance")
                 {
                     hideFlags = HideFlags.HideAndDontSave

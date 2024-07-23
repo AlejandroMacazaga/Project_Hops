@@ -6,14 +6,14 @@ namespace Utils.EventBus
 {
     public static class EventBus<T> where T : IEvent
     {
-        static readonly HashSet<IEventBinding<T>> bindings = new();
+        private static readonly HashSet<IEventBinding<T>> Bindings = new();
 
-        public static void Register(EventBinding<T> binding) => bindings.Add(binding);
-        public static void Deregister(EventBinding<T> binding) => bindings.Remove(binding);
+        public static void Register(EventBinding<T> binding) => Bindings.Add(binding);
+        public static void Deregister(EventBinding<T> binding) => Bindings.Remove(binding);
 
         public static void Raise(T @event)
         {
-            foreach (var binding in bindings)
+            foreach (var binding in Bindings)
             {
                 binding.OnEvent(@event);
                 binding.OnEventNoArgs.Invoke();
@@ -23,7 +23,7 @@ namespace Utils.EventBus
         static void Clear()
         {
             Debug.Log($"Clearing {typeof(T).Name} bindings");
-            bindings.Clear();
+            Bindings.Clear();
         }
     }
 }

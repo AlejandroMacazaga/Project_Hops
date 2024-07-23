@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Scripts.Entities
+namespace Entities
 {
     [CreateAssetMenu(menuName = "Entity/EntityData")]
     public class EntityData : ScriptableObject
     {
-        public HealthData HealthData;
+        public HealthData healthData;
     }
 }

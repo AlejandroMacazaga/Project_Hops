@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using Utils.Timers;
 
-namespace Scripts.Player
+namespace Player
 {
     public class StatModifier
     {
@@ -14,23 +11,18 @@ namespace Scripts.Player
             Flat,
             Percent
         }
-        public ModifierType type;
-        public float value;
-        public string name;
-        private CountdownTimer durationTimer;
+        public readonly ModifierType Type;
+        public readonly float Value;
         public Action<StatModifier> ModifierEnd;
 
         public StatModifier(ModifierType type, float value, float duration = 0)
         {
-            this.type = type;
-            this.value = value;
-            if (duration > 0)
-            {
-
-                durationTimer = new CountdownTimer(duration);
-                durationTimer.Start();
-                durationTimer.OnTimerStop += OnModifierEnd;
-            }
+            Type = type;
+            Value = value;
+            if (!(duration > 0)) return;
+            var durationTimer = new CountdownTimer(duration);
+            durationTimer.Start();
+            durationTimer.OnTimerStop += OnModifierEnd;
         }
 
         private void OnModifierEnd()
@@ -41,13 +33,13 @@ namespace Scripts.Player
 
     public class ModifiedStat
     {
-        public bool needsUpdate;
-        public float value;
+        public bool NeedsUpdate;
+        public float Value;
     
         public ModifiedStat(float value)
         {
-            needsUpdate = false;
-            this.value = value;
+            NeedsUpdate = false;
+            this.Value = value;
         }
 
         
@@ -55,121 +47,102 @@ namespace Scripts.Player
 
     public class PlayerStats
     {
-        readonly PlayerData baseStats;
-        private Dictionary<string, List<StatModifier>> modifiers = new();
-        private Dictionary<string, ModifiedStat> cachedModifiedValues = new();
+        private readonly PlayerData _baseStats;
+        private readonly Dictionary<string, List<StatModifier>> _modifiers = new();
+        private readonly Dictionary<string, ModifiedStat> _cachedModifiedValues = new();
 
 
         public PlayerStats(PlayerData stats)
         {
-            baseStats = stats;
+            _baseStats = stats;
             InitializeCache();
         }
 
         private void InitializeCache()
         {
-            cachedModifiedValues["MaxHealth"] = new ModifiedStat(baseStats.HealthData.MaxHealthPoints);
-            cachedModifiedValues["MaxSpeed"] = new ModifiedStat(baseStats.MaxSpeed);
-            cachedModifiedValues["Acceleration"] = new ModifiedStat(baseStats.Acceleration);
-            cachedModifiedValues["JumpForce"] = new ModifiedStat(baseStats.JumpForce);
-            cachedModifiedValues["Gravity"] = new ModifiedStat(baseStats.Gravity);
-            cachedModifiedValues["RotationSpeed"] = new ModifiedStat(baseStats.RotationSpeed);
-            cachedModifiedValues["Damage"] = new ModifiedStat(baseStats.Damage);
-            cachedModifiedValues["AttackSpeed"] = new ModifiedStat(baseStats.AttackSpeed);
-            cachedModifiedValues["Defense"] = new ModifiedStat(baseStats.Defense);
+            _cachedModifiedValues["MaxHealth"] = new ModifiedStat(_baseStats.healthData.maxHealthPoints);
+            _cachedModifiedValues["MaxSpeed"] = new ModifiedStat(_baseStats.maxSpeed);
+            _cachedModifiedValues["Acceleration"] = new ModifiedStat(_baseStats.acceleration);
+            _cachedModifiedValues["JumpForce"] = new ModifiedStat(_baseStats.jumpForce);
+            _cachedModifiedValues["Gravity"] = new ModifiedStat(_baseStats.gravity);
+            _cachedModifiedValues["RotationSpeed"] = new ModifiedStat(_baseStats.rotationSpeed);
+            _cachedModifiedValues["Damage"] = new ModifiedStat(_baseStats.damage);
+            _cachedModifiedValues["AttackSpeed"] = new ModifiedStat(_baseStats.attackSpeed);
+            _cachedModifiedValues["Defense"] = new ModifiedStat(_baseStats.defense);
             // Add new values here depending of the new values the player has
         }
 
         public void AddModifier(string statName, StatModifier modifier)
         {
-            if (!modifiers.ContainsKey(statName))
+            if (!_modifiers.ContainsKey(statName))
             {
-                modifiers[statName] = new List<StatModifier>();
+                _modifiers[statName] = new List<StatModifier>();
             }
 
             modifier.ModifierEnd = m => RemoveModifier(statName, m);
-            modifiers[statName].Add(modifier);
-            modifiers[statName].OrderByDescending(mod => mod.type);
-            cachedModifiedValues[statName].needsUpdate = true;
+            _modifiers[statName].Add(modifier);
+            _cachedModifiedValues[statName].NeedsUpdate = true;
 
 
         }
 
         public void RemoveModifier(string statName, StatModifier modifier)
         {
-            if (modifiers.ContainsKey(statName))
-            {
-                modifiers[statName].Remove(modifier);
-                cachedModifiedValues[statName].needsUpdate = true;
-
-            }
+            if (!_modifiers.ContainsKey(statName)) return;
+            _modifiers[statName].Remove(modifier);
+            _cachedModifiedValues[statName].NeedsUpdate = true;
         }
 
         public float GetStat(string statName)
         {
-            var stat = cachedModifiedValues[statName];
-            if (stat.needsUpdate)
-            {
-                stat.value = UpdateStat(statName);
-                stat.needsUpdate = false;
-            }
-            return stat.value;
+            var stat = _cachedModifiedValues[statName];
+            if (!stat.NeedsUpdate) return stat.Value;
+            stat.Value = UpdateStat(statName);
+            stat.NeedsUpdate = false;
+            return stat.Value;
         }
 
         private float UpdateStat(string statName)
         {
             var baseValue = GetBaseStat(statName);
             var modifiedValue = baseValue;
-            foreach (var modifier in modifiers[statName])
+            foreach (var modifier in _modifiers[statName])
             {
                 var flatSum = 0f;
                 var percentSum = 0f;
-                switch (modifier.type)
+                switch (modifier.Type)
                 {
                     case StatModifier.ModifierType.Flat:
-                        flatSum += modifier.value;
+                        flatSum += modifier.Value;
                         break;
                     case StatModifier.ModifierType.Percent:
-                        percentSum += modifier.value;
+                        percentSum += modifier.Value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                Debug.Log(modifiedValue);
-                Debug.Log("FlatSum: " + flatSum);
-                Debug.Log("PercentSum: " + percentSum);
+                
                 modifiedValue += flatSum;
                 modifiedValue *= percentSum;
-                Debug.Log(modifiedValue);
-
             }
             return modifiedValue;
         }
 
         private float GetBaseStat(string statName)
         {
-            switch(statName) {
-                case "MaxHealth":
-                    return baseStats.HealthData.MaxHealthPoints;
-                case "MaxSpeed":
-                    return baseStats.MaxSpeed;
-                case "Acceleration":
-                    return baseStats.Acceleration;
-                case "JumpForce":
-                    return baseStats.JumpForce;
-                case "Gravity":
-                    return baseStats.Gravity;
-                case "RotationSpeed":
-                    return baseStats.RotationSpeed;
-                case "Damage":
-                    return baseStats.Damage;
-                case "AttackSpeed":
-                    return baseStats.AttackSpeed;
-                case "Defense":
-                    return baseStats.Defense;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return statName switch
+            {
+                "MaxHealth" => _baseStats.healthData.maxHealthPoints,
+                "MaxSpeed" => _baseStats.maxSpeed,
+                "Acceleration" => _baseStats.acceleration,
+                "JumpForce" => _baseStats.jumpForce,
+                "Gravity" => _baseStats.gravity,
+                "RotationSpeed" => _baseStats.rotationSpeed,
+                "Damage" => _baseStats.damage,
+                "AttackSpeed" => _baseStats.attackSpeed,
+                "Defense" => _baseStats.defense,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 

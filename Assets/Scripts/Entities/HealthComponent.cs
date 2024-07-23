@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-namespace Scripts.Entities
+using UnityEngine.Serialization;
+
+namespace Entities
 {
     public class HealthComponent : MonoBehaviour
     {
@@ -17,19 +19,19 @@ namespace Scripts.Entities
         public void DamageReceived(float damage)
         {
             healthPoints = damage;
-            if (healthPoints <= 0) OnDeath.Invoke();
+            if (healthPoints <= 0) OnDeath?.Invoke();
         }
 
         public void HealReceived(float heal)
         {
             healthPoints += heal;
-            if (healthPoints > maxHealthPoints) OnOverheal.Invoke(healthPoints - maxHealthPoints);
+            if (healthPoints > maxHealthPoints) OnOverheal?.Invoke(healthPoints - maxHealthPoints);
         }
 
         public void SetValues(HealthData data)
         {
-            healthPoints = data.HealthPoints;
-            maxHealthPoints = data.MaxHealthPoints;
+            healthPoints = data.healthPoints;
+            maxHealthPoints = data.maxHealthPoints;
         }
 
 
@@ -38,8 +40,9 @@ namespace Scripts.Entities
     [Serializable]
     public struct HealthData
     {
-        public float HealthPoints,
-            MaxHealthPoints;
+        public float healthPoints;
+
+        public float maxHealthPoints;
     }
 }
 

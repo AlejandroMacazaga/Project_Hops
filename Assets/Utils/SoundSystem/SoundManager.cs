@@ -10,7 +10,7 @@ namespace Utils.SoundSystem
     public class SoundManager : PersistentSingleton<SoundManager>
     {
         IObjectPool<SoundEmitter> _pool;
-        private readonly List<SoundEmitter> _activeSounds = new();
+        [SerializeField] private List<SoundEmitter> activeSounds = new();
         public readonly Queue<SoundEmitter> FrequentSounds = new();
         
         [SerializeField] private SoundEmitter soundEmitterPrefab;
@@ -76,13 +76,13 @@ namespace Utils.SoundSystem
         private void OnTakeFromPool(SoundEmitter soundEmitter)
         {
             soundEmitter.gameObject.SetActive(true);
-            _activeSounds.Add(soundEmitter);
+            activeSounds.Add(soundEmitter);
         }
         
         private void OnReturnedToPool(SoundEmitter soundEmitter)
         {
             soundEmitter.gameObject.SetActive(false);
-            _activeSounds.Remove(soundEmitter);
+            activeSounds.Remove(soundEmitter);
         }
         
         private void OnDestroyPoolObject(SoundEmitter soundEmitter)

@@ -5,7 +5,7 @@ namespace Projectiles
 {
     public class Projectile : Flyweight
     {
-        new ProjectileSettings settings => (ProjectileSettings)base.settings;
+        private new ProjectileSettings settings => (ProjectileSettings)base.settings;
         
         private void OnEnable()
         {

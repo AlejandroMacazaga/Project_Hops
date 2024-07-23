@@ -1,19 +1,18 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Scripts.Player
+namespace Player
 {
     [CreateAssetMenu(menuName = "Player/PlayerData")]
     public class PlayerData : Entities.EntityData
     {
-        public float MaxSpeed;
-        public float Acceleration;
-        public float JumpForce;
-        public float Gravity;
-        public float RotationSpeed;
-        public float Damage;
-        public float AttackSpeed;
-        public float Defense;
+        public float maxSpeed;
+        public float acceleration;
+        public float jumpForce;
+        public float gravity;
+        public float rotationSpeed;
+        public float damage;
+        public float attackSpeed;
+        public float defense;
 
         
         

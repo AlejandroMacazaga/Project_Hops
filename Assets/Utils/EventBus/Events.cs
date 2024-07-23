@@ -1,10 +1,12 @@
-
-public interface IEvent
+namespace Utils.EventBus
 {
+    public interface IEvent
+    {
 
-}
+    }
 
-public struct TestEvent : IEvent
-{
+    public struct TestEvent : IEvent
+    {
 
+    }
 }

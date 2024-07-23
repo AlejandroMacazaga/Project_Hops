@@ -1,17 +1,16 @@
-
 using UnityEngine;
 using Utils.StateMachine;
 
-namespace Scripts.Player
+namespace Player.States
 {
     public abstract class PlayerBaseState : IState
     {
 
-        protected readonly PlayerController controller;
+        protected readonly PlayerController Controller;
 
         protected PlayerBaseState(PlayerController controller)
         {
-            this.controller = controller;
+            this.Controller = controller;
         }
 
         public virtual void FixedUpdate()
@@ -64,10 +63,10 @@ namespace Scripts.Player
 
     public class PlayerJumpState : PlayerBaseState
     {
-        AnimationClip animation;
+        private AnimationClip _animation;
         public PlayerJumpState(PlayerController controller, AnimationClip animation) : base(controller)
         {
-            this.animation = animation;
+            this._animation = animation;
         }
 
         public override void FixedUpdate()
