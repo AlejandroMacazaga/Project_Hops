@@ -11,7 +11,7 @@ namespace Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : EntityController
     {
-        new PlayerData data => (PlayerData)base.data;
+        private new PlayerData data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
         private Camera _camera;
@@ -22,7 +22,7 @@ namespace Player
         public PlayerStats PlayerStats => _playerStats;
         public AnimationSystem AnimationSystem => _animationSystem;
         public StateMachine StateMachine => _sm;
-
+        public bool IsPressingJump => isPressingJump;
         
 
         [Header("Input system")]
@@ -38,23 +38,30 @@ namespace Player
 
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
+        
+        [Header("Action blockers")]
+        [SerializeField] private bool hasMovementBlocked = false;
+
+        [SerializeField] private bool isOnUnstableGround = false;
+        
         public override void Awake()
         {
             base.Awake();
             _character = GetComponent<CharacterController>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
             _playerStats = new PlayerStats(data);
-            _playerStats.AddModifier("Gravity", new StatModifier(StatModifier.ModifierType.Percent, 3f));
-
+            StatModifier multiplyByZero = new(StatModifier.ModifierType.Percent, 0f);
+            
             #region State machine configuration
             _sm = new StateMachine();
             var idleState = new PlayerIdleState(this);
-            var jumpState = new PlayerJumpState(this, null);
-
-            _sm.AddAnyTransition(jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump));
-
-            _sm.AddTransition(jumpState, idleState, new FuncPredicate(() => !_character.isGrounded));
-
+            var jumpState = new PlayerJumpState(this, null, multiplyByZero);
+            var onAirState = new PlayerOnAirState(this, null);
+            _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded));
+            _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
+            _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
+            _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
+            
 
             _sm.SetState(idleState);
             #endregion
@@ -110,6 +117,7 @@ namespace Player
                 currentVelocity = -1f;
             else
                 currentVelocity -= _playerStats.GetStat("Gravity") * Time.deltaTime;
+            if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 
         private void OnJump(bool pressed)
@@ -122,10 +130,12 @@ namespace Player
             _animationSystem.PlayOneShot(clip, loop);
         }
 
-        public CharacterController GetCharacter()
+        public void SetVelocity(float value)
         {
-            return _character;
+            currentVelocity = value;
         }
+
+        
 
     }
 }
