@@ -1,25 +1,27 @@
-using Scripts.Entities;
 using AYellowpaper.SerializedCollections;
+using Entities;
+using Input;
+using Player.States;
 using UnityEngine;
-using Utils.StateMachine;
 using Utils.AnimationSystem;
-using System;
-namespace Scripts.Player
+using Utils.StateMachine;
+
+namespace Player
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : EntityController
     {
-        new PlayerData Data => (PlayerData)base.Data;
+        new PlayerData Data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
         private Camera _camera;
         private CharacterController _character;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
-        [HideInInspector] public CharacterController Character => _character;
-        [HideInInspector] public PlayerStats PlayerStats => _playerStats;
-        [HideInInspector] public AnimationSystem AnimationSystem => _animationSystem;
-        [HideInInspector] public StateMachine StateMachine => _sm;
+        public CharacterController Character => _character;
+        public PlayerStats PlayerStats => _playerStats;
+        public AnimationSystem AnimationSystem => _animationSystem;
+        public StateMachine StateMachine => _sm;
 
         
 
@@ -46,23 +48,15 @@ namespace Scripts.Player
 
             #region State machine configuration
             _sm = new StateMachine();
-            PlayerIdleState pidles = new PlayerIdleState(this);
-            PlayerJumpState pjumps = new PlayerJumpState(this, null);
+            var idleState = new PlayerIdleState(this);
+            var jumpState = new PlayerJumpState(this, null);
 
-            _sm.AddAnyTransition(pjumps, new FuncPredicate(() =>
-            {
-                if (!_character.isGrounded) return false;
+            _sm.AddAnyTransition(jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump));
 
-                return isPressingJump;
-            }));
-
-            _sm.AddTransition(pjumps, pidles, new FuncPredicate(() =>
-            {
-                return !_character.isGrounded;
-            }));
+            _sm.AddTransition(jumpState, idleState, new FuncPredicate(() => !_character.isGrounded));
 
 
-            _sm.SetState(pidles);
+            _sm.SetState(idleState);
             #endregion
 
             #region Input system configuration
@@ -81,6 +75,7 @@ namespace Scripts.Player
             // _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
         }
 
+        
         private void FixedUpdate()
         {
             _sm.FixedUpdate();
@@ -115,8 +110,6 @@ namespace Scripts.Player
                 currentVelocity = -1f;
             else
                 currentVelocity = -(_playerStats.GetStat("Gravity") * Time.deltaTime);
-            Debug.Log(_playerStats.GetStat("Gravity"));
-            Debug.Log(currentVelocity);
         }
 
         private void OnJump(bool pressed)
@@ -124,9 +117,9 @@ namespace Scripts.Player
             isPressingJump = pressed;
         }
 
-        public void PlayAnimation(AnimationClip animation, bool loop = false)
+        public void PlayAnimation(AnimationClip clip, bool loop = false)
         {
-            _animationSystem.PlayOneShot(animation, loop);
+            _animationSystem.PlayOneShot(clip, loop);
         }
 
         public CharacterController GetCharacter()

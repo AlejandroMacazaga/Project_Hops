@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace Scripts.Entities
+﻿namespace Entities
 {
     public interface IEntityController
     {

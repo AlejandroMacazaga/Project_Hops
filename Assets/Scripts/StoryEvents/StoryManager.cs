@@ -1,57 +1,60 @@
-using Assets.Scripts.StoryEvents;
-using AYellowpaper.SerializedCollections;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Singletons;
 
-public class StoryManager : PersistentSingleton<StoryManager>
+namespace StoryEvents
 {
-    [SerializeField]
-    private List<StoryEvent> storyEvents;
-
-    private void Start() 
+    public class StoryManager : PersistentSingleton<StoryManager>
     {
-        LoadProgress();
-    }
+        [SerializeField]
+        private List<StoryEvent> storyEvents;
 
-    public void UnlockEvent(string eventName)
-    {
-        var storyIndex = storyEvents.FindIndex(e => e.eventName == eventName);
-        if (storyIndex >= 0)
+        private void Start() 
         {
-            var storyEvent = storyEvents[storyIndex];
-            storyEvent.isUnlocked = true;
-            Debug.Log($"Story Event {eventName} unlocked!");
-            // todo: save the event
-
-            // Trigger the event or handle any additional logic here
+            LoadProgress();
         }
-        else
+
+        public void UnlockEvent(string eventName)
         {
-            Debug.LogWarning($"Story Event {eventName} not found.");
+            var storyIndex = storyEvents.FindIndex(e => e.eventName == eventName);
+            if (storyIndex >= 0)
+            {
+                var storyEvent = storyEvents[storyIndex];
+                storyEvent.isUnlocked = true;
+                Debug.Log($"Story Event {eventName} unlocked!");
+                // todo: save the event
+
+                // Trigger the event or handle any additional logic here
+            }
+            else
+            {
+                Debug.LogWarning($"Story Event {eventName} not found.");
+            }
         }
-    }
 
-    public bool IsEventUnlocked(string eventName)
-    {
-        var storyIndex = storyEvents.FindIndex(e => e.eventName == eventName);
-        return storyIndex >= 0 && storyEvents[storyIndex].isUnlocked;
-    }
+        public bool IsEventUnlocked([NotNull] string eventName)
+        {
+            if (eventName == null) throw new ArgumentNullException(nameof(eventName));
+            var storyIndex = storyEvents.FindIndex(e => e.eventName == eventName);
+            return storyIndex >= 0 && storyEvents[storyIndex].isUnlocked;
+        }
 
-    private void LoadProgress()
-    {
-        // todo: Load from a save file or database
-    }
+        private void LoadProgress()
+        {
+            // todo: Load from a save file or database
+        }
 
-    private void OnApplicationQuit()
-    {
-        SaveProgress();
-    }
+        private void OnApplicationQuit()
+        {
+            SaveProgress();
+        }
 
-    private void SaveProgress()
-    {
-        // todo: Save to a save file or database
-    }
+        private void SaveProgress()
+        {
+            // todo: Save to a save file or database
+        }
 
+    }
 }

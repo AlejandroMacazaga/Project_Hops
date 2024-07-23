@@ -38,7 +38,7 @@ namespace Utils.EventBus
             EventBusTypes = InitializeAllBuses();
         }
 
-        static List<Type> InitializeAllBuses()
+        private static List<Type> InitializeAllBuses()
         {
             var eventBusTypes = new List<Type>();
 
@@ -55,11 +55,10 @@ namespace Utils.EventBus
         public static void ClearAllBuses()
         {
             Debug.Log("Clearing all the buses...");
-            for (int i = 0; i < EventBusTypes.Count; i++)
+            foreach (var busType in EventBusTypes)
             {
-                var busType = EventBusTypes[i];
                 var clearMethod = busType.GetMethod("Clear", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
-                clearMethod.Invoke(null, null);
+                clearMethod?.Invoke(null, null);
             }
         }
 

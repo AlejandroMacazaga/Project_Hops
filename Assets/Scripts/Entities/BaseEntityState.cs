@@ -1,9 +1,6 @@
 using Utils.StateMachine;
-using UnityEngine;
 
-
-
-namespace Scripts.Entities
+namespace Entities
 {
     public abstract class BaseEntityState : IState
     {
