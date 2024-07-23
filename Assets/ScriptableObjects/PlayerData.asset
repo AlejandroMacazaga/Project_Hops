@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2516c3d5e77ec3a4c8ce3aa83767c951, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  HealthData:
-    HealthPoints: 0
-    MaxHealthPoints: 0
-  MaxSpeed: 10
-  Acceleration: 10
-  JumpForce: 0
-  Gravity: 50
-  RotationSpeed: 0
-  Damage: 0
-  AttackSpeed: 0
-  Defense: 0
+  healthData:
+    healthPoints: 0
+    maxHealthPoints: 0
+  maxSpeed: 10
+  acceleration: 0
+  jumpForce: 0
+  gravity: 2
+  rotationSpeed: 0
+  damage: 0
+  attackSpeed: 0
+  defense: 0

@@ -11,7 +11,7 @@ namespace Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : EntityController
     {
-        new PlayerData Data => (PlayerData)base.data;
+        new PlayerData data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
         private Camera _camera;
@@ -31,7 +31,7 @@ namespace Player
         [Header("Movement values")]
         [SerializeField] private Vector2 currentDirection;
         [SerializeField] private float currentVelocity = 0f;
-
+        [SerializeField] private float maxVelocity = 6f;
         [SerializedDictionary("Name", "Animation Clips")]
         public SerializedDictionary<string, AnimationClip> animations;
 
@@ -43,7 +43,7 @@ namespace Player
             base.Awake();
             _character = GetComponent<CharacterController>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
-            _playerStats = new PlayerStats(Data);
+            _playerStats = new PlayerStats(data);
             _playerStats.AddModifier("Gravity", new StatModifier(StatModifier.ModifierType.Percent, 3f));
 
             #region State machine configuration
@@ -106,10 +106,10 @@ namespace Player
 
         private void HandleGravity()
         {
-            if (_character.isGrounded && currentVelocity < 0f)
+            if (_character.isGrounded && currentVelocity <= 0f)
                 currentVelocity = -1f;
             else
-                currentVelocity = -(_playerStats.GetStat("Gravity") * Time.deltaTime);
+                currentVelocity -= _playerStats.GetStat("Gravity") * Time.deltaTime;
         }
 
         private void OnJump(bool pressed)
