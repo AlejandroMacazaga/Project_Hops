@@ -41,8 +41,7 @@ namespace Player
         
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
-
-        [SerializeField] private bool isOnUnstableGround = false;
+        public bool isOnUnstableGround = false;
         
         public override void Awake()
         {
