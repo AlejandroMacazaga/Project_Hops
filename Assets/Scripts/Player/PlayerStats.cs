@@ -19,7 +19,7 @@ namespace Player
         {
             Type = type;
             Value = value;
-            if (!(duration > 0)) return;
+            if (duration == 0) return;
             var durationTimer = new CountdownTimer(duration);
             durationTimer.Start();
             durationTimer.OnTimerStop += OnModifierEnd;

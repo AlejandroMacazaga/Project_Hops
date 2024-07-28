@@ -1,3 +1,5 @@
+using Entities;
+
 namespace Utils.EventBus
 {
     public interface IEvent
@@ -8,5 +10,11 @@ namespace Utils.EventBus
     public struct TestEvent : IEvent
     {
 
+    }
+
+    public struct PlayerDamageEvent : IEvent
+    {
+        public EntityController DamageDealer;
+        public int Damage;
     }
 }

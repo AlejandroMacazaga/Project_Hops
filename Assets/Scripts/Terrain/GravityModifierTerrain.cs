@@ -14,6 +14,7 @@ namespace Terrain
         }
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log("Hello");
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
             controller.PlayerStats.AddModifier("Gravity", _mod);
@@ -21,6 +22,7 @@ namespace Terrain
 
         private void OnTriggerExit(Collider other)
         {
+            Debug.Log("Agur");
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
             controller.PlayerStats.RemoveModifier("Gravity", _mod);
