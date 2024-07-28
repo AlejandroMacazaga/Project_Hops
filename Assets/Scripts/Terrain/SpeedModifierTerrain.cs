@@ -8,10 +8,13 @@ namespace Terrain
         [SerializeField] [Range(0.0f, 10.0f)] private float speedModifier = 1f;
         [SerializeField] [Range(0.0f, 120.0f)] private float duration = 0f;
         private StatModifier _mod;
+        private StatModifier _modWithTime;
 
         private void Awake()
         {
-            _mod ??= new StatModifier(StatModifier.ModifierType.Percent, speedModifier, duration);
+            _mod ??= new StatModifier(StatModifier.ModifierType.Percent, speedModifier);
+            if (duration != 0)
+                _modWithTime ??= new StatModifier(StatModifier.ModifierType.Percent, speedModifier, duration);
         }
         private void OnTriggerEnter(Collider other)
         {
@@ -23,8 +26,9 @@ namespace Terrain
         private void OnTriggerExit(Collider other)
         {
             var controller = other.GetComponent<PlayerController>();
-            if (!controller && duration == 0) return;
+            if (!controller) return;
             controller.PlayerStats.RemoveModifier("MaxSpeed",_mod);
+            if (duration != 0) controller.PlayerStats.AddModifier("MaxSpeed", _modWithTime);
         }
     }
 }

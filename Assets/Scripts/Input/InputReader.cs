@@ -17,6 +17,7 @@ namespace Input
         
         public Vector3 Direction => _inputActions.Player.Move.ReadValue<Vector2>();
 
+        public Vector2 CameraLook => _inputActions.Player.Look.ReadValue<Vector2>();
         void OnEnable()
         {
             if (_inputActions != null) return;

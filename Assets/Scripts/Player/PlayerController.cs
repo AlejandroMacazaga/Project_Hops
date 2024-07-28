@@ -1,10 +1,13 @@
+using System;
 using AYellowpaper.SerializedCollections;
 using Entities;
 using Input;
 using Player.States;
 using UnityEngine;
 using Utils.AnimationSystem;
+using Utils.EventBus;
 using Utils.StateMachine;
+using StateMachine = Utils.StateMachine.StateMachine;
 
 namespace Player
 {
@@ -14,7 +17,6 @@ namespace Player
         private new PlayerData data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
-        private Camera _camera;
         private CharacterController _character;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
@@ -28,6 +30,8 @@ namespace Player
         [Header("Input system")]
         [SerializeField] private InputReader inputReader;
 
+        [Header("First Person Camera")]
+        [SerializeField] private Camera fpCamera;
         [Header("Movement values")]
         [SerializeField] private Vector2 currentDirection;
         [SerializeField] private float currentVelocity = 0f;
@@ -71,6 +75,11 @@ namespace Player
             inputReader.Jump += OnJump;
             #endregion
 
+        }
+
+        private void OnEnable()
+        {
+            EnableCursor(false);
         }
 
         private void Update()
@@ -134,7 +143,10 @@ namespace Player
             currentVelocity = value;
         }
 
-        
 
+        private static void EnableCursor(bool enable)
+        {
+            Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
+        }
     }
 }
