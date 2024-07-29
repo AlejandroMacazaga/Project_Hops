@@ -12,6 +12,7 @@ namespace Input
         public event UnityAction<bool> Dash = delegate { };
         public event UnityAction LightAttack = delegate { };
         public event UnityAction HeavyAttack = delegate { };
+        public event UnityAction<bool> Reload = delegate { };
 
         PlayerInputActions _inputActions;
         
@@ -73,6 +74,17 @@ namespace Input
             }
         }
 
+        public void OnReload(InputAction.CallbackContext context)
+        {
+            switch (context.phase) {
+                case InputActionPhase.Started:
+                    Reload.Invoke(true);
+                    break;
+                case InputActionPhase.Canceled:
+                    Reload.Invoke(false);
+                    break;
+            }
+        }
 
     }
 }

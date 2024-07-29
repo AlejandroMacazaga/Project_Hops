@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils;
 using Utils.Flyweight;
 
@@ -7,9 +8,15 @@ namespace Projectiles
 {
     public class Projectile : Flyweight {
         new ProjectileSettings settings => (ProjectileSettings) base.settings;
-        
+
+        public float currentDamage;
         void OnEnable() {
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
+        }
+
+        public void SetDamage(float multiplier)
+        {
+            currentDamage = settings.damage * multiplier;
         }
         
         void Update() {
