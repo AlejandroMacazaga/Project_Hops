@@ -1,28 +1,24 @@
+using System.Collections;
 using UnityEngine;
+using Utils;
 using Utils.Flyweight;
 
 namespace Projectiles
 {
-    public class Projectile : Flyweight
-    {
-        private new ProjectileSettings settings => (ProjectileSettings)base.settings;
+    public class Projectile : Flyweight {
+        new ProjectileSettings settings => (ProjectileSettings) base.settings;
         
-        private void OnEnable()
-        {
-            StartCoroutine(DespawnAfterDelay());
+        void OnEnable() {
+            StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
         }
         
-        private void Update()
-        {
+        void Update() {
             transform.Translate(Vector3.forward * (settings.speed * Time.deltaTime));
         }
-        
-        private void OnTriggerEnter(Collider other)
-        {
-            FlyweightManager.Instance.ReturnToPool(this);
+
+        IEnumerator DespawnAfterDelay(float delay) {
+            yield return Helpers.GetWaitForSeconds(delay);
+            FlyweightManager.ReturnToPool(this);
         }
-        
-        
-        
     }
 }
