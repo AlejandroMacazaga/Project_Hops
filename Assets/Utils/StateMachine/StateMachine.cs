@@ -63,8 +63,8 @@ namespace Utils.StateMachine
         {
             _anyTransitions.Add(new Transition(GetOrAddNode(to).State, condition));
         }
-        
-        StateNode GetOrAddNode(IState state)
+
+        private StateNode GetOrAddNode(IState state)
         {
             var node = _nodes.GetValueOrDefault(state.GetType());
 
