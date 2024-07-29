@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c900088e70414290342b9ecc0aefd6, type: 3}
   m_Name: Basic Projectile
   m_EditorClassIdentifier: 
-  type: 
+  type: Basic
   prefab: {fileID: 4375108616942057391, guid: a46e48334638ad44e8a3021b072a7b8b, type: 3}
   despawnDelay: 5
   speed: 100
+  damage: 5
