@@ -9,17 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2516c3d5e77ec3a4c8ce3aa83767c951, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: 44c900088e70414290342b9ecc0aefd6, type: 3}
+  m_Name: Basic Projectile
   m_EditorClassIdentifier: 
-  healthData:
-    healthPoints: 0
-    maxHealthPoints: 0
-  maxSpeed: 10
-  acceleration: 0
-  jumpForce: 1
-  gravity: 2
-  rotationSpeed: 0
-  damage: 0
-  attackSpeed: 0
-  defense: 0
+  type: 
+  prefab: {fileID: 4375108616942057391, guid: a46e48334638ad44e8a3021b072a7b8b, type: 3}
+  despawnDelay: 5
+  speed: 100

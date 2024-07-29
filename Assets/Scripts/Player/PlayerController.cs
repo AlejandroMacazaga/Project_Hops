@@ -3,10 +3,12 @@ using AYellowpaper.SerializedCollections;
 using Entities;
 using Input;
 using Player.States;
+using Projectiles;
 using UnityEngine;
 using Utils.AnimationSystem;
 using Utils.EventBus;
 using Utils.StateMachine;
+using Weapons;
 using StateMachine = Utils.StateMachine.StateMachine;
 
 namespace Player
@@ -25,7 +27,8 @@ namespace Player
         public AnimationSystem AnimationSystem => _animationSystem;
         public StateMachine StateMachine => _sm;
         public bool IsPressingJump => isPressingJump;
-        
+
+        private IWeapon _currentWeapon;
 
         [Header("Input system")]
         [SerializeField] private InputReader inputReader;
@@ -39,7 +42,8 @@ namespace Player
         [SerializedDictionary("Name", "Animation Clips")]
         public SerializedDictionary<string, AnimationClip> animations;
 
-
+        [Header("Weapon data")] 
+        [SerializeField] private ProjectileSettings projectileSettings;
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
         
@@ -73,8 +77,12 @@ namespace Player
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
             inputReader.Jump += OnJump;
+            inputReader.LightAttack += OnLightAttack;
+
             #endregion
 
+
+            _currentWeapon = new Weapon(projectileSettings, fpCamera.gameObject);
         }
 
         private void OnEnable()
@@ -100,6 +108,7 @@ namespace Player
         {
             inputReader.Move -= OnMove;
             inputReader.Jump -= OnJump;
+            inputReader.LightAttack -= OnLightAttack;
             // _animationSystem.Destroy();
         }
 
@@ -147,6 +156,11 @@ namespace Player
         private static void EnableCursor(bool enable)
         {
             Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
+        }
+
+        private void OnLightAttack()
+        {
+            _currentWeapon.Shoot();
         }
     }
 }
