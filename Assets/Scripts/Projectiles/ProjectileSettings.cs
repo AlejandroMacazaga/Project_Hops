@@ -42,6 +42,11 @@ namespace Projectiles
         {
             Debug.Log("Default damage method");
         }
+
+        public void Damage(HealthComponent healthComponent)
+        {
+            healthComponent.DamageReceived(damage);
+        }
         
         
     }
