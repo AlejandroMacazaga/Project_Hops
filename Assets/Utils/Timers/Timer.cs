@@ -58,7 +58,7 @@ namespace Utils.Timers
         protected Timer(float time = 0f)
         {
             InitialTime = time;
-            CurrentTime = time;
+            CurrentTime = 0f;
         }
 
         public void Start()

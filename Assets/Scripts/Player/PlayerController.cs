@@ -43,7 +43,7 @@ namespace Player
         public SerializedDictionary<string, AnimationClip> animations;
 
         [Header("Weapon data")] 
-        [SerializeField] private ProjectileSettings projectileSettings;
+        [SerializeField] private WeaponSettings weaponSettings;
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
         
@@ -82,7 +82,7 @@ namespace Player
             #endregion
 
 
-            _currentWeapon = new Weapon(projectileSettings, fpCamera.gameObject);
+            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject);
         }
 
         private void OnEnable()

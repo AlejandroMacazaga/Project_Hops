@@ -272,7 +272,7 @@ MonoBehaviour:
       Value: {fileID: 0}
     - Key: idle
       Value: {fileID: 0}
-  projectileSettings: {fileID: 11400000, guid: 44fcb61c14e3e474e8bb8e96a1d373f7, type: 2}
+  weaponSettings: {fileID: 11400000, guid: dedea88a32f52ec4ba5065245c3c31b0, type: 2}
   isPressingJump: 0
   hasMovementBlocked: 0
   isOnUnstableGround: 0
