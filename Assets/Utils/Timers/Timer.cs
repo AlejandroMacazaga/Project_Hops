@@ -87,7 +87,7 @@ namespace Utils.Timers
         public float CurrentTime { get; protected set; }
         public bool IsRunning { get; protected set; }
 
-        protected float InitialTime;
+        public float InitialTime;
 
         public virtual float Progress => Mathf.Clamp(CurrentTime / InitialTime, 0, 1);
         

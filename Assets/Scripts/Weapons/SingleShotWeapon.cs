@@ -18,7 +18,7 @@ namespace Weapons
             _weaponSettings = weaponSettings;
             _owner = owner;
             _camera = camera;
-            _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed);
+            _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed"));
             _currentBullets = weaponSettings.magazineSize;
             _reloadTimer.OnTimerStop += () => _currentBullets = weaponSettings.magazineSize;
         }
@@ -31,6 +31,7 @@ namespace Weapons
         public void Reload()
         {
             if (_reloadTimer.IsRunning) return;
+            _reloadTimer.InitialTime = _weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed");
             _reloadTimer.Start();
         }
         

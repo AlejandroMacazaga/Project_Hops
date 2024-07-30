@@ -23,7 +23,7 @@ namespace Entities {
 
         protected virtual void PrepareHealth()
         {
-            if (Health == null) Health = GetComponent<HealthComponent>();
+            if (!Health) Health = GetComponent<HealthComponent>();
             Health.SetValues(data.healthData);
             Health.OnDeath += OnDeath;
         }

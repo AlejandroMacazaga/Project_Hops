@@ -66,10 +66,10 @@ namespace Player
             _cachedModifiedValues["Acceleration"] = new ModifiedStat(_baseStats.acceleration);
             _cachedModifiedValues["JumpForce"] = new ModifiedStat(_baseStats.jumpForce);
             _cachedModifiedValues["Gravity"] = new ModifiedStat(_baseStats.gravity);
-            _cachedModifiedValues["RotationSpeed"] = new ModifiedStat(_baseStats.rotationSpeed);
             _cachedModifiedValues["Damage"] = new ModifiedStat(_baseStats.damage);
             _cachedModifiedValues["AttackSpeed"] = new ModifiedStat(_baseStats.attackSpeed);
             _cachedModifiedValues["Defense"] = new ModifiedStat(_baseStats.defense);
+            _cachedModifiedValues["ReloadSpeed"] = new ModifiedStat(_baseStats.reloadSpeed);
             _cachedModifiedValues["DashMultiplier"] = new ModifiedStat(_baseStats.dashMultiplier);
             _cachedModifiedValues["DashDuration"] = new ModifiedStat(_baseStats.dashDuration);
             _cachedModifiedValues["DashCooldown"] = new ModifiedStat(_baseStats.dashCooldown);
@@ -143,10 +143,10 @@ namespace Player
                 "Acceleration" => _baseStats.acceleration,
                 "JumpForce" => _baseStats.jumpForce,
                 "Gravity" => _baseStats.gravity,
-                "RotationSpeed" => _baseStats.rotationSpeed,
                 "Damage" => _baseStats.damage,
                 "AttackSpeed" => _baseStats.attackSpeed,
                 "Defense" => _baseStats.defense,
+                "ReloadSpeed" => _baseStats.reloadSpeed,
                 "DashMultiplier" => _baseStats.dashMultiplier,
                 "DashDuration" => _baseStats.dashDuration,
                 "DashCooldown" => _baseStats.dashCooldown,
