@@ -12,13 +12,28 @@ namespace Player
         [SerializeField] private float senX, senY;
         [SerializeField] private Transform bodyOrientation;
         [SerializeField] private bool isLocked;
+        [SerializeField] private bool isBodyLocked;
+        public bool IsBodyLocked
+        {
+            get => isBodyLocked;
+            set
+            {
+                isBodyLocked = value;
+                if (isBodyLocked) return;
+                bodyOrientation.Rotate(Vector3.up * transform.localEulerAngles.y);
+                transform.localRotation = Quaternion.Euler(transform.localRotation.x, 0f, 0f);
+            } 
+        }
+
         private CountdownTimer _timer;
-        private float _xRotation, _yRotation;
+        private float _xRotation;
+        private float _yRotation;
 
         void Awake()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            isBodyLocked = false;
             playerInputs.EnablePlayerActions();
         }
         
@@ -34,13 +49,23 @@ namespace Player
             var movement = playerInputs.CameraLook;
             var mouseX = movement.x * Time.deltaTime * senX;
             var mouseY = movement.y * Time.deltaTime * senY;
-
-            _yRotation += mouseX;
+            
+            
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
-
-            transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-            bodyOrientation.Rotate(Vector3.up * mouseX);
+            
+            if (isBodyLocked)
+            {
+                // Apply the rotation to the camera's local rotation
+                _yRotation += mouseX;
+                transform.localRotation = Quaternion.Euler(_xRotation, _yRotation, 0f);
+            }
+            else
+            {
+                _yRotation = 0f;
+                transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+                bodyOrientation.Rotate(Vector3.up * mouseX);
+            }
         }
 
         public void LockCamera(float time, float angle)
@@ -60,7 +85,7 @@ namespace Player
             bodyOrientation.Rotate(Vector3.up);
         }
 
-        private void UnlockCamera()
+        public void UnlockCamera()
         {
             isLocked = false;
         }

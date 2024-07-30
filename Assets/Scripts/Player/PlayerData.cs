@@ -5,7 +5,7 @@ namespace Player
     [CreateAssetMenu(menuName = "Player/PlayerData")]
     public class PlayerData : Entities.EntityData
     {
-        [Tooltip("Flat")]public float maxSpeed;
+        [Tooltip("Flat")]public float speed;
         [Tooltip("Flat")]public float acceleration;
         [Tooltip("Flat")]public float jumpForce;
         [Tooltip("Flat")]public float gravity;

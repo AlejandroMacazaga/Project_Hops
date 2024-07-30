@@ -44,7 +44,7 @@ namespace Utils.StateMachine
         ITransition GetTransition()
         {
             foreach (var transition in _anyTransitions)
-                if (transition.Condition.Evaluate()) 
+                if (transition.To != _current.State && transition.Condition.Evaluate()) 
                     return transition;
             
             foreach (var transition in _current.Transitions)
