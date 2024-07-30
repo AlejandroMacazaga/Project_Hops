@@ -17,8 +17,8 @@ MonoBehaviour:
     maxHealthPoints: 0
   speed: 10
   acceleration: 0
-  jumpForce: 1
-  gravity: 6
+  jumpForce: 4
+  gravity: 20
   rotationSpeed: 0.1
   damage: 1
   attackSpeed: 0.1

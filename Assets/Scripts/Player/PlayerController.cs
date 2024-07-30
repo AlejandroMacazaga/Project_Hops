@@ -142,9 +142,8 @@ namespace Player
         {
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
-            move.y = currentVelocity;
             move *= PlayerStats.GetStat("Speed");
- 
+            move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
         }
@@ -153,7 +152,10 @@ namespace Player
         {
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
-            
+            move *= PlayerStats.GetStat("AirSpeed");
+            move.y = currentVelocity;
+
+            _character.Move(move * Time.deltaTime);
         }
         
 
