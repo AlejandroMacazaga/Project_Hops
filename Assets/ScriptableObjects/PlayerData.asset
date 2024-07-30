@@ -15,7 +15,7 @@ MonoBehaviour:
   healthData:
     healthPoints: 0
     maxHealthPoints: 0
-  maxSpeed: 10
+  speed: 10
   acceleration: 0
   jumpForce: 1
   gravity: 6
@@ -24,3 +24,6 @@ MonoBehaviour:
   attackSpeed: 0.1
   defense: 0
   reloadSpeed: 0.1
+  dashMultiplier: 5
+  dashDuration: 0.15
+  dashCooldown: 0.3

@@ -62,7 +62,7 @@ namespace Player
         private void InitializeCache()
         {
             _cachedModifiedValues["MaxHealth"] = new ModifiedStat(_baseStats.healthData.maxHealthPoints);
-            _cachedModifiedValues["MaxSpeed"] = new ModifiedStat(_baseStats.maxSpeed);
+            _cachedModifiedValues["Speed"] = new ModifiedStat(_baseStats.speed);
             _cachedModifiedValues["Acceleration"] = new ModifiedStat(_baseStats.acceleration);
             _cachedModifiedValues["JumpForce"] = new ModifiedStat(_baseStats.jumpForce);
             _cachedModifiedValues["Gravity"] = new ModifiedStat(_baseStats.gravity);
@@ -139,7 +139,7 @@ namespace Player
             return statName switch
             {
                 "MaxHealth" => _baseStats.healthData.maxHealthPoints,
-                "MaxSpeed" => _baseStats.maxSpeed,
+                "Speed" => _baseStats.speed,
                 "Acceleration" => _baseStats.acceleration,
                 "JumpForce" => _baseStats.jumpForce,
                 "Gravity" => _baseStats.gravity,

@@ -36,11 +36,13 @@ namespace Player
         [SerializeField] private InputReader inputReader;
 
         [Header("First Person Camera")]
-        [SerializeField] private Camera fpCamera;
+        public FirstPersonCamera fpCamera;
+        
         [Header("Movement values")]
         public Vector2 currentDirection;
         [SerializeField] private float currentVelocity = 0f;
         [SerializeField] private float maxVelocity = 6f;
+        [SerializeField] private Vector2 currentAirSpeed;
         [SerializedDictionary("Name", "Animation Clips")]
         public SerializedDictionary<string, AnimationClip> animations;
 
@@ -78,7 +80,7 @@ namespace Player
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
-            _sm.AddAnyTransition(dashState, new FuncPredicate(() => dashState.IsFinished && isPressingDash && !DashCooldown.IsRunning));
+            _sm.AddAnyTransition(dashState, new FuncPredicate(() => isPressingDash && !DashCooldown.IsRunning));
             _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished));
             
 
@@ -141,10 +143,17 @@ namespace Player
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
             move.y = currentVelocity;
-            move *= PlayerStats.GetStat("MaxSpeed");
+            move *= PlayerStats.GetStat("Speed");
  
 
             _character.Move(move * Time.deltaTime);
+        }
+
+        public void HandleAirMovement()
+        {
+            var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
+            move = transform.TransformDirection(move);
+            
         }
         
 

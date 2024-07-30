@@ -27,10 +27,11 @@ namespace Player.States
 
         public override void OnEnter()
         {
+            _timer.Start();
             Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
-            _timer.Start();
+            Controller.fpCamera.IsBodyLocked = true;
             //controller.AnimationSystem.PlayOneShot(animation, true);
         }
 
@@ -39,13 +40,14 @@ namespace Player.States
             Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
             _timer.Stop();
             Controller.DashCooldown.Start();
+            Controller.fpCamera.IsBodyLocked = false;
         }
 
         public override void Update()
         {
             var move = new Vector3(_direction.x, 0 , _direction.y);
             move = Controller.transform.TransformDirection(move);
-            move *= Controller.PlayerStats.GetStat("MaxSpeed");
+            move *= Controller.PlayerStats.GetStat("Speed");
             move *= Controller.PlayerStats.GetStat("DashMultiplier");
             
             Controller.Character.Move(move * Time.deltaTime);
