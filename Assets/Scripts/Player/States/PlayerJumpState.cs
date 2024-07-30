@@ -23,7 +23,6 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            Debug.Log("We Jumping");
             
             Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
             _timer.Start();
@@ -33,14 +32,14 @@ namespace Player.States
 
         public override void OnExit()
         {
-            Debug.Log("We no jumping no more");
             Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
             _timer.Stop();
         }
 
         public override void Update()
         {
-
+            Controller.HandleGravity();
+            Controller.HandleMovement();
         }
     }
 }
