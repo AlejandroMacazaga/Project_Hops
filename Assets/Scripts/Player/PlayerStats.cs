@@ -9,13 +9,14 @@ namespace Player
         public enum ModifierType
         {
             Flat,
-            Percent
+            Percent,
+            Zero
         }
         public readonly ModifierType Type;
         public readonly float Value;
         public Action<StatModifier> ModifierEnd;
 
-        public StatModifier(ModifierType type, float value, float duration = 0)
+        public StatModifier(ModifierType type, float value = 0, float duration = 0)
         {
             Type = type;
             Value = value;
@@ -69,6 +70,9 @@ namespace Player
             _cachedModifiedValues["Damage"] = new ModifiedStat(_baseStats.damage);
             _cachedModifiedValues["AttackSpeed"] = new ModifiedStat(_baseStats.attackSpeed);
             _cachedModifiedValues["Defense"] = new ModifiedStat(_baseStats.defense);
+            _cachedModifiedValues["DashMultiplier"] = new ModifiedStat(_baseStats.dashMultiplier);
+            _cachedModifiedValues["DashDuration"] = new ModifiedStat(_baseStats.dashDuration);
+            _cachedModifiedValues["DashCooldown"] = new ModifiedStat(_baseStats.dashCooldown);
             // Add new values here depending of the new values the player has
         }
 
@@ -88,8 +92,8 @@ namespace Player
 
         public void RemoveModifier(string statName, StatModifier modifier)
         {
-            if (!_modifiers.ContainsKey(statName)) return;
-            _modifiers[statName].Remove(modifier);
+            if (!_modifiers.TryGetValue(statName, out var modifiers)) return;
+            modifiers.Remove(modifier);
             _cachedModifiedValues[statName].NeedsUpdate = true;
         }
 
@@ -118,6 +122,8 @@ namespace Player
                     case StatModifier.ModifierType.Percent:
                         percentSum += modifier.Value;
                         break;
+                    case StatModifier.ModifierType.Zero:
+                        return 0;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -141,6 +147,9 @@ namespace Player
                 "Damage" => _baseStats.damage,
                 "AttackSpeed" => _baseStats.attackSpeed,
                 "Defense" => _baseStats.defense,
+                "DashMultiplier" => _baseStats.dashMultiplier,
+                "DashDuration" => _baseStats.dashDuration,
+                "DashCooldown" => _baseStats.dashCooldown,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

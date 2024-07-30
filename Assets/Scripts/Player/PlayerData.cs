@@ -5,16 +5,21 @@ namespace Player
     [CreateAssetMenu(menuName = "Player/PlayerData")]
     public class PlayerData : Entities.EntityData
     {
-        public float maxSpeed;
-        public float acceleration;
-        public float jumpForce;
-        public float gravity;
-        public float rotationSpeed;
-        public float damage;
-        public float attackSpeed;
-        public float defense;
+        [Tooltip("Flat")]public float maxSpeed;
+        [Tooltip("Flat")]public float acceleration;
+        [Tooltip("Flat")]public float jumpForce;
+        [Tooltip("Flat")]public float gravity;
+        [Tooltip("Multiplier")][Range(0.1f, 10f)] public float rotationSpeed;
+        [Tooltip("Multiplier")][Range(0.1f, 10f)] public float damage = 1;
+        [Tooltip("Multiplier")][Range(0.1f, 10f)] public float attackSpeed;
+        [Tooltip("Flat")] public float defense;
+        [Tooltip("Multiplier")][Range(0.1f, 10f)] public float reloadSpeed;
 
-        
-        
+        [Header("Dash data")]
+        [Tooltip("Multiplier")][Range(0.1f, 10f)] public float dashMultiplier;
+        [Tooltip("Seconds")] public float dashDuration;
+        [Tooltip("Seconds")] public float dashCooldown;
+
+
     }
 }

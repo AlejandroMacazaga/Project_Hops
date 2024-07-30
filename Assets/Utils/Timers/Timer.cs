@@ -1,4 +1,5 @@
 using System;
+using Player;
 using UnityEngine;
 
 namespace Utils.Timers
@@ -18,6 +19,44 @@ namespace Utils.Timers
             if (IsRunning && CurrentTime <= 0)
             {
                 Stop();
+            }
+        }
+
+        public override bool IsFinished() => CurrentTime <= 0;
+    }
+
+    public class PlayerCooldownTimer : Timer
+    {
+        private PlayerStats _stats;
+        private string _stat;
+        public PlayerCooldownTimer(PlayerStats stats, string stat)
+        {
+            _stat = stat;
+            _stats = stats;
+            CurrentTime = 0f;
+        }
+
+        public override void Tick()
+        {
+            if (IsRunning && CurrentTime > 0)
+            {
+                CurrentTime -= Time.deltaTime;
+            }
+            
+            if (IsRunning && CurrentTime <= 0)
+            {
+                Stop();
+            }
+        }
+        
+        public override void Start()
+        {
+            CurrentTime = _stats.GetStat(_stat);
+            if (!IsRunning)
+            {
+                IsRunning = true;
+                TimerManager.RegisterTimer(this);
+                OnTimerStart.Invoke();
             }
         }
 
@@ -46,7 +85,7 @@ namespace Utils.Timers
     public abstract class Timer : IDisposable
     {
         public float CurrentTime { get; protected set; }
-        public bool IsRunning { get; private set; }
+        public bool IsRunning { get; protected set; }
 
         protected float InitialTime;
 
@@ -61,7 +100,7 @@ namespace Utils.Timers
             CurrentTime = 0f;
         }
 
-        public void Start()
+        public virtual void Start()
         {
             CurrentTime = InitialTime;
             if (!IsRunning)
@@ -72,7 +111,7 @@ namespace Utils.Timers
             }
         }
         
-        public void Stop()
+        public virtual void Stop()
         {
             if (IsRunning)
             {

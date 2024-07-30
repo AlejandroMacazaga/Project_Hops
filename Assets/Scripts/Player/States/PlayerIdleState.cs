@@ -14,17 +14,16 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            Debug.Log("We on the idle state");
         }
 
         public override void OnExit()
         {
-            Debug.Log("We off the idle state");
         }
 
         public override void Update()
         {
-            
+            Controller.HandleGravity();
+            Controller.HandleMovement();
         }
 
     }

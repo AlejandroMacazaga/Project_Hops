@@ -5,9 +5,11 @@ using Input;
 using Player.States;
 using Projectiles;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
 using Utils.StateMachine;
+using Utils.Timers;
 using Weapons;
 using StateMachine = Utils.StateMachine.StateMachine;
 
@@ -36,7 +38,7 @@ namespace Player
         [Header("First Person Camera")]
         [SerializeField] private Camera fpCamera;
         [Header("Movement values")]
-        [SerializeField] private Vector2 currentDirection;
+        public Vector2 currentDirection;
         [SerializeField] private float currentVelocity = 0f;
         [SerializeField] private float maxVelocity = 6f;
         [SerializedDictionary("Name", "Animation Clips")]
@@ -44,45 +46,62 @@ namespace Player
 
         [Header("Weapon data")] 
         [SerializeField] private WeaponSettings weaponSettings;
+        
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
+        [SerializeField] private bool isPressingDash;
         
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
         public bool isOnUnstableGround = false;
-        
+
+        public PlayerCooldownTimer DashCooldown;
         public override void Awake()
         {
             base.Awake();
             _character = GetComponent<CharacterController>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
             _playerStats = new PlayerStats(data);
-            StatModifier multiplyByZero = new(StatModifier.ModifierType.Percent, 0f);
+            StatModifier toZero = new(StatModifier.ModifierType.Zero);
+            
+            #region Cooldowns
+            DashCooldown = new PlayerCooldownTimer(_playerStats, "DashCooldown");
+            #endregion
             
             #region State machine configuration
             _sm = new StateMachine();
             var idleState = new PlayerIdleState(this);
-            var jumpState = new PlayerJumpState(this, null, multiplyByZero);
+            var jumpState = new PlayerJumpState(this, null, toZero);
             var onAirState = new PlayerOnAirState(this, null);
+            var dashState = new PlayerDashState(this, null, toZero);
             _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded));
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
+            _sm.AddAnyTransition(dashState, new FuncPredicate(() => dashState.IsFinished && isPressingDash && !DashCooldown.IsRunning));
+            _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished));
             
 
             _sm.SetState(idleState);
             #endregion
-
+            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
             inputReader.Jump += OnJump;
             inputReader.LightAttack += OnLightAttack;
+            inputReader.Reload += OnReload;
+            inputReader.Dash += OnDash;
 
             #endregion
 
 
-            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject);
+
+        }
+
+        private void OnReload(bool pressed)
+        {
+            if (pressed) _currentWeapon.Reload();
         }
 
         private void OnEnable()
@@ -93,8 +112,6 @@ namespace Player
         private void Update()
         {
             _sm.Update();
-            HandleGravity();
-            HandleMovement();
             // _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
         }
 
@@ -109,6 +126,8 @@ namespace Player
             inputReader.Move -= OnMove;
             inputReader.Jump -= OnJump;
             inputReader.LightAttack -= OnLightAttack;
+            inputReader.Reload -= OnReload;
+            inputReader.Dash -= OnDash;
             // _animationSystem.Destroy();
         }
 
@@ -117,7 +136,7 @@ namespace Player
             currentDirection = dir;
         }
 
-        private void HandleMovement()
+        public void HandleMovement()
         {
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
@@ -127,8 +146,9 @@ namespace Player
 
             _character.Move(move * Time.deltaTime);
         }
+        
 
-        private void HandleGravity()
+        public void HandleGravity()
         {
             if (_character.isGrounded && currentVelocity <= 0f)
                 currentVelocity = -1f;
@@ -140,6 +160,11 @@ namespace Player
         private void OnJump(bool pressed)
         {
             isPressingJump = pressed;
+        }
+
+        private void OnDash(bool pressed)
+        {
+            isPressingDash = pressed;
         }
 
         public void PlayAnimation(AnimationClip clip, bool loop = false)

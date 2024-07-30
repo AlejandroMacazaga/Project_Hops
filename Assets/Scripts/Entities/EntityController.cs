@@ -6,7 +6,6 @@ namespace Entities {
 
     public class EntityController : MonoBehaviour, IEntityController
     {
-        [FormerlySerializedAs("Data")]
         [Header("Entity configuration")]
         [SerializeField] protected EntityData data; 
         [SerializeField] protected Animator animator;
