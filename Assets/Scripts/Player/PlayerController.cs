@@ -76,13 +76,15 @@ namespace Player
             var jumpState = new PlayerJumpState(this, null, toZero);
             var onAirState = new PlayerOnAirState(this, null);
             var dashState = new PlayerDashState(this, null, toZero);
+            var deathState = new PlayerDeathState(this);
             _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded));
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
             _sm.AddAnyTransition(dashState, new FuncPredicate(() => isPressingDash && !DashCooldown.IsRunning));
-            _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished));
-            
+            _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished && _character.isGrounded));
+            _sm.AddTransition(dashState, onAirState, new FuncPredicate(() => dashState.IsFinished && !_character.isGrounded));
+            _sm.AddAnyTransition(deathState, new FuncPredicate(() => Health.IsDead));
 
             _sm.SetState(idleState);
             #endregion
@@ -91,7 +93,7 @@ namespace Player
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
             inputReader.Jump += OnJump;
-            inputReader.LightAttack += OnLightAttack;
+            inputReader.PrimaryAttack += OnPrimaryAttack;
             inputReader.Reload += OnReload;
             inputReader.Dash += OnDash;
 
@@ -127,9 +129,10 @@ namespace Player
         {
             inputReader.Move -= OnMove;
             inputReader.Jump -= OnJump;
-            inputReader.LightAttack -= OnLightAttack;
+            inputReader.PrimaryAttack -= OnPrimaryAttack;
             inputReader.Reload -= OnReload;
             inputReader.Dash -= OnDash;
+            Health.OnDeath -= OnDeath;
             // _animationSystem.Destroy();
         }
 
@@ -162,7 +165,7 @@ namespace Player
         public void HandleGravity()
         {
             if (_character.isGrounded && currentVelocity <= 0f)
-                currentVelocity = -1f;
+                currentVelocity = -3f;
             else
                 currentVelocity -= _playerStats.GetStat("Gravity") * Time.deltaTime;
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
@@ -194,9 +197,14 @@ namespace Player
             Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-        private void OnLightAttack()
+        private void OnPrimaryAttack()
         {
-            _currentWeapon.Shoot();
+            _currentWeapon.PrimaryAttack();
+        }
+
+        public override void OnDeath()
+        {
+            
         }
     }
 }

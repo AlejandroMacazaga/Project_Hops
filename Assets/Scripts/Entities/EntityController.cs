@@ -16,7 +16,7 @@ namespace Entities {
             animator = GetComponent<Animator>();
         }
 
-        protected virtual void OnDeath()
+        public virtual void OnDeath()
         {
             // noop
         }

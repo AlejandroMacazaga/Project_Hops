@@ -2,5 +2,6 @@
 {
     public interface IEntityController
     {
+        void OnDeath();
     }
 }

@@ -10,8 +10,8 @@ namespace Input
         public event UnityAction<Vector2, bool> Look = delegate { };
         public event UnityAction<bool> Jump = delegate { };
         public event UnityAction<bool> Dash = delegate { };
-        public event UnityAction LightAttack = delegate { };
-        public event UnityAction HeavyAttack = delegate { };
+        public event UnityAction PrimaryAttack = delegate { };
+        public event UnityAction SecondaryAttack = delegate { };
         public event UnityAction<bool> Reload = delegate { };
 
         PlayerInputActions _inputActions;
@@ -40,15 +40,15 @@ namespace Input
 
         bool IsDeviceMouse(InputAction.CallbackContext context) => context.control.device.name == "Mouse";
 
-        public void OnLightAttack(InputAction.CallbackContext context) {
+        public void OnPrimaryAttack(InputAction.CallbackContext context) {
             if (context.phase == InputActionPhase.Started) {
-                LightAttack.Invoke();
+                PrimaryAttack.Invoke();
             }
         }
 
-        public void OnHeavyAttack(InputAction.CallbackContext context) {
+        public void OnSecondaryAttack(InputAction.CallbackContext context) {
             if (context.phase == InputActionPhase.Started) {
-                HeavyAttack.Invoke();
+                SecondaryAttack.Invoke();
             }
         }
 

@@ -13,6 +13,7 @@ namespace Entities
         [SerializeField]
         float maxHealthPoints;
 
+        public bool IsDead => healthPoints <= 0;
         public event UnityAction OnDeath;
 
         public event UnityAction<float> OnOverheal;

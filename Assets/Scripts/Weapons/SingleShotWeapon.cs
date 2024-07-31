@@ -28,14 +28,7 @@ namespace Weapons
             _weaponSettings.projectileSettings = settings;
         }
 
-        public void Reload()
-        {
-            if (_reloadTimer.IsRunning) return;
-            _reloadTimer.InitialTime = _weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed");
-            _reloadTimer.Start();
-        }
-        
-        public void Shoot()
+        public void PrimaryAttack()
         {
             if (!_reloadTimer.IsFinished()) return;
             if (_currentBullets == 0) Reload();
@@ -45,5 +38,18 @@ namespace Weapons
             flyweight.transform.rotation = _camera.transform.rotation;
             _currentBullets -= 1;
         }
+
+        public void SecondaryAttack()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Reload()
+        {
+            if (_reloadTimer.IsRunning) return;
+            _reloadTimer.InitialTime = _weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed");
+            _reloadTimer.Start();
+        }
+        
     }
 }
