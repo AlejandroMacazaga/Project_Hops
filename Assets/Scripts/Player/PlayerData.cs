@@ -2,7 +2,7 @@
 
 namespace Player
 {
-    [CreateAssetMenu(menuName = "Player/PlayerData")]
+    [CreateAssetMenu(menuName = "Entities/Player/PlayerData")]
     public class PlayerData : Entities.EntityData
     {
         [Header("Ground Movement Data")]

@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Entities
 {
-    public interface IDamageable
+    public interface IVisitable
     {
-        void Accept(IDamager damage)
+        void Accept(IVisitor visitor)
         {
             
         }

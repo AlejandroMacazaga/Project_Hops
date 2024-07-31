@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 namespace Entities
 {
-    public class HealthComponent : MonoBehaviour, IDamageable
+    public class HealthComponent : MonoBehaviour, IVisitable
     {
         [SerializeField]
         float healthPoints;
@@ -36,9 +36,9 @@ namespace Entities
         }
 
 
-        public void Accept(IDamager damage)
+        public void Accept(IVisitor damage)
         {
-            damage.Damage(this);
+            damage.Visit(this);
         }
     }
 

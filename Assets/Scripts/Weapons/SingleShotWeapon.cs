@@ -33,7 +33,6 @@ namespace Weapons
             if (!_reloadTimer.IsFinished()) return;
             if (_currentBullets == 0) Reload();
             var flyweight = (Projectile)FlyweightManager.Spawn(_weaponSettings.projectileSettings);
-            flyweight.SetDamage(_owner.PlayerStats.GetStat("Damage"));
             flyweight.transform.position = _camera.transform.position;
             flyweight.transform.rotation = _camera.transform.rotation;
             _currentBullets -= 1;
