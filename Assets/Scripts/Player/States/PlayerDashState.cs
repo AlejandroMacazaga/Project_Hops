@@ -39,7 +39,8 @@ namespace Player.States
         {
             Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
             _timer.Stop();
-            Controller.DashCooldown.Start();
+            if(Controller.Character.isGrounded) Controller.DashCooldown.Start();
+            else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
             Controller.fpCamera.IsBodyLocked = false;
         }
 

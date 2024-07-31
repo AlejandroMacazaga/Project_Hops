@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Reflection;
+using Entities;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utils;
@@ -13,17 +16,12 @@ namespace Projectiles
         void OnEnable() {
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
         }
-
-        public void SetDamage(float multiplier)
-        {
-            currentDamage = settings.damage * multiplier;
-        }
         
         void Update() {
             transform.Translate(Vector3.forward * (settings.speed * Time.deltaTime));
         }
 
-        void OnCollisionEnter(Collision other)
+        void OnTriggerEnter(Collider other)
         {
             StopCoroutine(nameof(DespawnAfterDelay));
             FlyweightManager.ReturnToPool(this);

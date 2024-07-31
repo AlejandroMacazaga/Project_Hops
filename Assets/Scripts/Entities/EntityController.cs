@@ -8,12 +8,10 @@ namespace Entities {
     {
         [Header("Entity configuration")]
         [SerializeField] protected EntityData data; 
-        [SerializeField] protected Animator animator;
         protected HealthComponent Health;
         public virtual void Awake()
         {
             PrepareHealth();
-            animator = GetComponent<Animator>();
         }
 
         public virtual void OnDeath()
@@ -27,7 +25,13 @@ namespace Entities {
             Health.SetValues(data.healthData);
             Health.OnDeath += OnDeath;
         }
-
-      
+    }
+    
+    public enum EntityTeam
+    {
+        Player,
+        Ally,
+        Enemy,
+        Environment
     }
 }
