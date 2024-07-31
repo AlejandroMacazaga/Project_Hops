@@ -12,8 +12,8 @@ namespace Entities
         
         public void Visit(object o)
         {
-            MethodInfo damageMethod = GetType().GetMethod("Damage", new Type[] { o.GetType() });
-            if (damageMethod != null && damageMethod != GetType().GetMethod("Damage", new Type[] { typeof(object) }))
+            MethodInfo damageMethod = GetType().GetMethod("Visit", new Type[] { o.GetType() });
+            if (damageMethod != null && damageMethod != GetType().GetMethod("Visit", new Type[] { typeof(object) }))
             {
                 damageMethod.Invoke(this, new object[] { o });
             }
