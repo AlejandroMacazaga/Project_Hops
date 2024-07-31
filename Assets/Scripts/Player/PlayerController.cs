@@ -46,8 +46,11 @@ namespace Player
         [SerializedDictionary("Name", "Animation Clips")]
         public SerializedDictionary<string, AnimationClip> animations;
 
+        [FormerlySerializedAs("projectileWeaponSettings")]
         [Header("Weapon data")] 
         [SerializeField] private WeaponSettings weaponSettings;
+
+        [SerializeField] private ProjectileSettings projectileSettings;
         
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
@@ -88,7 +91,7 @@ namespace Player
 
             _sm.SetState(idleState);
             #endregion
-            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject);
+            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject, projectileSettings);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;

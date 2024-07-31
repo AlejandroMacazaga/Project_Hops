@@ -7,9 +7,10 @@ namespace Entities
     {
         [SerializeField] private DamageComponent damageComponent;
         
-        void OnTriggerEnter(Collider collision)
+        void OnTriggerEnter (Collider other)
         {
-            if (collision.TryGetComponent<IVisitable>(out var visitable))
+            Debug.Log("Just collided");
+            if (other.TryGetComponent<IVisitable>(out var visitable))
             {
                 visitable.Accept(damageComponent);
             }
