@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   healthData:
-    healthPoints: 0
-    maxHealthPoints: 0
+    healthPoints: 100
+    maxHealthPoints: 100
   speed: 10
   acceleration: 0
-  jumpForce: 4
-  gravity: 20
-  rotationSpeed: 0.1
+  jumpForce: 8
+  gravity: 40
   damage: 1
   attackSpeed: 0.1
   defense: 0

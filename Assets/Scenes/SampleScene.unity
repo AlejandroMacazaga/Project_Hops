@@ -265,7 +265,7 @@ MonoBehaviour:
   fpCamera: {fileID: 2072133943}
   currentDirection: {x: 0, y: 0}
   currentVelocity: 0
-  maxVelocity: 6
+  maxVelocity: 30
   currentAirSpeed: {x: 0, y: 0}
   animations:
     _serializedList:

@@ -12,7 +12,11 @@ namespace Utils.StateMachine
         public void Update()
         {
             var transition = GetTransition();
-            if (transition != null) ChangeState(transition.To);
+            if (transition != null)
+            {
+                ChangeState(transition.To);
+                transition.TransitionalAction?.Invoke();
+            }
             
             _current.State?.Update();
         }
@@ -59,9 +63,19 @@ namespace Utils.StateMachine
             GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
         }
         
+        public void AddTransition(IState from, IState to, Action transitionalAction, IPredicate condition)
+        {
+            GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition, transitionalAction);
+        }
+        
         public void AddAnyTransition(IState to, IPredicate condition)
         {
             _anyTransitions.Add(new Transition(GetOrAddNode(to).State, condition));
+        }
+        
+        public void AddAnyTransition(IState to, IPredicate condition, Action transitionalAction)
+        {
+            _anyTransitions.Add(new Transition(GetOrAddNode(to).State, condition, transitionalAction));
         }
 
         private StateNode GetOrAddNode(IState state)
@@ -91,6 +105,11 @@ namespace Utils.StateMachine
             public void AddTransition(IState to, IPredicate condition)
             {
                 Transitions.Add(new Transition(to, condition));
+            }
+            
+            public void AddTransition(IState to, IPredicate condition, Action transitionalAction)
+            {
+                Transitions.Add(new Transition(to, condition, transitionalAction));
             }
         }
     }
