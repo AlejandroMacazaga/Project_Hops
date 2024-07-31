@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Utils.Flyweight
 {
+    [CreateAssetMenu(menuName = "FlyweightSettings")]
     public abstract class FlyweightSettings : ScriptableObject {
         public string type;
         public GameObject prefab;

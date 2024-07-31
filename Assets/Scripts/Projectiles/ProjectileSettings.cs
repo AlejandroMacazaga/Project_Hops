@@ -9,8 +9,9 @@ using Utils.Flyweight;
 namespace Projectiles
 {
     [CreateAssetMenu(menuName = "Projectiles/Projectile")]
-    public class ProjectileSettings : FlyweightSettings
+    public class ProjectileSettings : FlyweightSettings, IProjectile
     {
+        public LayerMask toIgnore;
         public float despawnDelay = 5f;
         public float speed = 10f;
         public override Flyweight Create() {
