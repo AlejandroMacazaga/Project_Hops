@@ -19,7 +19,7 @@ namespace Entities
         public event UnityAction<float> OnOverheal;
         public void DamageReceived(float damage)
         {
-            healthPoints = damage;
+            healthPoints -= damage;
             if (healthPoints <= 0) OnDeath?.Invoke();
         }
 

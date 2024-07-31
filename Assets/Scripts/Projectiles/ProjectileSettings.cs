@@ -8,7 +8,7 @@ using Utils.Flyweight;
 
 namespace Projectiles
 {
-    [CreateAssetMenu(menuName = "Player/Projectile")]
+    [CreateAssetMenu(menuName = "Projectiles/Projectile")]
     public class ProjectileSettings : FlyweightSettings
     {
         public float despawnDelay = 5f;

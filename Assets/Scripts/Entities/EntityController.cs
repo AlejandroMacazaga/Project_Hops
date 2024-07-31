@@ -23,7 +23,6 @@ namespace Entities {
         {
             if (!Health) Health = GetComponent<HealthComponent>();
             Health.SetValues(data.healthData);
-            Health.OnDeath += OnDeath;
         }
     }
     
