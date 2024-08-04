@@ -1,5 +1,6 @@
 using System;
 using AYellowpaper.SerializedCollections;
+using Cinemachine;
 using Entities;
 using Input;
 using Player.States;
@@ -18,7 +19,7 @@ namespace Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : EntityController
     {
-        private new PlayerData data => (PlayerData)base.data;
+        private new PlayerData Data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
         private CharacterController _character;
@@ -36,7 +37,7 @@ namespace Player
         [SerializeField] private InputReader inputReader;
 
         [Header("First Person Camera")]
-        public FirstPersonCamera fpCamera;
+        public CinemachineFirstPerson fpScript;
         
         [Header("Movement values")]
         public Vector2 currentDirection;
@@ -48,7 +49,7 @@ namespace Player
 
         [FormerlySerializedAs("projectileWeaponSettings")]
         [Header("Weapon data")] 
-        [SerializeField] private WeaponSettings weaponSettings;
+        [SerializeField] private RaycastWeaponSettings weaponSettings;
 
         [SerializeField] private ProjectileSettings projectileSettings;
         
@@ -66,7 +67,7 @@ namespace Player
             base.Awake();
             _character = GetComponent<CharacterController>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
-            _playerStats = new PlayerStats(data);
+            _playerStats = new PlayerStats(Data);
             StatModifier toZero = new(StatModifier.ModifierType.Zero);
             
             #region Cooldowns
@@ -91,7 +92,8 @@ namespace Player
 
             _sm.SetState(idleState);
             #endregion
-            _currentWeapon = new SingleShotWeapon(weaponSettings, this, fpCamera.gameObject, projectileSettings);
+            // _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
+            _currentWeapon = new ReaperMeleeWeapon(this, weaponSettings);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;

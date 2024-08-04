@@ -11,14 +11,14 @@ namespace Weapons
         private readonly WeaponSettings _weaponSettings;
         private readonly ProjectileSettings _projectileSettings;
         private readonly PlayerController _owner;
-        private readonly GameObject _camera;
+        private readonly Camera _camera;
         private readonly CountdownTimer _reloadTimer;
         private int _currentBullets;
-        public SingleShotWeapon(WeaponSettings weaponSettings, PlayerController owner, GameObject camera, ProjectileSettings projectileSettings)
+        public SingleShotWeapon(WeaponSettings weaponSettings, PlayerController owner, ProjectileSettings projectileSettings)
         {
             _weaponSettings = weaponSettings;
             _owner = owner;
-            _camera = camera;
+            _camera = Camera.current;
             _projectileSettings = projectileSettings;
             _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed"));
             _currentBullets = weaponSettings.magazineSize;
@@ -30,8 +30,8 @@ namespace Weapons
             if (!_reloadTimer.IsFinished()) return;
             if (_currentBullets == 0) Reload();
             var flyweight = (Projectile)FlyweightManager.Spawn(_projectileSettings);
-            flyweight.transform.position = _camera.transform.position;
-            flyweight.transform.rotation = _camera.transform.rotation;
+            flyweight.transform.position = _camera.transform.localPosition;
+            flyweight.transform.rotation = _camera.transform.localRotation;
             _currentBullets -= 1;
         }
 
