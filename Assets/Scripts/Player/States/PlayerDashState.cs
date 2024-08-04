@@ -31,7 +31,7 @@ namespace Player.States
             Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
-            Controller.fpCamera.IsBodyLocked = true;
+            Controller.fpScript.IsBodyLocked = true;
             //controller.AnimationSystem.PlayOneShot(animation, true);
         }
 
@@ -41,7 +41,7 @@ namespace Player.States
             _timer.Stop();
             if(Controller.Character.isGrounded) Controller.DashCooldown.Start();
             else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
-            Controller.fpCamera.IsBodyLocked = false;
+            Controller.fpScript.IsBodyLocked = false;
         }
 
         public override void Update()

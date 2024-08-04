@@ -36,6 +36,11 @@ namespace Player
             isBodyLocked = false;
             playerInputs.EnablePlayerActions();
         }
+
+        void Start()
+        {
+            fpCamera = Camera.current;
+        }
         
         
 

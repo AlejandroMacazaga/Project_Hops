@@ -8,13 +8,13 @@ namespace Weapons
     public class ReaperMeleeWeapon : IWeapon
     {
         private readonly RaycastWeaponSettings _settings;
-        private readonly Camera _camera;
+        private readonly Camera _spawnPoint;
         private readonly PlayerController _owner;
         private List<DamageComponent> _damageList;
         
         public void PrimaryAttack()
         {
-            
+            Debug.Log(FindByRaycast());
         }
 
         public void SecondaryAttack()
@@ -30,15 +30,17 @@ namespace Weapons
         public ReaperMeleeWeapon(PlayerController owner, RaycastWeaponSettings settings)
         {
             _owner = owner;
-            _camera = _owner?.fpCamera?.gameObject.GetComponent<Camera>();
+            _spawnPoint = Camera.main;
+            Debug.Log(_spawnPoint);
             _settings = settings;
         }
 
         private IVisitable FindByRaycast()
         {
+            Debug.DrawRay(_spawnPoint.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), _spawnPoint.transform.forward * _settings.range, Color.red, 10f);
             return Physics.Raycast(
-                _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)),
-                _owner.fpCamera.transform.forward,
+                _spawnPoint.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)),
+                 _spawnPoint.transform.forward,
                 out var hit,
                 _settings.range) ? hit.transform.GetComponent<IVisitable>() : default;
         }

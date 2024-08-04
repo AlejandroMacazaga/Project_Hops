@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44c900088e70414290342b9ecc0aefd6, type: 3}
-  m_Name: Basic Projectile
+  m_Script: {fileID: 11500000, guid: fd054ee41cf14b01bc8fdda95dda9e55, type: 3}
+  m_Name: New Raycast Weapon Settings
   m_EditorClassIdentifier: 
-  type: Basic
-  prefab: {fileID: 4375108616942057391, guid: a46e48334638ad44e8a3021b072a7b8b, type: 3}
-  toIgnore:
-    serializedVersion: 2
-    m_Bits: 192
-  despawnDelay: 5
-  speed: 50
+  magazineSize: 999
+  rateOfFire: 1
+  reloadSpeed: 0
+  prefab: {fileID: 0}
+  range: 68
+  damage: {fileID: 11400000, guid: b6329005469c3d64a8c4c5f3f5e66157, type: 2}
