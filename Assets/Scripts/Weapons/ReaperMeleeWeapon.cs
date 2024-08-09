@@ -31,7 +31,6 @@ namespace Weapons
         {
             _owner = owner;
             _spawnPoint = Camera.main;
-            Debug.Log(_spawnPoint);
             _settings = settings;
         }
 

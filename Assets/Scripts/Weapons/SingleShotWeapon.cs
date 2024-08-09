@@ -36,6 +36,7 @@ namespace Weapons
         }
 
         public void SecondaryAttack()
+        
         {
             throw new System.NotImplementedException();
         }

@@ -32,7 +32,6 @@ namespace Entities
         {
             healthComponent.DamageReceived(amount);
         }
-        
 
         public bool CanDamage(EntityTeam other)
         {

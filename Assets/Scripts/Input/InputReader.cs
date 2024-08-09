@@ -14,6 +14,8 @@ namespace Input
         public event UnityAction SecondaryAttack = delegate { };
         public event UnityAction<bool> Reload = delegate { };
 
+        public event UnityAction Interact = delegate { };
+
         PlayerInputActions _inputActions;
         
         public Vector3 Direction => _inputActions.Player.Move.ReadValue<Vector2>();
@@ -49,6 +51,14 @@ namespace Input
         public void OnSecondaryAttack(InputAction.CallbackContext context) {
             if (context.phase == InputActionPhase.Started) {
                 SecondaryAttack.Invoke();
+            }
+        }
+
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                Interact.Invoke();
             }
         }
 
