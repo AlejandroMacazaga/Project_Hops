@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Entities;
@@ -6,6 +7,7 @@ using Input;
 using Player.States;
 using Projectiles;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
@@ -38,6 +40,9 @@ namespace Player
 
         [Header("First Person Camera")]
         public CinemachineFirstPerson fpScript;
+
+        private Camera _camera;
+        [SerializeField] private float interactableRange = 99f;
         
         [Header("Movement values")]
         public Vector2 currentDirection;
@@ -60,6 +65,8 @@ namespace Player
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
         public bool isOnUnstableGround = false;
+
+        private IInteractable _currentInteractable;
 
         public PlayerCooldownTimer DashCooldown;
         public override void Awake()
@@ -101,11 +108,18 @@ namespace Player
             inputReader.PrimaryAttack += OnPrimaryAttack;
             inputReader.Reload += OnReload;
             inputReader.Dash += OnDash;
+            inputReader.Interact += OnInteract;
 
             #endregion
 
+            _camera = Camera.main;
 
+        }
 
+        private void OnInteract()
+        {
+            Debug.Log("Hello");
+            _currentInteractable?.Interact();
         }
 
         private void OnReload(bool pressed)
@@ -116,6 +130,7 @@ namespace Player
         private void OnEnable()
         {
             EnableCursor(false);
+            StartCoroutine(nameof(HandleInteractableSearch));
         }
 
         private void Update()
@@ -137,7 +152,9 @@ namespace Player
             inputReader.PrimaryAttack -= OnPrimaryAttack;
             inputReader.Reload -= OnReload;
             inputReader.Dash -= OnDash;
+            inputReader.Interact -= OnInteract;
             Health.OnDeath -= OnDeath;
+            StopCoroutine(nameof(HandleInteractableSearch));
             // _animationSystem.Destroy();
         }
 
@@ -155,6 +172,51 @@ namespace Player
 
             _character.Move(move * Time.deltaTime);
         }
+
+        public IEnumerator HandleInteractableSearch()
+        {
+            while (true)
+            {
+                if(Physics.Raycast(
+                    _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)),
+                    _camera.transform.forward,
+                    out var hit,
+                    interactableRange))
+                {
+                    if (hit.transform.TryGetComponent<IInteractable>(out var interactable))
+                    {
+                        Debug.Log("This is an interactable component");
+                        if (interactable != _currentInteractable)
+                        {
+                            _currentInteractable?.IsNotHovered();
+                            _currentInteractable = interactable;
+                            
+                        }
+                        _currentInteractable?.IsHovered();
+                        // TODO: Do what needs to be done when something can be interacted with
+                    }
+                    else
+                    {
+                        if (_currentInteractable != null)
+                        {
+                            _currentInteractable?.IsNotHovered();
+                            _currentInteractable = null;
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    if (_currentInteractable != null)
+                    {
+                        _currentInteractable.IsNotHovered();
+                        _currentInteractable = null;
+                    }
+                }
+                yield return Utils.Helpers.GetWaitForSeconds(0.1f);
+            }
+        }
+        
 
         public void HandleAirMovement()
         {
