@@ -37,7 +37,7 @@ namespace Player
         
         
 
-        private void Update()
+        private void LateUpdate()
         {
             HandleCamera();
         }
