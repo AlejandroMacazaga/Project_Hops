@@ -11,6 +11,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
+using Utils.EventChannel;
 using Utils.StateMachine;
 using Utils.Timers;
 using Weapons;
@@ -49,6 +50,8 @@ namespace Player
         [SerializeField] private float currentVelocity = 0f;
         [SerializeField] private float maxVelocity = 6f;
         [SerializeField] private Vector2 currentAirSpeed;
+        [SerializeField] private float coyoteTime = 0.1f;
+        private CountdownTimer _coyoteTimeTimer;
         [SerializedDictionary("Name", "Animation Clips")]
         public SerializedDictionary<string, AnimationClip> animations;
 
@@ -65,7 +68,7 @@ namespace Player
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
         public bool isOnUnstableGround = false;
-
+        
         private IInteractable _currentInteractable;
 
         public PlayerCooldownTimer DashCooldown;
@@ -79,6 +82,7 @@ namespace Player
             
             #region Cooldowns
             DashCooldown = new PlayerCooldownTimer(_playerStats, "DashCooldown");
+            _coyoteTimeTimer = new CountdownTimer(coyoteTime);
             #endregion
             
             #region State machine configuration
@@ -88,9 +92,10 @@ namespace Player
             var onAirState = new PlayerOnAirState(this, null);
             var dashState = new PlayerDashState(this, null, toZero);
             var deathState = new PlayerDeathState(this);
-            _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded));
+            _sm.AddTransition(idleState, onAirState,  StartCoyoteTimer, new FuncPredicate(() => !_character.isGrounded));
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
+            _sm.AddTransition(onAirState, jumpState, new FuncPredicate(() => _coyoteTimeTimer.IsRunning && isPressingJump));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
             _sm.AddAnyTransition(dashState, new FuncPredicate(() => isPressingDash && !DashCooldown.IsRunning));
             _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished && _character.isGrounded));
@@ -116,9 +121,13 @@ namespace Player
 
         }
 
+        private void StartCoyoteTimer()
+        {
+            _coyoteTimeTimer.Start();
+        }
+
         private void OnInteract()
         {
-            Debug.Log("Hello");
             _currentInteractable?.Interact();
         }
 
@@ -209,7 +218,7 @@ namespace Player
                 {
                     if (_currentInteractable != null)
                     {
-                        _currentInteractable.IsNotHovered();
+                        _currentInteractable?.IsNotHovered();
                         _currentInteractable = null;
                     }
                 }

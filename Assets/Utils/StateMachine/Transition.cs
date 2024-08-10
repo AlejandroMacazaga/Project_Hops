@@ -18,6 +18,8 @@ namespace Utils.StateMachine
 
         public Transition(IState to, IPredicate condition, Action transitionalAction)
         {
+            To = to;
+            Condition = condition;
             TransitionalAction = transitionalAction;
         }
     }
