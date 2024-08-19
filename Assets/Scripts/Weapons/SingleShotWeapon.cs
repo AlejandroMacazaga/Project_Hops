@@ -1,6 +1,7 @@
 using Player;
 using Projectiles;
 using UnityEngine;
+using Utils.EventBus;
 using Utils.Flyweight;
 using Utils.Timers;
 
@@ -18,27 +19,38 @@ namespace Weapons
         {
             _weaponSettings = weaponSettings;
             _owner = owner;
-            _camera = Camera.current;
+            _camera = Camera.main;
             _projectileSettings = projectileSettings;
             _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat("ReloadSpeed"));
             _currentBullets = weaponSettings.magazineSize;
-            _reloadTimer.OnTimerStop += () => _currentBullets = weaponSettings.magazineSize;
+            EventBus<AmmoChangeEvent>.Raise(new AmmoChangeEvent(_currentBullets));
+            _reloadTimer.OnTimerStop += () =>
+            {
+                _currentBullets = weaponSettings.magazineSize;
+                EventBus<AmmoChangeEvent>.Raise(new AmmoChangeEvent(_currentBullets));
+            };
+            
         }
 
         public void PrimaryAttack()
         {
             if (!_reloadTimer.IsFinished()) return;
-            if (_currentBullets == 0) Reload();
+            if (_currentBullets == 0)
+            {
+                Reload();
+                return;
+            }
             var flyweight = (Projectile)FlyweightManager.Spawn(_projectileSettings);
             flyweight.transform.position = _camera.transform.localPosition;
             flyweight.transform.rotation = _camera.transform.localRotation;
             _currentBullets -= 1;
+            EventBus<AmmoChangeEvent>.Raise(new AmmoChangeEvent(_currentBullets));
         }
 
         public void SecondaryAttack()
         
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void Reload()

@@ -27,5 +27,7 @@ namespace Utils.EventChannel
     }
 
     public class EventListener : EventListener<Empty> { }
+    
+    public class IntEventListener : EventListener<int> { }
 
 }

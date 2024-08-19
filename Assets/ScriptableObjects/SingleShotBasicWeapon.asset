@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2ae40139c7df445865a03af468fa26, type: 3}
   m_Name: SingleShotBasicWeapon
   m_EditorClassIdentifier: 
-  projectileSettings: {fileID: 11400000, guid: 44fcb61c14e3e474e8bb8e96a1d373f7, type: 2}
   magazineSize: 10
   rateOfFire: 5
   reloadSpeed: 2

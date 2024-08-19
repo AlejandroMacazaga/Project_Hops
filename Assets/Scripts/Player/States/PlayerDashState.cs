@@ -28,6 +28,7 @@ namespace Player.States
         public override void OnEnter()
         {
             _timer.Start();
+            Controller.SetVelocity(0f);
             Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
