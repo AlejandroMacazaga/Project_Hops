@@ -17,4 +17,14 @@ namespace Utils.EventBus
         public EntityController DamageDealer;
         public int Damage;
     }
+
+    public struct AmmoChangeEvent : IEvent
+    {
+        public readonly int CurrentAmmo;
+
+        public AmmoChangeEvent(int currentAmmo)
+        {
+            CurrentAmmo = currentAmmo;
+        }
+    }
 }

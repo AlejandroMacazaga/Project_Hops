@@ -57,7 +57,7 @@ namespace Player
 
         [FormerlySerializedAs("projectileWeaponSettings")]
         [Header("Weapon data")] 
-        [SerializeField] private RaycastWeaponSettings weaponSettings;
+        [SerializeField] private WeaponSettings weaponSettings;
 
         [SerializeField] private ProjectileSettings projectileSettings;
         
@@ -92,7 +92,7 @@ namespace Player
             var onAirState = new PlayerOnAirState(this, null);
             var dashState = new PlayerDashState(this, null, toZero);
             var deathState = new PlayerDeathState(this);
-            _sm.AddTransition(idleState, onAirState,  StartCoyoteTimer, new FuncPredicate(() => !_character.isGrounded));
+            _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded), StartCoyoteTimer);
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(onAirState, jumpState, new FuncPredicate(() => _coyoteTimeTimer.IsRunning && isPressingJump));
@@ -105,7 +105,7 @@ namespace Player
             _sm.SetState(idleState);
             #endregion
             // _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
-            _currentWeapon = new ReaperMeleeWeapon(this, weaponSettings);
+            _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
