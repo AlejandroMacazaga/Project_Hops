@@ -16,6 +16,7 @@ namespace Projectiles
         
 
         public float currentDamage;
+        
         void OnEnable() {
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
             _lastPosition = transform.position;
@@ -27,7 +28,7 @@ namespace Projectiles
             _lastPosition = transform.position;
         }
 
-        void OnTriggerEnter()
+        void OnTriggerEnter(Collider other)
         {
             StopCoroutine(nameof(DespawnAfterDelay));
             FlyweightManager.ReturnToPool(this);

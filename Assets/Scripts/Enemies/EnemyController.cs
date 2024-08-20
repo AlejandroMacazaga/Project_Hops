@@ -1,4 +1,7 @@
 using Entities;
+using Items;
+using UnityEngine;
+using Utils.Flyweight;
 
 namespace Enemies
 {
@@ -20,6 +23,8 @@ namespace Enemies
         
         public override void OnDeath()
         {
+            var flyweight = (Pickup)FlyweightManager.Spawn(data.pickupSettings);
+            flyweight.transform.position = transform.position;
             Destroy(gameObject);
         }
     }

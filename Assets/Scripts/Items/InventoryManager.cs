@@ -24,7 +24,7 @@ namespace Items
         }
         
         
-        public void Add(ResourceItem item, int quantity)
+        public void Add(ResourceItem item, int quantity = 1)
         {
             if (resourceInventory.ContainsKey(item))
             {
@@ -39,7 +39,7 @@ namespace Items
             }
         }
 
-        public bool Remove(ResourceItem item, int quantity)
+        public bool Remove(ResourceItem item, int quantity = 1)
         {
             if (!resourceInventory.ContainsKey(item)) return false;
             var currentQuantity = resourceInventory[item];
@@ -49,7 +49,7 @@ namespace Items
             return true;
         }
         
-        public void Add(ConsumableItem item, int quantity)
+        public void Add(ConsumableItem item, int quantity = 1)
         {
             if (consumableInventory.ContainsKey(item))
             {
@@ -64,13 +64,23 @@ namespace Items
             }
         }
 
-        public bool Remove(ConsumableItem item, int quantity)
+        public bool Remove(ConsumableItem item, int quantity = 1)
         {
             if (!consumableInventory.ContainsKey(item)) return false;
             var currentQuantity = consumableInventory[item];
             if (quantity > currentQuantity) return false;
             consumableInventory[item] = quantity - currentQuantity;
             EventBus<ConsumableInventoryUpdateEvent>.Raise(new ConsumableInventoryUpdateEvent() {Item = item, Quantity = quantity - currentQuantity});
+            return true;
+        }
+
+        public bool Add(KeyItem item, int quantity = 1)
+        {
+            if (!keyInventory.ContainsKey(item)) return false;
+            var currentQuantity = keyInventory[item];
+            if (quantity > currentQuantity) return false;
+            keyInventory[item] = quantity - currentQuantity;
+            EventBus<KeyInventoryUpdateEvent>.Raise(new KeyInventoryUpdateEvent() {Item = item, Quantity = quantity - currentQuantity});
             return true;
         }
     }
@@ -85,6 +95,12 @@ namespace Items
     public struct ResourceInventoryUpdateEvent : IEvent
     {
         public ResourceItem Item;
+        public int Quantity;
+    }
+
+    public struct KeyInventoryUpdateEvent : IEvent
+    {
+        public KeyItem Item;
         public int Quantity;
     }
 }

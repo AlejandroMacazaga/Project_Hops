@@ -8,7 +8,7 @@ using Utils.Flyweight;
 
 namespace Projectiles
 {
-    [CreateAssetMenu(menuName = "Projectiles/Projectile")]
+    [CreateAssetMenu(menuName = "Flyweight/Projectile")]
     public class ProjectileSettings : FlyweightSettings, IProjectile
     {
         public LayerMask toIgnore;
