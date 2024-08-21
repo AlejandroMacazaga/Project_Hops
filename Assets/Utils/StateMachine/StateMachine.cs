@@ -52,7 +52,7 @@ namespace Utils.StateMachine
         
         Transition GetTransition() {
             foreach (var transition in _anyTransitions)
-                if (transition.Evaluate())
+                if (transition.Evaluate() && transition.To != CurrentState)
                     return transition;
 
             foreach (var transition in _currentNode.Transitions) {

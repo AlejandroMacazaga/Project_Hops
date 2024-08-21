@@ -43,6 +43,7 @@ namespace Player.States
             if(Controller.Character.isGrounded) Controller.DashCooldown.Start();
             else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
             Controller.fpScript.IsBodyLocked = false;
+            Controller.IsPressingDash = false;
         }
 
         public override void Update()

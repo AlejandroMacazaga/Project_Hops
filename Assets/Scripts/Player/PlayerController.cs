@@ -8,6 +8,7 @@ using Player.States;
 using Projectiles;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
@@ -32,7 +33,17 @@ namespace Player
         public PlayerStats PlayerStats => _playerStats;
         public AnimationSystem AnimationSystem => _animationSystem;
         public StateMachine StateMachine => _sm;
-        public bool IsPressingJump => isPressingJump;
+        public bool IsPressingJump
+        {
+            get => isPressingJump;
+            set => isPressingJump = value;
+        }
+
+        public bool IsPressingDash
+        {
+            get => isPressingDash;
+            set => isPressingDash = value;
+        }
 
         private IWeapon _currentWeapon;
 
@@ -126,14 +137,36 @@ namespace Player
             _coyoteTimeTimer.Start();
         }
 
-        private void OnInteract()
+        private void OnInteract(ActionState action, IInputInteraction interaction)
         {
-            _currentInteractable?.Interact();
+            switch (action)
+            {
+                case ActionState.Press:
+                    _currentInteractable?.Interact();
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
-        private void OnReload(bool pressed)
+        private void OnReload(ActionState action, IInputInteraction interaction)
         {
-            if (pressed) _currentWeapon.Reload();
+            switch (action)
+            {
+                case ActionState.Press:
+                    _currentWeapon?.Reload();
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         private void OnEnable()
@@ -247,14 +280,38 @@ namespace Player
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 
-        private void OnJump(bool pressed)
+        private void OnJump(ActionState action, IInputInteraction interaction)
         {
-            isPressingJump = pressed;
+            switch (action)
+            {
+                case ActionState.Press:
+                    isPressingJump = true;
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    isPressingJump = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
-        private void OnDash(bool pressed)
+        private void OnDash(ActionState action, IInputInteraction interaction)
         {
-            isPressingDash = pressed;
+            switch (action)
+            {
+                case ActionState.Press:
+                    isPressingDash = true;
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    isPressingDash = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         public void PlayAnimation(AnimationClip clip, bool loop = false)
@@ -273,9 +330,20 @@ namespace Player
             Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-        private void OnPrimaryAttack()
+        private void OnPrimaryAttack(ActionState action, IInputInteraction interaction)
         {
-            _currentWeapon.PrimaryAttack();
+            switch (action)
+            {
+                case ActionState.Press:
+                    _currentWeapon.PrimaryAttack();
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         public override void OnDeath()

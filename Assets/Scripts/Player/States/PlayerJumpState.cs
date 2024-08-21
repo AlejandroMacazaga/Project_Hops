@@ -33,6 +33,7 @@ namespace Player.States
         public override void OnExit()
         {
             Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
+            Controller.IsPressingJump = false;
             _timer.Stop();
         }
 
