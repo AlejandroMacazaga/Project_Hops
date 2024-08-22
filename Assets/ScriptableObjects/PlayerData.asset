@@ -24,6 +24,6 @@ MonoBehaviour:
   attackSpeed: 1
   defense: 1
   reloadSpeed: 1
-  dashMultiplier: 6.1
-  dashDuration: 0.15
+  dashMultiplier: 4
+  dashDuration: 0.1
   dashCooldown: 0.5

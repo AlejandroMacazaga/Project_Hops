@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93968f0833034bbeb9ac4c5f3256452c, type: 3}
-  m_Name: New Basic Enemy Data
+  m_Script: {fileID: 11500000, guid: 2ea4477f4a584b49b1e2c5f6d4b9c5d3, type: 3}
+  m_Name: Test Resource
   m_EditorClassIdentifier: 
-  healthData:
-    healthPoints: 20
-    maxHealthPoints: 20
-  team: 2
-  pickupSettings: {fileID: 11400000, guid: 5c72537df5b9fc045a291f0310b817b8, type: 2}
+  itemName: Dick And Balls
+  sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
