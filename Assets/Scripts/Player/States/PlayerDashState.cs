@@ -52,7 +52,6 @@ namespace Player.States
             move = Controller.transform.TransformDirection(move);
             move *= Controller.PlayerStats.GetStat("Speed");
             move *= Controller.PlayerStats.GetStat("DashMultiplier");
-            
             Controller.Character.Move(move * Time.deltaTime);
         }
     }
