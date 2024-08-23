@@ -20,13 +20,14 @@ using StateMachine = Utils.StateMachine.StateMachine;
 
 namespace Player
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(CharacterController), typeof(CeilingDetector))]
     public class PlayerController : EntityController
     {
         private new PlayerData Data => (PlayerData)base.data;
 
         private PlayerStats _playerStats;
         private CharacterController _character;
+        private CeilingDetector _ceilingDetector;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
         public CharacterController Character => _character;
@@ -87,6 +88,7 @@ namespace Player
         {
             base.Awake();
             _character = GetComponent<CharacterController>();
+            _ceilingDetector = GetComponent<CeilingDetector>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
             _playerStats = new PlayerStats(Data);
             StatModifier toZero = new(StatModifier.ModifierType.Zero);
@@ -108,6 +110,7 @@ namespace Player
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(onAirState, jumpState, new FuncPredicate(() => _coyoteTimeTimer.IsRunning && isPressingJump));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
+            //_sm.AddTransition(jumpState, onAirState, new FuncPredicate(()=> _ceilingDetector && _ceilingDetector.HitCeiling()), Bonk);
             _sm.AddAnyTransition(dashState, new FuncPredicate(() => isPressingDash && !DashCooldown.IsRunning));
             _sm.AddTransition(dashState, idleState, new FuncPredicate(() => dashState.IsFinished && _character.isGrounded));
             _sm.AddTransition(dashState, onAirState, new FuncPredicate(() => dashState.IsFinished && !_character.isGrounded));
@@ -122,6 +125,7 @@ namespace Player
             inputReader.Move += OnMove;
             inputReader.Jump += OnJump;
             inputReader.PrimaryAttack += OnPrimaryAttack;
+            inputReader.SecondaryAttack += OnSecondaryAttack;
             inputReader.Reload += OnReload;
             inputReader.Dash += OnDash;
             inputReader.Interact += OnInteract;
@@ -131,12 +135,31 @@ namespace Player
             _camera = Camera.main;
 
         }
-
-        private void StartCoyoteTimer()
+        
+        private void OnDestroy()
         {
-            _coyoteTimeTimer.Start();
+            inputReader.Move -= OnMove;
+            inputReader.Jump -= OnJump;
+            inputReader.PrimaryAttack -= OnPrimaryAttack;
+            inputReader.Reload -= OnReload;
+            inputReader.Dash -= OnDash;
+            inputReader.Interact -= OnInteract;
+            Health.OnDeath -= OnDeath;
+            StopCoroutine(nameof(HandleInteractableSearch));
+            // _animationSystem.Destroy();
+        }
+        
+        private void OnEnable()
+        {
+            EnableCursor(false);
+            StartCoroutine(nameof(HandleInteractableSearch));
         }
 
+        private void OnSecondaryAttack(ActionState action, IInputInteraction interaction)
+        {
+            _currentWeapon.SecondaryAttack();
+        }
+        
         private void OnInteract(ActionState action, IInputInteraction interaction)
         {
             switch (action)
@@ -152,7 +175,19 @@ namespace Player
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
         }
+        
+        private void Update()
+        {
+            _sm.Update();
+            // _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
+        }
 
+        
+        private void FixedUpdate()
+        {
+            _sm.FixedUpdate();
+        }
+        
         private void OnReload(ActionState action, IInputInteraction interaction)
         {
             switch (action)
@@ -168,41 +203,70 @@ namespace Player
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
         }
-
-        private void OnEnable()
-        {
-            EnableCursor(false);
-            StartCoroutine(nameof(HandleInteractableSearch));
-        }
-
-        private void Update()
-        {
-            _sm.Update();
-            // _animationSystem.UpdateLocomotion(_character.velocity, Data.MaxSpeed);
-        }
-
         
-        private void FixedUpdate()
+        private void OnJump(ActionState action, IInputInteraction interaction)
         {
-            _sm.FixedUpdate();
+            switch (action)
+            {
+                case ActionState.Press:
+                    isPressingJump = true;
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    isPressingJump = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
-        private void OnDestroy()
+        private void OnDash(ActionState action, IInputInteraction interaction)
         {
-            inputReader.Move -= OnMove;
-            inputReader.Jump -= OnJump;
-            inputReader.PrimaryAttack -= OnPrimaryAttack;
-            inputReader.Reload -= OnReload;
-            inputReader.Dash -= OnDash;
-            inputReader.Interact -= OnInteract;
-            Health.OnDeath -= OnDeath;
-            StopCoroutine(nameof(HandleInteractableSearch));
-            // _animationSystem.Destroy();
+            switch (action)
+            {
+                case ActionState.Press:
+                    isPressingDash = true;
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    isPressingDash = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
-
+        
         private void OnMove(Vector2 dir)
         {
             currentDirection = dir;
+        }
+        
+        private void OnPrimaryAttack(ActionState action, IInputInteraction interaction)
+        {
+            switch (action)
+            {
+                case ActionState.Press:
+                    _currentWeapon.PrimaryAttack();
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+        }
+
+        public override void OnDeath()
+        {
+            
+        }
+
+        private void StartCoyoteTimer()
+        {
+            _coyoteTimeTimer.Start();
         }
 
         public void HandleMovement()
@@ -217,7 +281,7 @@ namespace Player
 
         public IEnumerator HandleInteractableSearch()
         {
-            while (true)
+            while (enabled)
             {
                 if(Physics.Raycast(
                     _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)),
@@ -280,40 +344,6 @@ namespace Player
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 
-        private void OnJump(ActionState action, IInputInteraction interaction)
-        {
-            switch (action)
-            {
-                case ActionState.Press:
-                    isPressingJump = true;
-                    break;
-                case ActionState.Hold:
-                    break;
-                case ActionState.Release:
-                    isPressingJump = false;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
-            }
-        }
-
-        private void OnDash(ActionState action, IInputInteraction interaction)
-        {
-            switch (action)
-            {
-                case ActionState.Press:
-                    isPressingDash = true;
-                    break;
-                case ActionState.Hold:
-                    break;
-                case ActionState.Release:
-                    isPressingDash = false;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
-            }
-        }
-
         public void PlayAnimation(AnimationClip clip, bool loop = false)
         {
             _animationSystem.PlayOneShot(clip, loop);
@@ -330,25 +360,9 @@ namespace Player
             Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-        private void OnPrimaryAttack(ActionState action, IInputInteraction interaction)
+        public void Bonk()
         {
-            switch (action)
-            {
-                case ActionState.Press:
-                    _currentWeapon.PrimaryAttack();
-                    break;
-                case ActionState.Hold:
-                    break;
-                case ActionState.Release:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
-            }
-        }
-
-        public override void OnDeath()
-        {
-            
+            currentVelocity = 0f;
         }
     }
 }
