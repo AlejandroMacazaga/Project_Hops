@@ -17,7 +17,7 @@ namespace Terrain
             Debug.Log("Hello");
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
-            controller.PlayerStats.AddModifier("Gravity", _mod);
+            controller.PlayerStats.AddModifier(PlayerStat.Gravity, _mod);
         }
 
         private void OnTriggerExit(Collider other)
@@ -25,7 +25,7 @@ namespace Terrain
             Debug.Log("Agur");
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
-            controller.PlayerStats.RemoveModifier("Gravity", _mod);
+            controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _mod);
         }
     }
 }

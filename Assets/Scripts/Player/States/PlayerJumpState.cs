@@ -24,15 +24,15 @@ namespace Player.States
         public override void OnEnter()
         {
             
-            Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
+            Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
             _timer.Start();
-            Controller.SetVelocity(Controller.PlayerStats.GetStat("JumpForce"));
+            Controller.SetVelocity(Controller.PlayerStats.GetStat(PlayerStat.JumpForce));
 
         }
 
         public override void OnExit()
         {
-            Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
+            Controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _gravityModifier);
             Controller.IsPressingJump = false;
             _timer.Stop();
         }

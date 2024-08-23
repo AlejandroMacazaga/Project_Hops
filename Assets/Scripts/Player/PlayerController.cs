@@ -70,8 +70,6 @@ namespace Player
         [FormerlySerializedAs("projectileWeaponSettings")]
         [Header("Weapon data")] 
         [SerializeField] private WeaponSettings weaponSettings;
-
-        [SerializeField] private ProjectileSettings projectileSettings;
         
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
@@ -94,7 +92,7 @@ namespace Player
             StatModifier toZero = new(StatModifier.ModifierType.Zero);
             
             #region Cooldowns
-            DashCooldown = new PlayerCooldownTimer(_playerStats, "DashCooldown");
+            DashCooldown = new PlayerCooldownTimer(_playerStats, PlayerStat.DashCooldown);
             _coyoteTimeTimer = new CountdownTimer(coyoteTime);
             #endregion
             
@@ -119,7 +117,7 @@ namespace Player
             _sm.SetState(idleState);
             #endregion
             // _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
-            _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
+            _currentWeapon = new SingleShotWeapon(weaponSettings, this);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
@@ -157,7 +155,7 @@ namespace Player
 
         private void OnSecondaryAttack(ActionState action, IInputInteraction interaction)
         {
-            _currentWeapon.SecondaryAttack();
+            _currentWeapon.Action(WeaponAction.TapSecondaryAttack);
         }
         
         private void OnInteract(ActionState action, IInputInteraction interaction)
@@ -193,7 +191,7 @@ namespace Player
             switch (action)
             {
                 case ActionState.Press:
-                    _currentWeapon?.Reload();
+                    _currentWeapon?.Action(WeaponAction.TapReload);
                     break;
                 case ActionState.Hold:
                     break;
@@ -248,7 +246,7 @@ namespace Player
             switch (action)
             {
                 case ActionState.Press:
-                    _currentWeapon.PrimaryAttack();
+                    _currentWeapon.Action(WeaponAction.TapPrimaryAttack);
                     break;
                 case ActionState.Hold:
                     break;
@@ -273,7 +271,7 @@ namespace Player
         {
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
-            move *= PlayerStats.GetStat("Speed");
+            move *= PlayerStats.GetStat(PlayerStat.Speed);
             move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
@@ -328,7 +326,7 @@ namespace Player
         {
             var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
             move = transform.TransformDirection(move);
-            move *= PlayerStats.GetStat("AirSpeed");
+            move *= PlayerStats.GetStat(PlayerStat.Speed);
             move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
@@ -340,7 +338,7 @@ namespace Player
             if (_character.isGrounded && currentVelocity <= 0f)
                 currentVelocity = -3f;
             else
-                currentVelocity -= _playerStats.GetStat("Gravity") * Time.deltaTime;
+                currentVelocity -= _playerStats.GetStat(PlayerStat.Gravity) * Time.deltaTime;
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 

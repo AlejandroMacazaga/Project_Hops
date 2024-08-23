@@ -1,10 +1,20 @@
 namespace Weapons
 {
     public interface IWeapon
-    { 
-        void PrimaryAttack();
+    {
+        void Action(WeaponAction action);
+    }
 
-        void SecondaryAttack();
-        void Reload();
+    public enum WeaponAction
+    {
+        TapPrimaryAttack,
+        TapSecondaryAttack,
+        TapReload,
+        HoldPrimaryAttack,
+        HoldSecondaryAttack,
+        HoldReload,
+        ReleasePrimaryAttack,
+        ReleaseSecondaryAttack,
+        ReleaseReload,
     }
 }

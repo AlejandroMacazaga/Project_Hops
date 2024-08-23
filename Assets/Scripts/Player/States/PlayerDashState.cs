@@ -16,7 +16,7 @@ namespace Player.States
             this._animation = animation;
             _direction = new Vector2();
             _gravityModifier = gravityModifier;
-            _timer = new CountdownTimer(Controller.PlayerStats.GetStat("DashDuration"));
+            _timer = new CountdownTimer(Controller.PlayerStats.GetStat(PlayerStat.DashDuration));
             _timer.OnTimerStart += () => IsFinished = false;
             _timer.OnTimerStop += () => IsFinished = true;
         }
@@ -29,7 +29,7 @@ namespace Player.States
         {
             _timer.Start();
             Controller.SetVelocity(0f);
-            Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
+            Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
             Controller.fpScript.IsBodyLocked = true;
@@ -38,7 +38,7 @@ namespace Player.States
 
         public override void OnExit()
         {
-            Controller.PlayerStats.RemoveModifier("Gravity", _gravityModifier);
+            Controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _gravityModifier);
             _timer.Stop();
             if(Controller.Character.isGrounded) Controller.DashCooldown.Start();
             else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
@@ -50,8 +50,8 @@ namespace Player.States
         {
             var move = new Vector3(_direction.x, 0 , _direction.y);
             move = Controller.transform.TransformDirection(move);
-            move *= Controller.PlayerStats.GetStat("Speed");
-            move *= Controller.PlayerStats.GetStat("DashMultiplier");
+            move *= Controller.PlayerStats.GetStat(PlayerStat.Speed);
+            move *= Controller.PlayerStats.GetStat(PlayerStat.DashMultiplier);
             Controller.Character.Move(move * Time.deltaTime);
         }
     }

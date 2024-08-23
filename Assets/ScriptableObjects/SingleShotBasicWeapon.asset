@@ -16,3 +16,6 @@ MonoBehaviour:
   rateOfFire: 5
   reloadSpeed: 2
   prefab: {fileID: 0}
+  primaryAttack: {fileID: 11400000, guid: 44fcb61c14e3e474e8bb8e96a1d373f7, type: 2}
+  secondaryAttack: {fileID: 11400000, guid: abb33f1dc69a9044fbc19a508aa47c98, type: 2}
+  damage: 10
