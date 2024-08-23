@@ -28,7 +28,8 @@ namespace Items
         
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<PlayerController>(out var player))
+            
+            if (other.transform.parent && other.transform.parent.TryGetComponent<PlayerController>(out var player))
             {
                 FlyweightManager.ReturnToPool(this);
                 switch (settings.item)
