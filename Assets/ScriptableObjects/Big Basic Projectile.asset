@@ -9,11 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93968f0833034bbeb9ac4c5f3256452c, type: 3}
-  m_Name: New Basic Enemy Data
+  m_Script: {fileID: 11500000, guid: 44c900088e70414290342b9ecc0aefd6, type: 3}
+  m_Name: Big Basic Projectile
   m_EditorClassIdentifier: 
-  healthData:
-    healthPoints: 100
-    maxHealthPoints: 100
-  team: 2
-  pickupSettings: {fileID: 11400000, guid: 5c72537df5b9fc045a291f0310b817b8, type: 2}
+  type: Big
+  prefab: {fileID: 4753846450903252007, guid: a5975654334389c4d96cc382767a16d1, type: 3}
+  toIgnore:
+    serializedVersion: 2
+    m_Bits: 192
+  despawnDelay: 5
+  speed: 20

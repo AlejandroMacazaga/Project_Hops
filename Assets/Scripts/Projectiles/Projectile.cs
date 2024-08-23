@@ -11,15 +11,22 @@ namespace Projectiles
 {
     public class Projectile : Flyweight {
         new ProjectileSettings settings => (ProjectileSettings) base.settings;
-        
+
+        private DamageArea _hitbox;
         private Vector3 _lastPosition;
         
 
         public float currentDamage;
-        
+
+        void Awake()
+        {
+            _hitbox = GetComponent<DamageArea>();
+            
+        }
         void OnEnable() {
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
             _lastPosition = transform.position;
+            _hitbox.damageComponent.amount = currentDamage;
         }
         
         void FixedUpdate() {

@@ -28,8 +28,8 @@ namespace Utils.Timers
     public class PlayerCooldownTimer : Timer
     {
         private PlayerStats _stats;
-        private string _stat;
-        public PlayerCooldownTimer(PlayerStats stats, string stat)
+        private PlayerStat _stat;
+        public PlayerCooldownTimer(PlayerStats stats, PlayerStat stat)
         {
             _stat = stat;
             _stats = stats;

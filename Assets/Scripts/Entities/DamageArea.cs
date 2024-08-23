@@ -5,7 +5,7 @@ namespace Entities
     
     public class DamageArea : MonoBehaviour
     {
-        [SerializeField] private DamageComponent damageComponent;
+        public DamageComponent damageComponent;
         
         void OnTriggerEnter (Collider other)
         {

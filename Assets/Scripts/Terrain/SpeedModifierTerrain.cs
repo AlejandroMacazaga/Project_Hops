@@ -20,15 +20,15 @@ namespace Terrain
         {
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
-            controller.PlayerStats.AddModifier("MaxSpeed", _mod);
+            controller.PlayerStats.AddModifier(PlayerStat.Speed, _mod);
         }
 
         private void OnTriggerExit(Collider other)
         {
             var controller = other.GetComponent<PlayerController>();
             if (!controller) return;
-            controller.PlayerStats.RemoveModifier("MaxSpeed",_mod);
-            if (duration != 0) controller.PlayerStats.AddModifier("MaxSpeed", _modWithTime);
+            controller.PlayerStats.RemoveModifier(PlayerStat.Speed,_mod);
+            if (duration != 0) controller.PlayerStats.AddModifier(PlayerStat.Speed, _modWithTime);
         }
     }
 }
