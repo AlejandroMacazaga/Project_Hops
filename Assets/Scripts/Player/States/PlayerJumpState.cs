@@ -23,7 +23,7 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            
+            Debug.Log("Jump State");
             Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
             _timer.Start();
             Controller.SetVelocity(Controller.PlayerStats.GetStat(PlayerStat.JumpForce));
@@ -40,7 +40,7 @@ namespace Player.States
         public override void Update()
         {
             Controller.HandleGravity();
-            Controller.HandleMovement();
+            Controller.HandleAirMovement();
         }
     }
 }

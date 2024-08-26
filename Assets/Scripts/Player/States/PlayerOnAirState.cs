@@ -16,6 +16,7 @@ namespace Player.States
 
         public override void OnEnter()
         {
+            Debug.Log("Air State");
             //Controller.PlayerStats.AddModifier("Gravity", _gravityModifier);
             //controller.AnimationSystem.PlayOneShot(animation, true);
         }
@@ -28,7 +29,7 @@ namespace Player.States
         public override void Update()
         {
             Controller.HandleGravity();
-            Controller.HandleMovement();
+            Controller.HandleAirMovement();
         }
     }
 }
