@@ -54,7 +54,7 @@ namespace Player.States
             move = Controller.transform.TransformDirection(move);
             move *= Controller.PlayerStats.GetStat(PlayerStat.Speed);
             move *= Controller.PlayerStats.GetStat(PlayerStat.DashMultiplier);
-            Controller.Character.Move(move * Time.deltaTime);
+            Controller.Character.Move(move * Time.fixedDeltaTime);
         }
     }
 } 
