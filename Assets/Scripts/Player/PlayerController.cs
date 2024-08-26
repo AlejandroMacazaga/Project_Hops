@@ -61,7 +61,9 @@ namespace Player
         public Vector2 currentDirection;
         [SerializeField] private float currentVelocity = 0f;
         [SerializeField] private float maxVelocity = 6f;
-        [SerializeField] private Vector2 currentAirSpeed;
+        [SerializeField] private float airAcceleration = 1f;
+        [SerializeField] private float maxAirSpeed = 1f;
+        [SerializeField] public Vector2 currentSpeed;
         [SerializeField] private float coyoteTime = 0.1f;
         private CountdownTimer _coyoteTimeTimer;
         [SerializedDictionary("Name", "Animation Clips")]
@@ -269,7 +271,8 @@ namespace Player
 
         public void HandleMovement()
         {
-            var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
+            currentSpeed = currentDirection;
+            var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
             move *= PlayerStats.GetStat(PlayerStat.Speed);
             move.y = currentVelocity;
@@ -324,7 +327,10 @@ namespace Player
 
         public void HandleAirMovement()
         {
-            var move = new Vector3(currentDirection.x, 0 , currentDirection.y);
+            currentSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * airAcceleration * Time.deltaTime) : currentSpeed.x),
+                (currentDirection.y != 0f ? currentSpeed.y + (currentDirection.y * airAcceleration * Time.deltaTime) : currentSpeed.y));
+            currentSpeed = Vector2.ClampMagnitude(currentSpeed, maxAirSpeed);
+            var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
             move *= PlayerStats.GetStat(PlayerStat.Speed);
             move.y = currentVelocity;

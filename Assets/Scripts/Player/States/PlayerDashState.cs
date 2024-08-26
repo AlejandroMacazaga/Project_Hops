@@ -27,6 +27,7 @@ namespace Player.States
 
         public override void OnEnter()
         {
+            Debug.Log("Dash State");
             _timer.Start();
             Controller.SetVelocity(0f);
             Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
@@ -38,6 +39,7 @@ namespace Player.States
 
         public override void OnExit()
         {
+            Controller.currentSpeed = _direction;
             Controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _gravityModifier);
             _timer.Stop();
             if(Controller.Character.isGrounded) Controller.DashCooldown.Start();

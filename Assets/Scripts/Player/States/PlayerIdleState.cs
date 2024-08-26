@@ -14,6 +14,7 @@ namespace Player.States
 
         public override void OnEnter()
         {
+            Debug.Log("Idle State");
         }
 
         public override void OnExit()
