@@ -20,7 +20,7 @@ using StateMachine = Utils.StateMachine.StateMachine;
 
 namespace Player
 {
-    [RequireComponent(typeof(CharacterController), typeof(CeilingDetector))]
+    [RequireComponent(typeof(CharacterController), typeof(CeilingDetector), typeof(GroundChecker))]
     public class PlayerController : EntityController
     {
         private new PlayerData Data => (PlayerData)base.data;
@@ -30,6 +30,7 @@ namespace Player
         private CeilingDetector _ceilingDetector;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
+        private GroundChecker _gc;
         public CharacterController Character => _character;
         public PlayerStats PlayerStats => _playerStats;
         public AnimationSystem AnimationSystem => _animationSystem;
@@ -79,7 +80,11 @@ namespace Player
         
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
-        public bool isOnUnstableGround = false;
+
+        public bool IsOnUnstableGround
+        {
+            get => _gc.groundSlopeAngle > _character.slopeLimit;
+        }
         
         private IInteractable _currentInteractable;
 
@@ -89,15 +94,14 @@ namespace Player
             base.Awake();
             _character = GetComponent<CharacterController>();
             _ceilingDetector = GetComponent<CeilingDetector>();
+            _gc = GetComponent<GroundChecker>();
             //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
             _playerStats = new PlayerStats(Data);
             StatModifier toZero = new(StatModifier.ModifierType.Zero);
-            
             #region Cooldowns
             DashCooldown = new PlayerCooldownTimer(_playerStats, PlayerStat.DashCooldown);
             _coyoteTimeTimer = new CountdownTimer(coyoteTime);
             #endregion
-            
             #region State machine configuration
             _sm = new StateMachine();
             var idleState = new PlayerIdleState(this);
@@ -106,7 +110,7 @@ namespace Player
             var dashState = new PlayerDashState(this, null, toZero);
             var deathState = new PlayerDeathState(this);
             _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded), StartCoyoteTimer);
-            _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !isOnUnstableGround));
+            _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !IsOnUnstableGround));
             _sm.AddTransition(onAirState, idleState, new FuncPredicate(() => _character.isGrounded));
             _sm.AddTransition(onAirState, jumpState, new FuncPredicate(() => _coyoteTimeTimer.IsRunning && isPressingJump));
             _sm.AddTransition(jumpState, onAirState, new FuncPredicate(() => jumpState.IsGracePeriodOver));
@@ -278,6 +282,11 @@ namespace Player
             move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
+        }
+
+        public void HandleGroundDetection()
+        {
+            
         }
 
         public IEnumerator HandleInteractableSearch()

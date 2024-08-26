@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System;
 using UnityEngine;
 
-namespace AdvancedController {
+namespace Utils {
     public class RaycastSensor {
         public float castLength = 1f;
         public LayerMask layermask = 255;
         
-        Vector3 origin = Vector3.zero;
-        Transform tr;
+        Vector3 _origin = Vector3.zero;
+        readonly Transform _tr;
         
         public enum CastDirection { Forward, Right, Up, Backward, Left, Down }
         CastDirection castDirection;
@@ -16,11 +14,11 @@ namespace AdvancedController {
         RaycastHit hitInfo;
 
         public RaycastSensor(Transform playerTransform) {
-            tr = playerTransform;
+            _tr = playerTransform;
         }
 
         public void Cast() {
-            Vector3 worldOrigin = tr.TransformPoint(origin);
+            Vector3 worldOrigin = _tr.TransformPoint(_origin);
             Vector3 worldDirection = GetCastDirection();
             
             Physics.Raycast(worldOrigin, worldDirection, out hitInfo, castLength, layermask, QueryTriggerInteraction.Ignore);
@@ -34,16 +32,16 @@ namespace AdvancedController {
         public Transform GetTransform() => hitInfo.transform;
         
         public void SetCastDirection(CastDirection direction) => castDirection = direction;
-        public void SetCastOrigin(Vector3 pos) => origin = tr.InverseTransformPoint(pos);
+        public void SetCastOrigin(Vector3 pos) => _origin = _tr.InverseTransformPoint(pos);
 
         Vector3 GetCastDirection() {
             return castDirection switch {
-                CastDirection.Forward => tr.forward,
-                CastDirection.Right => tr.right,
-                CastDirection.Up => tr.up,
-                CastDirection.Backward => -tr.forward,
-                CastDirection.Left => -tr.right,
-                CastDirection.Down => -tr.up,
+                CastDirection.Forward => _tr.forward,
+                CastDirection.Right => _tr.right,
+                CastDirection.Up => _tr.up,
+                CastDirection.Backward => -_tr.forward,
+                CastDirection.Left => -_tr.right,
+                CastDirection.Down => -_tr.up,
                 _ => Vector3.one
             };
         }
