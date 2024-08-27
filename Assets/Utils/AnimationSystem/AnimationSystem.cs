@@ -3,10 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
-using MEC; // Uses More Effective Coroutines from the Unity Asset Store
+using MEC;
+using UnityEngine.Serialization; // Uses More Effective Coroutines from the Unity Asset Store
 
 namespace Utils.AnimationSystem
 {
+    [Serializable]
+    public struct AnimatorConfig
+    {
+        public Animator animator;
+        public AnimationClip idleAnimation;
+        public AnimationClip movingAnimation;
+    }
+
+    [Serializable]
+    public struct AudioConfig
+    {
+        public AudioSource audioSource;
+        public AudioClip[] movementSounds;
+    }
+
     public class AnimationSystem
     {
         PlayableGraph _playableGraph;
@@ -18,11 +34,11 @@ namespace Utils.AnimationSystem
         CoroutineHandle _blendInHandle;
         CoroutineHandle _blendOutHandle;
 
-        public AnimationSystem(Animator animator, AnimationClip idleClip, AnimationClip walkClip)
+        public AnimationSystem(AnimatorConfig animatorConfig, AudioConfig audioConfig)
         {
             _playableGraph = PlayableGraph.Create("AnimationSystem");
 
-            var playableOutput = AnimationPlayableOutput.Create(_playableGraph, "Animation", animator);
+            var playableOutput = AnimationPlayableOutput.Create(_playableGraph, "Animation", animatorConfig.animator);
 
             _topLevelMixer = AnimationMixerPlayable.Create(_playableGraph, 2);
             playableOutput.SetSourcePlayable(_topLevelMixer);
@@ -31,8 +47,8 @@ namespace Utils.AnimationSystem
             _topLevelMixer.ConnectInput(0, _locomotionMixer, 0);
             _playableGraph.GetRootPlayable(0).SetInputWeight(0, 1f);
 
-            var idlePlayable = AnimationClipPlayable.Create(_playableGraph, idleClip);
-            var walkPlayable = AnimationClipPlayable.Create(_playableGraph, walkClip);
+            var idlePlayable = AnimationClipPlayable.Create(_playableGraph, animatorConfig.idleAnimation);
+            var walkPlayable = AnimationClipPlayable.Create(_playableGraph, animatorConfig.movingAnimation);
 
             idlePlayable.GetAnimationClip().wrapMode = WrapMode.Loop;
             walkPlayable.GetAnimationClip().wrapMode = WrapMode.Loop;
@@ -53,7 +69,6 @@ namespace Utils.AnimationSystem
         public void PlayOneShot(AnimationClip oneShotClip, bool loop = false)
         {
             if (_oneShotPlayable.IsValid() && _oneShotPlayable.GetAnimationClip() == oneShotClip) return;
-
             InterruptOneShot();
             _oneShotPlayable = AnimationClipPlayable.Create(_playableGraph, oneShotClip);
             _topLevelMixer.ConnectInput(1, _oneShotPlayable, 0);
