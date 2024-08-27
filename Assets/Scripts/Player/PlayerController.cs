@@ -7,8 +7,10 @@ using Input;
 using Player.States;
 using Projectiles;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
@@ -30,6 +32,7 @@ namespace Player
         private CeilingDetector _ceilingDetector;
         private StateMachine _sm;
         private AnimationSystem _animationSystem;
+        private Animator _animator;
         private GroundChecker _gc;
         public CharacterController Character => _character;
         public PlayerStats PlayerStats => _playerStats;
@@ -81,11 +84,9 @@ namespace Player
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
 
-        public bool IsOnUnstableGround
-        {
-            get => _gc.groundSlopeAngle > _character.slopeLimit;
-        }
-        
+        PlayableGraph playableGraph;
+        public bool IsOnUnstableGround => _gc.groundSlopeAngle > _character.slopeLimit;
+
         private IInteractable _currentInteractable;
 
         public PlayerCooldownTimer DashCooldown;
@@ -95,7 +96,8 @@ namespace Player
             _character = GetComponent<CharacterController>();
             _ceilingDetector = GetComponent<CeilingDetector>();
             _gc = GetComponent<GroundChecker>();
-            //_animationSystem = new AnimationSystem(Animator, animations["idle"], animations["walk"]);
+            _animator = GetComponent<Animator>();
+            // _animationSystem = new AnimationSystem(_animator, animations["idle"], animations["walk"]);
             _playerStats = new PlayerStats(Data);
             StatModifier toZero = new(StatModifier.ModifierType.Zero);
             #region Cooldowns
@@ -253,6 +255,7 @@ namespace Player
             {
                 case ActionState.Press:
                     _currentWeapon.Action(WeaponAction.TapPrimaryAttack);
+                    AnimationPlayableUtilities.PlayClip(GetComponent<Animator>(), animations["attack1"], out playableGraph);
                     break;
                 case ActionState.Hold:
                     break;

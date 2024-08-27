@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.greenbamboogames.playablegraphmonitor": {
+      "version": "https://github.com/SolarianZ/UnityPlayableGraphMonitorTool.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9499974fc089b113782194cf6da46229b2cd3d2d"
+    },
+    "com.kylewbanks.scenerefattribute": {
+      "version": "https://github.com/KyleBanks/scene-ref-attribute.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b871efe4ded8ec9ff9de31c4c272fe5860e6549c"
+    },
     "com.unity.cinemachine": {
       "version": "2.10.1",
       "depth": 0,
@@ -143,9 +157,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
