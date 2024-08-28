@@ -1,4 +1,6 @@
+using Player.Events;
 using UnityEngine;
+using Utils.EventBus;
 using Utils.Timers;
 
 namespace Player.States
@@ -27,13 +29,16 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            Debug.Log("Dash State");
             _timer.Start();
             Controller.SetVelocity(0f);
             Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
             Controller.fpScript.IsBodyLocked = true;
+            EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
+            {
+                IsGoingFast = true
+            });
             //controller.AnimationSystem.PlayOneShot(animation, true);
         }
 
@@ -46,6 +51,10 @@ namespace Player.States
             else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
             Controller.fpScript.IsBodyLocked = false;
             Controller.IsPressingDash = false;
+            EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
+            {
+                IsGoingFast = false
+            });
         }
 
         public override void Update()
@@ -54,7 +63,7 @@ namespace Player.States
             move = Controller.transform.TransformDirection(move);
             move *= Controller.PlayerStats.GetStat(PlayerStat.Speed);
             move *= Controller.PlayerStats.GetStat(PlayerStat.DashMultiplier);
-            Controller.Character.Move(move * Time.fixedDeltaTime);
+            Controller.Character.Move(move * Time.deltaTime);
         }
     }
 } 
