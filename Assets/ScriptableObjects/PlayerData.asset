@@ -16,14 +16,14 @@ MonoBehaviour:
     healthPoints: 100
     maxHealthPoints: 100
   team: 0
-  speed: 7
-  acceleration: 0
-  jumpForce: 8
+  speed: 10
+  acceleration: 100
+  jumpForce: 14
   gravity: 40
   damage: 1
   attackSpeed: 1
   defense: 1
   reloadSpeed: 1
   dashMultiplier: 4
-  dashDuration: 0.1
+  dashDuration: 0.2
   dashCooldown: 0.5

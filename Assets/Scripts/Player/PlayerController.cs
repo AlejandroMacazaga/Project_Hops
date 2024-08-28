@@ -83,8 +83,6 @@ namespace Player
         
         [Header("Action blockers")]
         [SerializeField] private bool hasMovementBlocked = false;
-
-        PlayableGraph playableGraph;
         public bool IsOnUnstableGround => _gc.groundSlopeAngle > _character.slopeLimit;
 
         private IInteractable _currentInteractable;
@@ -255,7 +253,6 @@ namespace Player
             {
                 case ActionState.Press:
                     _currentWeapon.Action(WeaponAction.TapPrimaryAttack);
-                    AnimationPlayableUtilities.PlayClip(GetComponent<Animator>(), animations["attack1"], out playableGraph);
                     break;
                 case ActionState.Hold:
                     break;

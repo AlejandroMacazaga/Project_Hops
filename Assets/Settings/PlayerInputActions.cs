@@ -78,7 +78,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""7e516df6-12e2-4872-8c35-f1b522cb7631"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=2,pressPoint=0.5),Tap(duration=0.1,pressPoint=0.5)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
