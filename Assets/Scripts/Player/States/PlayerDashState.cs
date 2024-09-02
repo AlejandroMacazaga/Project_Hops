@@ -1,3 +1,4 @@
+using Player.Classes;
 using Player.Events;
 using UnityEngine;
 using Utils.EventBus;
@@ -18,7 +19,7 @@ namespace Player.States
             this._animation = animation;
             _direction = new Vector2();
             _gravityModifier = gravityModifier;
-            _timer = new CountdownTimer(Controller.PlayerStats.GetStat(PlayerStat.DashDuration));
+            _timer = new CountdownTimer(Controller.classData.GetStat(ClassStat.DashDuration));
             _timer.OnTimerStart += () => IsFinished = false;
             _timer.OnTimerStop += () => IsFinished = true;
         }
@@ -31,7 +32,7 @@ namespace Player.States
         {
             _timer.Start();
             Controller.SetVelocity(0f);
-            Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
+            Controller.classData.AddModifier(ClassStat.Gravity, _gravityModifier);
             _direction = Controller.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
             Controller.fpScript.IsBodyLocked = true;
@@ -45,7 +46,7 @@ namespace Player.States
         public override void OnExit()
         {
             Controller.currentSpeed = _direction;
-            Controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _gravityModifier);
+            Controller.classData.RemoveModifier(ClassStat.Gravity, _gravityModifier);
             _timer.Stop();
             if(Controller.Character.isGrounded) Controller.DashCooldown.Start();
             else Controller.DashCooldown.Start(); // TODO: Add here logic for when you dash in the air
@@ -61,8 +62,8 @@ namespace Player.States
         {
             var move = new Vector3(_direction.x, 0 , _direction.y);
             move = Controller.transform.TransformDirection(move);
-            move *= Controller.PlayerStats.GetStat(PlayerStat.Speed);
-            move *= Controller.PlayerStats.GetStat(PlayerStat.DashMultiplier);
+            move *= Controller.classData.GetStat(ClassStat.Speed);
+            move *= Controller.classData.GetStat(ClassStat.DashSpeed);
             Controller.Character.Move(move * Time.deltaTime);
         }
     }

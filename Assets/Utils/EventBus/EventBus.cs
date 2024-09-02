@@ -20,7 +20,7 @@ namespace Utils.EventBus
             }
         }
 
-        static void Clear()
+        public static void Clear()
         {
             Debug.Log($"Clearing {typeof(T).Name} bindings");
             Bindings.Clear();

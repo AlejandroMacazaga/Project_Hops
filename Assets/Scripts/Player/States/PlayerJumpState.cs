@@ -1,3 +1,4 @@
+using Player.Classes;
 using UnityEngine;
 using Utils.Timers;
 
@@ -24,15 +25,15 @@ namespace Player.States
         public override void OnEnter()
         {
             Debug.Log("Jump State");
-            Controller.PlayerStats.AddModifier(PlayerStat.Gravity, _gravityModifier);
+            Controller.classData.AddModifier(ClassStat.Gravity, _gravityModifier);
             _timer.Start();
-            Controller.SetVelocity(Controller.PlayerStats.GetStat(PlayerStat.JumpForce));
+            Controller.SetVelocity(Controller.classData.GetStat(ClassStat.JumpForce));
 
         }
 
         public override void OnExit()
         {
-            Controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _gravityModifier);
+            Controller.classData.RemoveModifier(ClassStat.Gravity, _gravityModifier);
             Controller.IsPressingJump = false;
             _timer.Stop();
         }

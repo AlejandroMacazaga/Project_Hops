@@ -4,6 +4,8 @@ using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Entities;
 using Input;
+using KBCore.Refs;
+using Player.Classes;
 using Player.States;
 using Projectiles;
 using UnityEngine;
@@ -24,10 +26,8 @@ namespace Player
 {
     [RequireComponent(typeof(CharacterController), typeof(CeilingDetector), typeof(GroundChecker))]
     public class PlayerController : EntityController
-    {
-        private new PlayerData Data => (PlayerData)base.data;
-
-        private PlayerStats _playerStats;
+    { public ClassData classData; 
+        
         private CharacterController _character;
         private CeilingDetector _ceilingDetector;
         private StateMachine _sm;
@@ -35,7 +35,6 @@ namespace Player
         private Animator _animator;
         private GroundChecker _gc;
         public CharacterController Character => _character;
-        public PlayerStats PlayerStats => _playerStats;
         public AnimationSystem AnimationSystem => _animationSystem;
         public StateMachine StateMachine => _sm;
         public bool IsPressingJump
@@ -75,7 +74,9 @@ namespace Player
 
         [FormerlySerializedAs("projectileWeaponSettings")]
         [Header("Weapon data")] 
-        [SerializeField] private WeaponSettings weaponSettings;
+        [SerializeField] private ReaperWeaponSettings weaponSettings;
+
+        [SerializeField,] private GameObject meleeDamageArea;
         
         [Header("Player input actions")]
         [SerializeField] private bool isPressingJump;
@@ -96,18 +97,16 @@ namespace Player
             _gc = GetComponent<GroundChecker>();
             _animator = GetComponent<Animator>();
             // _animationSystem = new AnimationSystem(_animator, animations["idle"], animations["walk"]);
-            _playerStats = new PlayerStats(Data);
-            StatModifier toZero = new(StatModifier.ModifierType.Zero);
             #region Cooldowns
-            DashCooldown = new PlayerCooldownTimer(_playerStats, PlayerStat.DashCooldown);
+            DashCooldown = new PlayerCooldownTimer(classData, ClassStat.DashCooldown);
             _coyoteTimeTimer = new CountdownTimer(coyoteTime);
             #endregion
             #region State machine configuration
             _sm = new StateMachine();
             var idleState = new PlayerIdleState(this);
-            var jumpState = new PlayerJumpState(this, null, toZero);
+            var jumpState = new PlayerJumpState(this, null, StatModifier.Zero);
             var onAirState = new PlayerOnAirState(this, null);
-            var dashState = new PlayerDashState(this, null, toZero);
+            var dashState = new PlayerDashState(this, null, StatModifier.Zero);
             var deathState = new PlayerDeathState(this);
             _sm.AddTransition(idleState, onAirState, new FuncPredicate(() => !_character.isGrounded), StartCoyoteTimer);
             _sm.AddTransition(idleState, jumpState, new FuncPredicate(() => _character.isGrounded && isPressingJump && !IsOnUnstableGround));
@@ -123,7 +122,7 @@ namespace Player
             _sm.SetState(idleState);
             #endregion
             // _currentWeapon = new SingleShotWeapon(weaponSettings, this, projectileSettings);
-            _currentWeapon = new SingleShotWeapon(weaponSettings, this);
+            _currentWeapon = new ReaperWeapon(this, weaponSettings);
             #region Input system configuration
             inputReader.EnablePlayerActions();
             inputReader.Move += OnMove;
@@ -139,7 +138,12 @@ namespace Player
             _camera = Camera.main;
 
         }
-        
+
+        private void OnValidate()
+        {
+            this.ValidateRefs();
+        }
+
         private void OnDestroy()
         {
             inputReader.Move -= OnMove;
@@ -150,6 +154,7 @@ namespace Player
             inputReader.Interact -= OnInteract;
             Health.OnDeath -= OnDeath;
             StopCoroutine(nameof(HandleInteractableSearch));
+            _coyoteTimeTimer.Dispose();
             // _animationSystem.Destroy();
         }
         
@@ -161,7 +166,7 @@ namespace Player
 
         private void OnSecondaryAttack(ActionState action, IInputInteraction interaction)
         {
-            _currentWeapon.Action(WeaponAction.TapSecondaryAttack);
+            _currentWeapon.Action(WeaponAction.StartSecondaryAttack);
         }
         
         private void OnInteract(ActionState action, IInputInteraction interaction)
@@ -197,7 +202,7 @@ namespace Player
             switch (action)
             {
                 case ActionState.Press:
-                    _currentWeapon?.Action(WeaponAction.TapReload);
+                    _currentWeapon?.Action(WeaponAction.StartReload);
                     break;
                 case ActionState.Hold:
                     break;
@@ -249,14 +254,18 @@ namespace Player
         
         private void OnPrimaryAttack(ActionState action, IInputInteraction interaction)
         {
+            Debug.Log("Action: " + action);
+            Debug.Log("Interaction: " + interaction);
             switch (action)
             {
                 case ActionState.Press:
-                    _currentWeapon.Action(WeaponAction.TapPrimaryAttack);
+                    _currentWeapon.Action(WeaponAction.StartPrimaryAttack);
                     break;
                 case ActionState.Hold:
+                    _currentWeapon.Action(WeaponAction.HoldPrimaryAttack);
                     break;
                 case ActionState.Release:
+                    _currentWeapon.Action(WeaponAction.ReleasePrimaryAttack);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
@@ -278,7 +287,7 @@ namespace Player
             currentSpeed = currentDirection;
             var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
-            move *= PlayerStats.GetStat(PlayerStat.Speed);
+            move *= classData.GetStat(ClassStat.Speed);
             move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
@@ -341,7 +350,7 @@ namespace Player
             currentSpeed = Vector2.ClampMagnitude(currentSpeed, maxAirSpeed);
             var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
-            move *= PlayerStats.GetStat(PlayerStat.Speed);
+            move *= classData.GetStat(ClassStat.Speed);
             move.y = currentVelocity;
 
             _character.Move(move * Time.deltaTime);
@@ -353,7 +362,7 @@ namespace Player
             if (_character.isGrounded && currentVelocity <= 0f)
                 currentVelocity = -3f;
             else
-                currentVelocity -= _playerStats.GetStat(PlayerStat.Gravity) * Time.deltaTime;
+                currentVelocity -= classData.GetStat(ClassStat.Gravity) * Time.deltaTime;
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 

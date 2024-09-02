@@ -1,5 +1,6 @@
 using System;
 using Player;
+using Player.Classes;
 using UnityEngine;
 
 namespace Utils.Timers
@@ -15,6 +16,8 @@ namespace Utils.Timers
             {
                 CurrentTime -= Time.deltaTime;
             }
+
+            OnTimerTick.Invoke();
             
             if (IsRunning && CurrentTime <= 0)
             {
@@ -27,9 +30,9 @@ namespace Utils.Timers
 
     public class PlayerCooldownTimer : Timer
     {
-        private PlayerStats _stats;
-        private PlayerStat _stat;
-        public PlayerCooldownTimer(PlayerStats stats, PlayerStat stat)
+        private readonly ClassData _stats;
+        private readonly ClassStat _stat;
+        public PlayerCooldownTimer(ClassData stats, ClassStat stat)
         {
             _stat = stat;
             _stats = stats;
@@ -72,6 +75,7 @@ namespace Utils.Timers
             if (IsRunning)
             {
                 CurrentTime += Time.deltaTime;
+                OnTimerTick.Invoke();
                 return;
             }
             
@@ -93,6 +97,7 @@ namespace Utils.Timers
         
         public Action OnTimerStart = delegate {  };
         public Action OnTimerStop = delegate {  };
+        public Action OnTimerTick = delegate { };
         
         protected Timer(float time = 0f)
         {
