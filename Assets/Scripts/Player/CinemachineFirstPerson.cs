@@ -1,25 +1,26 @@
 using Cinemachine;
 using Input;
+using KBCore.Refs;
 using UnityEngine;
 using Utils.Timers;
 
 namespace Player
 {
-    public class CinemachineFirstPerson : MonoBehaviour
+    public class CinemachineFirstPerson : ValidatedMonoBehaviour
     {
         public CinemachineVirtualCamera virtualCamera;
         [SerializeField] private InputReader inputs;
         [SerializeField] private float mouseSensitivity;
         private float _xRotation, _yRotation;
         [SerializeField] private Transform bodyOrientation;
-        [SerializeField] private bool isBodyLocked;
+        [SerializeField, Self] private CharacterMover mover;
         public bool IsBodyLocked
         {
-            get => isBodyLocked;
+            get => mover.isBodyLocked;
             set
             {
-                isBodyLocked = value;
-                if (isBodyLocked) return;
+                mover.isBodyLocked = value;
+                if (mover.isBodyLocked) return;
                 bodyOrientation.Rotate(Vector3.up * virtualCamera.transform.localEulerAngles.y);
                 virtualCamera.transform.localRotation = Quaternion.Euler(virtualCamera.transform.localRotation.x, 0f, 0f);
             } 
@@ -31,7 +32,7 @@ namespace Player
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            isBodyLocked = false;
+            mover.isBodyLocked = false;
             inputs.EnablePlayerActions();
         }
         
@@ -53,7 +54,7 @@ namespace Player
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
             
-            if (isBodyLocked)
+            if (mover.isBodyLocked)
             {
                 // Apply the rotation to the camera's local rotation
                 _yRotation += mouseX;

@@ -1,5 +1,6 @@
 using System;
 using Player;
+using Player.Classes;
 using Projectiles;
 using UnityEngine;
 using Utils.EventBus;
@@ -21,7 +22,7 @@ namespace Weapons
             _weaponSettings = weaponSettings;
             _owner = owner;
             _camera = Camera.main;
-            _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat(PlayerStat.ReloadSpeed));
+            _reloadTimer = new CountdownTimer(_weaponSettings.reloadSpeed * _owner.classData.GetStat(ClassStat.ReloadSpeed));
             _currentBullets = weaponSettings.magazineSize;
             EventBus<AmmoChangeEvent>.Raise(new AmmoChangeEvent(_currentBullets));
             _reloadTimer.OnTimerStop += () =>
@@ -41,7 +42,7 @@ namespace Weapons
                 return;
             }
             var flyweight = (Projectile)FlyweightManager.Spawn(_weaponSettings.primaryAttack);
-            flyweight.currentDamage = _weaponSettings.damage * _owner.PlayerStats.GetStat(PlayerStat.Damage);
+            flyweight.currentDamage = _weaponSettings.damage * _owner.classData.GetStat(ClassStat.AttackDamage);
             flyweight.transform.position = _camera.transform.localPosition;
             flyweight.transform.rotation = _camera.transform.localRotation;
             _currentBullets -= 1;
@@ -58,7 +59,7 @@ namespace Weapons
                 return;
             }
             var flyweight = (Projectile)FlyweightManager.Spawn(_weaponSettings.secondaryAttack);
-            flyweight.currentDamage = _weaponSettings.damage * (_currentBullets / 2) * _owner.PlayerStats.GetStat(PlayerStat.Damage);
+            flyweight.currentDamage = _weaponSettings.damage * (_currentBullets / 2) * _owner.classData.GetStat(ClassStat.AttackDamage);
             flyweight.transform.position = _camera.transform.localPosition;
             flyweight.transform.rotation = _camera.transform.localRotation;
             _currentBullets = 0;
@@ -68,20 +69,21 @@ namespace Weapons
         public void Reload()
         {
             if (_reloadTimer.IsRunning) return;
-            _reloadTimer.InitialTime = _weaponSettings.reloadSpeed * _owner.PlayerStats.GetStat(PlayerStat.ReloadSpeed);
+            _reloadTimer.InitialTime = _weaponSettings.reloadSpeed * _owner.classData.GetStat(ClassStat.ReloadSpeed);
             _reloadTimer.Start();
         }
         public void Action(WeaponAction action)
         {
             switch (action)
             {
-                case WeaponAction.TapPrimaryAttack:
+                case WeaponAction.StartPrimaryAttack:
+                    Debug.Log("Pog");
                     PrimaryAttack();
                     break;
-                case WeaponAction.TapSecondaryAttack:
+                case WeaponAction.StartSecondaryAttack:
                     SecondaryAttack();
                     break;
-                case WeaponAction.TapReload:
+                case WeaponAction.StartReload:
                     Reload();
                     break;
                 case WeaponAction.HoldPrimaryAttack:

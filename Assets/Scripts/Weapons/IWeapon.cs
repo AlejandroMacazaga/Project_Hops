@@ -7,9 +7,9 @@ namespace Weapons
 
     public enum WeaponAction
     {
-        TapPrimaryAttack,
-        TapSecondaryAttack,
-        TapReload,
+        StartPrimaryAttack,
+        StartSecondaryAttack,
+        StartReload,
         HoldPrimaryAttack,
         HoldSecondaryAttack,
         HoldReload,
