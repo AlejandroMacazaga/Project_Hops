@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using Entities;
 using Player;
@@ -41,12 +41,12 @@ namespace Weapons
         {
             switch (action)
             {
-                case WeaponAction.TapPrimaryAttack:
+                case WeaponAction.StartPrimaryAttack:
                     PrimaryAttack();
                     break;
-                case WeaponAction.TapSecondaryAttack:
+                case WeaponAction.StartSecondaryAttack:
                     break;
-                case WeaponAction.TapReload:
+                case WeaponAction.StartReload:
                     break;
                 case WeaponAction.HoldPrimaryAttack:
                     break;
@@ -70,4 +70,4 @@ namespace Weapons
             Debug.Log("Doing Nothing");
         }
     }
-}
+} */

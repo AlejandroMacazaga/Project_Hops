@@ -1,9 +1,10 @@
 using System;
+using KBCore.Refs;
 using UnityEngine;
 
 namespace Player
 {
-    public class GroundChecker : MonoBehaviour {
+    public class GroundChecker : ValidatedMonoBehaviour {
 
         [Header("Results")] 
         public float groundSlopeAngle = 0f;            // Angle of the slope in degrees
@@ -17,8 +18,8 @@ namespace Player
         public float sphereCastDistance = 0.75f;       // How far spherecast moves down from origin point
 
         public float raycastLength = 0.75f;
-        public Vector3 rayOriginOffset1 = new Vector3(-0.2f, 0f, 0.16f);
-        public Vector3 rayOriginOffset2 = new Vector3(0.2f, 0f, -0.16f);
+        public Vector3 rayOriginOffset1 = new (-0.2f, 0f, 0.16f);
+        public Vector3 rayOriginOffset2 = new (0.2f, 0f, -0.16f);
 
         // Component reference
         private CharacterController _controller;

@@ -1,4 +1,6 @@
 using System;
+using Input;
+using UnityEngine.InputSystem;
 
 namespace Utils.StateMachine
 {
@@ -7,10 +9,10 @@ namespace Utils.StateMachine
         public IState To { get; protected set; }
         
         public abstract bool Evaluate();
+        public Action TransitionalAction;
     }
     public class Transition<T> : Transition {
         public readonly T Condition;
-        public Action TransitionalAction;
 
         public Transition(IState to, T condition, Action transitionalAction = null) {
             To = to;
@@ -64,7 +66,6 @@ namespace Utils.StateMachine
         public bool Flag;
 
         public ActionPredicate(ref Action eventReaction) => eventReaction += () => { Flag = true; };
-
         public bool Evaluate() {
             bool result = Flag;
             Flag = false;

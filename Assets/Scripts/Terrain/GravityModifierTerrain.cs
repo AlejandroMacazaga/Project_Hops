@@ -1,4 +1,5 @@
 using Player;
+using Player.Classes;
 using UnityEngine;
 
 namespace Terrain
@@ -10,22 +11,21 @@ namespace Terrain
         private StatModifier _mod;
         private void Awake()
         {
-            _mod ??= new StatModifier(StatModifier.ModifierType.Percent, gravityMultiplier);
+            _mod ??= new StatModifier(ModifierType.Multiplier, gravityMultiplier);
         }
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Hello");
-            var controller = other.GetComponent<PlayerController>();
+            var controller = other.GetComponent<CharacterClass>();
             if (!controller) return;
-            controller.PlayerStats.AddModifier(PlayerStat.Gravity, _mod);
+            controller.data.AddModifier(ClassStat.Gravity, _mod);
         }
 
         private void OnTriggerExit(Collider other)
         {
             Debug.Log("Agur");
-            var controller = other.GetComponent<PlayerController>();
+            var controller = other.GetComponent<CharacterClass>();
             if (!controller) return;
-            controller.PlayerStats.RemoveModifier(PlayerStat.Gravity, _mod);
+            controller.data.RemoveModifier(ClassStat.Gravity, _mod);
         }
     }
 }
