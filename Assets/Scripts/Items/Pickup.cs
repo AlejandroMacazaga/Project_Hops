@@ -1,5 +1,6 @@
 using System.Collections;
 using Player;
+using Player.Classes;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utils;
@@ -16,7 +17,6 @@ namespace Items
         {
         }
         void OnEnable() {
-            Debug.Log("Hello");
             spriteGameObject = transform.GetChild(0).gameObject;
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
         }
@@ -29,7 +29,7 @@ namespace Items
         void OnTriggerEnter(Collider other)
         {
             
-            if (other.transform.parent && other.transform.parent.TryGetComponent<PlayerController>(out var player))
+            if (other.transform.parent && other.transform.parent.TryGetComponent<CharacterClass>(out var player))
             {
                 FlyweightManager.ReturnToPool(this);
                 switch (settings.item)
@@ -47,7 +47,6 @@ namespace Items
             }
         }
         IEnumerator DespawnAfterDelay(float delay) {
-            Debug.Log(delay);
             yield return Helpers.GetWaitForSeconds(delay);
             FlyweightManager.ReturnToPool(this);
         }

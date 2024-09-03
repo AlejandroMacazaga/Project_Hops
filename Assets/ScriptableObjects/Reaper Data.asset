@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2516c3d5e77ec3a4c8ce3aa83767c951, type: 3}
-  m_Name: New Class Data
+  m_Name: Reaper Data
   m_EditorClassIdentifier: 
   baseStats:
     _serializedList:
     - Key: 0
       Value: 100
     - Key: 1
-      Value: 1
+      Value: 100
     - Key: 2
-      Value: 30
+      Value: 3
     - Key: 3
-      Value: 6
-    - Key: 4
       Value: 7
+    - Key: 4
+      Value: 3
     - Key: 5
-      Value: 30
+      Value: 1.2
     - Key: 6
-      Value: 20
+      Value: 7
     - Key: 7
-      Value: 1
+      Value: 20
     - Key: 8
-      Value: 1
+      Value: 30
     - Key: 9
       Value: 1
     - Key: 10
@@ -39,11 +39,15 @@ MonoBehaviour:
     - Key: 11
       Value: 1
     - Key: 12
-      Value: 4
+      Value: 5
     - Key: 13
-      Value: 0.15
+      Value: 0.1
     - Key: 14
-      Value: 2
+      Value: 4
+    - Key: 15
+      Value: 0.15
+    - Key: 16
+      Value: 0.5
   modifiers:
     _serializedList:
     - Key: 0
@@ -76,6 +80,10 @@ MonoBehaviour:
       Value: []
     - Key: 14
       Value: []
+    - Key: 15
+      Value: []
+    - Key: 16
+      Value: []
   cachedModifiedValues:
     _serializedList:
     - Key: 0
@@ -85,35 +93,35 @@ MonoBehaviour:
     - Key: 1
       Value:
         needsUpdate: 0
-        value: 1
+        value: 100
     - Key: 2
       Value:
         needsUpdate: 0
-        value: 30
+        value: 3
     - Key: 3
       Value:
         needsUpdate: 0
-        value: 6
+        value: 7
     - Key: 4
       Value:
         needsUpdate: 0
-        value: 7
+        value: 3
     - Key: 5
       Value:
         needsUpdate: 0
-        value: 30
+        value: 1.2
     - Key: 6
       Value:
         needsUpdate: 0
-        value: 20
+        value: 7
     - Key: 7
       Value:
         needsUpdate: 0
-        value: 1
+        value: 20
     - Key: 8
       Value:
         needsUpdate: 0
-        value: 1
+        value: 30
     - Key: 9
       Value:
         needsUpdate: 0
@@ -129,12 +137,20 @@ MonoBehaviour:
     - Key: 12
       Value:
         needsUpdate: 0
-        value: 4
+        value: 5
     - Key: 13
       Value:
         needsUpdate: 0
-        value: 0.15
+        value: 0.1
     - Key: 14
       Value:
         needsUpdate: 0
-        value: 2
+        value: 4
+    - Key: 15
+      Value:
+        needsUpdate: 0
+        value: 0.15
+    - Key: 16
+      Value:
+        needsUpdate: 0
+        value: 0.5

@@ -7,7 +7,7 @@ using Utils.EventBus;
 using Utils.Flyweight;
 using Utils.Timers;
 
-namespace Weapons
+/* namespace Weapons
 {
     public class SingleShotWeapon : IWeapon
     {
@@ -103,4 +103,4 @@ namespace Weapons
             }
         } 
     }
-}
+} */

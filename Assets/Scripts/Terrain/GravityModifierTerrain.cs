@@ -15,18 +15,17 @@ namespace Terrain
         }
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Hello");
-            var controller = other.GetComponent<PlayerController>();
+            var controller = other.GetComponent<CharacterClass>();
             if (!controller) return;
-            controller.classData.AddModifier(ClassStat.Gravity, _mod);
+            controller.data.AddModifier(ClassStat.Gravity, _mod);
         }
 
         private void OnTriggerExit(Collider other)
         {
             Debug.Log("Agur");
-            var controller = other.GetComponent<PlayerController>();
+            var controller = other.GetComponent<CharacterClass>();
             if (!controller) return;
-            controller.classData.RemoveModifier(ClassStat.Gravity, _mod);
+            controller.data.RemoveModifier(ClassStat.Gravity, _mod);
         }
     }
 }

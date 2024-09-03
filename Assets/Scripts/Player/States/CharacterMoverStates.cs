@@ -26,12 +26,10 @@ namespace Player.States
     {
         public override void OnEnter()
         {
-            Debug.Log("Entering Grounded State");
         }
 
         public override void Update()
         {
-            CharClass.mover.HandleGravity();
             CharClass.mover.HandleMovement();
         }
 
@@ -61,7 +59,6 @@ namespace Player.States
         }
         public override void OnEnter()
         {
-            Debug.Log("Entering Jumping State");
             _timer.OnTimerStart += () => IsGracePeriodOver = false;
             _timer.OnTimerStop += () => IsGracePeriodOver = true;
             _timer.Start();
@@ -71,13 +68,11 @@ namespace Player.States
 
         public override void Update()
         {
-            
+            CharClass.mover.HandleAirMovement();
         }
 
         public override void FixedUpdate()
         {
-            CharClass.mover.HandleGravity();
-            CharClass.mover.HandleAirMovement();
         }
 
 
@@ -91,18 +86,17 @@ namespace Player.States
     public class AirborneState : GenericMovementState {
         public override void OnEnter()
         {
-            Debug.Log("Entering OnAir State");
+            
         }
 
         public override void Update()
         {
-           
+            CharClass.mover.HandleAirMovement();
         }
 
         public override void FixedUpdate()
         {
-            CharClass.mover.HandleGravity();
-            CharClass.mover.HandleAirMovement();
+
         }
 
         public override void OnExit()
@@ -119,36 +113,43 @@ namespace Player.States
     public class DashingState : GenericMovementState
     {
         private Vector2 _direction;
-        private readonly CountdownTimer _timer;
+        private readonly PlayerCooldownTimer _timer;
         public bool IsFinished = true;
         public override void OnEnter()
         {
             _timer.Start();
-            
+            CharClass.fpCamera.IsBodyLocked = true;
+            _direction =  CharClass.mover.currentDirection;
+            CharClass.mover.currentVelocity = 0f;
             CharClass.GetClassData().AddModifier(ClassStat.Gravity, StatModifier.Zero);
-            _direction = CharClass.mover.currentDirection;
             if (_direction is { x: 0, y: 0 }) _direction.y = 1f;
             EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
             {
                 IsGoingFast = true
             });
-            CharClass.mover.isPressingDash = false;
         }
 
         public override void Update()
         {
-           
+            var move = new Vector3(_direction.x, 0 , _direction.y);
+            move = CharClass.mover.transform.TransformDirection(move);
+            move *= CharClass.GetCurrentStat(ClassStat.Speed);
+            move *= CharClass.GetCurrentStat(ClassStat.DashSpeed);
+            move.y = CharClass.mover.currentVelocity;
+            
+            CharClass.mover.characterController.Move(move * Time.deltaTime);
         }
 
         public override void FixedUpdate()
         {
-            CharClass.mover.HandleGravity();
-            CharClass.mover.HandleAirMovement();
         }
 
         public override void OnExit()
         {
+            
+            CharClass.fpCamera.IsBodyLocked = false;
             CharClass.mover.currentSpeed = _direction;
+            
             CharClass.GetClassData().RemoveModifier(ClassStat.Gravity, StatModifier.Zero);
             _timer.Stop();
             EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
@@ -160,7 +161,7 @@ namespace Player.States
         public DashingState(CharacterClass cc) : base(cc)
         {
             _direction = new Vector2();
-            _timer = new CountdownTimer(CharClass.GetCurrentStat(ClassStat.DashDuration));
+            _timer = new PlayerCooldownTimer(CharClass.GetClassData(), ClassStat.DashDuration);
             _timer.OnTimerStart += () => IsFinished = false;
             _timer.OnTimerStop += () => IsFinished = true;
         }

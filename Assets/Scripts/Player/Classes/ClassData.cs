@@ -100,6 +100,8 @@ namespace Player.Classes
      public enum ClassStat
         {
             MaxHealth,
+            MaxStamina,
+            StaminaRegen,
             Speed,
             AirAcceleration,
             MaxAirSpeed,
