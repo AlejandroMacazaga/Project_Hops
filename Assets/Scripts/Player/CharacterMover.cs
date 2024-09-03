@@ -17,9 +17,9 @@ namespace Player
     public class CharacterMover : ValidatedMonoBehaviour
     {
         [SerializeField, Self] private InterfaceRef<CharacterClass> characterClass;
-        [SerializeField, Self] private CharacterController characterController;
-        [SerializeField, Self] private CeilingDetector ceilingDetector;
-        [SerializeField, Self] private GroundChecker groundChecker;
+        [SerializeField, Self] public CharacterController characterController;
+        [SerializeField, Self] public CeilingDetector ceilingDetector;
+        [SerializeField, Self] public GroundChecker groundChecker;
 
         public StateMachine MovementStateMachine
         {
@@ -29,17 +29,11 @@ namespace Player
         
         [SerializeField] private float coyoteTime = 0.2f;
         private CountdownTimer _coyoteTimer;
-        private PlayerCooldownTimer _dashCooldown;
         
         [SerializeField] public bool isPressingJump = false;
-        [SerializeField] public bool isPressingDash = false;
-        [SerializeField] private int amountOfAirJumps = 0;
-        [SerializeField] private int currentAmountOfAirJumps = 0;
         [SerializeField] public float currentVelocity;
         [SerializeField] public Vector2 currentDirection;
         [SerializeField] public Vector2 currentSpeed;
-        [SerializeField] private int amountOfAirDash = 1;
-        [SerializeField] private int currentAmountOfAirDash = 1;
         [SerializeField] public bool isBodyLocked = false;
 
         public GroundedState GroundedState;
@@ -49,7 +43,6 @@ namespace Player
         void Awake()
         {
             _coyoteTimer = new CountdownTimer(coyoteTime);
-            _dashCooldown = new PlayerCooldownTimer(characterClass.Value.GetClassData(), ClassStat.DashCooldown);
             MovementStateMachine = new StateMachine();
             GroundedState = new GroundedState(characterClass.Value);
             JumpingState = new JumpingState(characterClass.Value);
@@ -59,7 +52,7 @@ namespace Player
             MovementStateMachine.AddTransition(GroundedState, JumpingState,
                 new FuncPredicate(() => characterController.isGrounded && isPressingJump));
             MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(() => characterController.isGrounded));
-            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning || currentAmountOfAirJumps > 0) && isPressingJump));
+            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump));
             MovementStateMachine.AddTransition(JumpingState, AirborneState, new FuncPredicate(() => JumpingState.IsGracePeriodOver));
             
             MovementStateMachine.SetState(AirborneState);
@@ -67,6 +60,7 @@ namespace Player
         
         private void Update()
         {
+            HandleGravity();
             MovementStateMachine.Update();
         }
         
@@ -83,20 +77,20 @@ namespace Player
             move *= characterClass.Value.GetCurrentStat(ClassStat.Speed);
             move.y = currentVelocity;
             
-            characterController.Move(move * Time.fixedDeltaTime);
+            characterController.Move(move * Time.deltaTime);
         }
         
         public void HandleAirMovement()
         {
-            currentSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.fixedDeltaTime) : currentSpeed.x),
-                (currentDirection.y != 0f ? currentSpeed.y + (currentDirection.y * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.fixedDeltaTime) : currentSpeed.y));
+            currentSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.x),
+                (currentDirection.y != 0f ? currentSpeed.y + (currentDirection.y * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.y));
             currentSpeed = Vector2.ClampMagnitude(currentSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
             var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
             move *= characterClass.Value.GetCurrentStat(ClassStat.Speed);
             move.y = currentVelocity;
 
-            characterController.Move(move * Time.fixedDeltaTime);
+            characterController.Move(move * Time.deltaTime);
         }
         
         public void HandleGravity()
@@ -105,20 +99,10 @@ namespace Player
             if (characterController.isGrounded && currentVelocity <= 0f)
                 currentVelocity = -3f;
             else
-                currentVelocity -= characterClass.Value.GetCurrentStat(ClassStat.Gravity) * Time.fixedDeltaTime;
+                currentVelocity -= characterClass.Value.GetCurrentStat(ClassStat.Gravity) * Time.deltaTime;
             if (currentVelocity < -maxVelocity) currentVelocity = -maxVelocity;
         }
 
-        public void HandleDashing()
-        {
-            currentSpeed = currentDirection;
-            var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
-            move = transform.TransformDirection(move);
-            move *= characterClass.Value.GetCurrentStat(ClassStat.Speed);
-            move.y = currentVelocity;
-            
-            characterController.Move(move * Time.fixedDeltaTime);
-        }
         
     }
 }

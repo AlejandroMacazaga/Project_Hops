@@ -42,7 +42,6 @@ namespace Utils.StateMachine
             
             var previousState = _currentNode.State;
             var nextState = _nodes[state.GetType()].State;
-
             previousState?.OnExit();
             nextState.OnEnter();
             
@@ -51,14 +50,20 @@ namespace Utils.StateMachine
 
         
         Transition GetTransition() {
-            foreach (var transition in _anyTransitions)
+            foreach (var transition in _anyTransitions) 
                 if (transition.Evaluate() && transition.To != CurrentState)
+                {
+                    transition?.TransitionalAction?.Invoke();
                     return transition;
+                }
+            
 
-            foreach (var transition in _currentNode.Transitions) {
+            foreach (var transition in _currentNode.Transitions) 
                 if (transition.Evaluate())
+                {
+                    transition.TransitionalAction?.Invoke();
                     return transition;
-            }
+                }
 
             return null;
         }
