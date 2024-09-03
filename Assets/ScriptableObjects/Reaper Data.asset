@@ -25,11 +25,11 @@ MonoBehaviour:
     - Key: 4
       Value: 3
     - Key: 5
-      Value: 1.2
+      Value: 1
     - Key: 6
       Value: 7
     - Key: 7
-      Value: 20
+      Value: 30
     - Key: 8
       Value: 30
     - Key: 9
@@ -43,7 +43,7 @@ MonoBehaviour:
     - Key: 13
       Value: 0.1
     - Key: 14
-      Value: 4
+      Value: 5
     - Key: 15
       Value: 0.15
     - Key: 16
@@ -109,7 +109,7 @@ MonoBehaviour:
     - Key: 5
       Value:
         needsUpdate: 0
-        value: 1.2
+        value: 1
     - Key: 6
       Value:
         needsUpdate: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
     - Key: 7
       Value:
         needsUpdate: 0
-        value: 20
+        value: 30
     - Key: 8
       Value:
         needsUpdate: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
     - Key: 14
       Value:
         needsUpdate: 0
-        value: 4
+        value: 5
     - Key: 15
       Value:
         needsUpdate: 0

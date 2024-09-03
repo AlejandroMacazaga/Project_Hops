@@ -1,36 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using KBCore.Refs;
 using Player.Events;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils.EventBus;
 
-public class SpeedlineListener : ValidatedMonoBehaviour
+namespace Player
 {
-    [SerializeField, Self] private ParticleSystem speedLines;
-
-    void Start()
+    public class SpeedlineListener : ValidatedMonoBehaviour
     {
-        speedLines.Stop();
-        EventBus<PlayerIsGoingFast>.Register(new EventBinding<PlayerIsGoingFast>(HandleSpeedLine));
-    }
+        [SerializeField, Self] private ParticleSystem speedLines;
 
-    void HandleSpeedLine(PlayerIsGoingFast e) 
-    {
-        if (e.IsGoingFast)
+        void Start()
         {
-            speedLines.Play();
+            speedLines.Stop();
+            EventBus<PlayerIsGoingFast>.Register(new EventBinding<PlayerIsGoingFast>(HandleSpeedLine));
         }
-        else
-        {
-            Invoke(nameof(StopSpeedLine), 0.1f);
-        }
-    }
 
-    void StopSpeedLine()
-    {
-        speedLines.Stop();
-    }
+        void HandleSpeedLine(PlayerIsGoingFast e) 
+        {
+            if (e.IsGoingFast)
+            {
+                speedLines.Play();
+            }
+            else
+            {
+                Invoke(nameof(StopSpeedLine), 0.1f);
+            }
+        }
+
+        void StopSpeedLine()
+        {
+            speedLines.Stop();
+        }
     
+    }
 }

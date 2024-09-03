@@ -29,6 +29,7 @@ namespace Player.Classes.Reaper
             mover.MovementStateMachine.AddTransition(DashingState, mover.GroundedState,
                 new FuncPredicate(() => DashingState.IsFinished && mover.characterController.isGrounded), () => DashCooldown.Start());
             mover.MovementStateMachine.AddTransition(DashingState, mover.AirborneState, new FuncPredicate(() => DashingState.IsFinished && !mover.characterController.isGrounded), () => DashCooldown.Start());
+            
             inputReader.Dash += OnDash;
             
             inputReader.EnablePlayerActions();
@@ -36,7 +37,6 @@ namespace Player.Classes.Reaper
 
         void Update()
         {
-            Debug.Log(DashCooldown.IsFinished());
         }
         
         
