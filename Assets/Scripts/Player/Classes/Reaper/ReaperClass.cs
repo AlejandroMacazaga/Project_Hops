@@ -23,7 +23,7 @@ namespace Player.Classes.Reaper
             base.Start();
             DashingState = new DashingState(this);
             DashCooldown = new PlayerCooldownTimer(data, ClassStat.DashCooldown);
-            mover.MovementStateMachine.AddTransition(mover.GroundedState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished()));
+            mover.MovementStateMachine.AddTransition(mover.GroundedState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished() && stamina.UseStamina(50)));
             mover.MovementStateMachine.AddTransition(mover.AirborneState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished()));
 
             mover.MovementStateMachine.AddTransition(DashingState, mover.GroundedState,
