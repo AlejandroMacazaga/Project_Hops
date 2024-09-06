@@ -2,13 +2,12 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace Entities
+namespace Entities.Attacks
 {
     [CreateAssetMenu(menuName = "Entities/DamageComponent")]
     public class DamageComponent : ScriptableObject, IVisitor
     {
-        public float amount;
-        public EntityTeam team;
+        public float damageAmount;
         
         public void Visit(object o)
         {
@@ -30,7 +29,7 @@ namespace Entities
 
         public void Visit(HealthComponent healthComponent)
         {
-            healthComponent.DamageReceived(amount);
+            healthComponent.DamageReceived(damageAmount);
         }
 
         public bool CanDamage(EntityTeam other)
@@ -38,7 +37,5 @@ namespace Entities
             return true;
             // TODO : Add checks for what can damage what
         }
-        
-        
     }
 }

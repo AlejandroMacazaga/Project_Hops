@@ -148,7 +148,7 @@ namespace Player.States
         {
             
             CharClass.fpCamera.IsBodyLocked = false;
-            CharClass.mover.currentSpeed = _direction;
+            CharClass.mover.currentSpeed = new Vector3(_direction.x, 0, _direction.y);
             
             CharClass.GetClassData().RemoveModifier(ClassStat.Gravity, StatModifier.Zero);
             _timer.Stop();
