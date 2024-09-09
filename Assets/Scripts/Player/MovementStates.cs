@@ -166,4 +166,5 @@ namespace Player.States
             _timer.OnTimerStop += () => IsFinished = true;
         }
     }
+    
 }

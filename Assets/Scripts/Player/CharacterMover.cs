@@ -43,6 +43,7 @@ namespace Player
         [SerializeField] public Vector2 currentDirection;
         [SerializeField] public Vector2 currentSpeed;
         [SerializeField] public bool isBodyLocked = false;
+        [SerializeField] public bool isMovementLocked = false;
         public GroundedState GroundedState;
         public JumpingState JumpingState;
         public AirborneState AirborneState;
@@ -57,9 +58,9 @@ namespace Player
             MovementStateMachine.AddTransition(GroundedState, AirborneState,
                 new FuncPredicate(() => !characterController.isGrounded), _coyoteTimer.Start);
             MovementStateMachine.AddTransition(GroundedState, JumpingState,
-                new FuncPredicate(() => characterController.isGrounded && isPressingJump));
+                new FuncPredicate(() => characterController.isGrounded && isPressingJump && !isMovementLocked));
             MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(() => characterController.isGrounded));
-            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump));
+            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump && !isMovementLocked));
             MovementStateMachine.AddTransition(JumpingState, AirborneState, new FuncPredicate(() => JumpingState.IsGracePeriodOver));
             
             MovementStateMachine.SetState(AirborneState);

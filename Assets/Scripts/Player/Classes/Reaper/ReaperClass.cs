@@ -20,19 +20,31 @@ namespace Player.Classes.Reaper
     {
         public DashingState DashingState;
         public PlayerCooldownTimer DashCooldown;
+
+        public ReaperNoAttackState NoAttackState;
+        public ReaperPrimaryAttackChargingState ChargingState;
+        public ReaperFastPrimaryAttackState FastPrimaryAttackState;
+        public ReaperChargedPrimaryAttackState ChargedPrimaryAttackState;
+        
+        public readonly StateMachine CombatStateMachine = new();
         
         private bool _isPressingDash, _hasStartedPrimaryAttack;
-        private CountdownTimer _holdAttackTimer;
+        public bool isAttacking = false;
+        public bool isPressingPrimaryAttack = false;
+        public bool isLeftAttack = false;
+        public CountdownTimer HoldAttackTimer;
         private AttackHoldEvent _holdEvent;
 
-        [SerializeField] private int attackChainNumber = 0;
+        public readonly StatModifier ChargeSlowdown = new StatModifier(ModifierType.Multiplier, 0.5f);
         
-        [SerializeField] private SerializedDictionary<ReaperAction, ReaperAttack> attacks;
+        [SerializeField] public SerializedDictionary<ReaperAction, ReaperAttack> attacks;
+
+        private Action _primaryAttackStart;
         public override void Start()
         {
             base.Start();
-            #region StateMachine
-            DashingState = new DashingState(this);
+            #region MovementStateMachine
+            DashingState = new(this);
             DashCooldown = new PlayerCooldownTimer(data, ClassStat.DashCooldown);
             mover.MovementStateMachine.AddTransition(mover.GroundedState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished() && stamina.UseStamina(50)));
             mover.MovementStateMachine.AddTransition(mover.AirborneState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished()));
@@ -42,19 +54,40 @@ namespace Player.Classes.Reaper
             mover.MovementStateMachine.AddTransition(DashingState, mover.AirborneState, new FuncPredicate(() => DashingState.IsFinished && !mover.characterController.isGrounded), () => DashCooldown.Start());
             #endregion
             
-            inputReader.Dash += OnDash;
+            #region ReaperStateMachine
+            
+            NoAttackState = new ReaperNoAttackState(this);
+            ChargingState = new ReaperPrimaryAttackChargingState(this);
+            FastPrimaryAttackState = new ReaperFastPrimaryAttackState(this);
+            ChargedPrimaryAttackState = new ReaperChargedPrimaryAttackState(this);
+            
+            CombatStateMachine.AddAnyTransition(NoAttackState, new FuncPredicate(() => !isAttacking));
+            CombatStateMachine.AddTransition(NoAttackState, ChargingState, new ActionPredicate(ref _primaryAttackStart));
+            CombatStateMachine.AddTransition(ChargingState, FastPrimaryAttackState,
+                new FuncPredicate(() => !isPressingPrimaryAttack && HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
+            CombatStateMachine.AddTransition(ChargingState, ChargedPrimaryAttackState, 
+                new FuncPredicate(() => !isPressingPrimaryAttack && !HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
+            CombatStateMachine.SetState(NoAttackState);
+            #endregion
+
             inputReader.PrimaryAttack += OnPrimaryAttack;
             inputReader.EnablePlayerActions();
             
-            _holdAttackTimer = new CountdownTimer(1f);
-            _holdAttackTimer.OnTimerTick += OnHoldTick;
+            HoldAttackTimer = new CountdownTimer(1f);
+            HoldAttackTimer.OnTimerTick += OnHoldTick;
+            
+            
         }
         
+
         private void OnHoldTick()
         {
-            _holdEvent.Progress = _holdAttackTimer.Progress;
+            Debug.Log("Tick");
+            _holdEvent.Progress = HoldAttackTimer.Progress;
             EventBus<AttackHoldEvent>.Raise(_holdEvent);
         }
+
+        
         private void OnDash(ActionState action, IInputInteraction interaction)
         {
             switch (action)
@@ -74,72 +107,31 @@ namespace Player.Classes.Reaper
 
         private void OnPrimaryAttack(ActionState action, IInputInteraction interaction)
         {
-            Debug.Log(action);
-            Debug.Log(interaction);
             switch (action)
             {
                 case ActionState.Press:
-                    StartPrimaryAttack();
+                    isPressingPrimaryAttack = true;
+                    _primaryAttackStart?.Invoke();
+                    HoldAttackTimer.Start();
                     break;
                 case ActionState.Hold:
                     break;
                 case ActionState.Release:
-                    ReleasePrimaryAttack();
+                    isPressingPrimaryAttack = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
         }
+
+        void Update()
+        {
+            CombatStateMachine.Update();
+        }
         
-        private void StartPrimaryAttack()
+        void FixedUpdate()
         {
-            if (_hasStartedPrimaryAttack) return;
-            _hasStartedPrimaryAttack = true;    
-            _holdAttackTimer.Start();
-            attackChainNumber++;
-
-        }
-
-        private void ReleasePrimaryAttack()
-        {
-            if (_holdAttackTimer.IsFinished())
-            {
-                ChargedPrimaryAttack();
-            }
-            else
-            {
-                FastPrimaryAttack();
-            }
-
-            _holdAttackTimer.Stop();
-            _holdEvent.Progress = 0f;
-            EventBus<AttackHoldEvent>.Raise(_holdEvent);
-            _hasStartedPrimaryAttack = false;
-        }
-
-
-        private void FastPrimaryAttack()
-        {
-            var attack = attackChainNumber % 2 == 0
-                ? attacks[ReaperAction.FastPrimaryAttackLeft]
-                : attacks[ReaperAction.FastPrimaryAttackRight];
-            attack.hitbox.Activate();
-            // play the animation
-            var timer = new CountdownTimer(attack.duration);
-            timer.Start();
-            timer.OnTimerStop += attack.hitbox.Deactivate;
-        }
-
-        private void ChargedPrimaryAttack()
-        {
-            var attack = attackChainNumber % 2 == 0
-                ? attacks[ReaperAction.ChargedPrimaryAttackLeft]
-                : attacks[ReaperAction.ChargedPrimaryAttackRight];
-            attack.hitbox.Activate();
-            // play the animation
-            var timer = new CountdownTimer(attack.duration);
-            timer.Start();
-            timer.OnTimerStop += attack.hitbox.Deactivate;
+            CombatStateMachine.FixedUpdate();
         }
     }
     

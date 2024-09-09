@@ -3,6 +3,7 @@ using KBCore.Refs;
 using Player.Classes;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utils.Timers;
 
 namespace Entities.Attacks
 {
@@ -11,9 +12,10 @@ namespace Entities.Attacks
         [SerializeField, Anywhere] private InterfaceRef<CharacterClass> owner;
         [SerializeField] public DamageComponent damage;
         [SerializeField, Self] private BoxCollider box;
+        
+        void Start() {}
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Ey");
             if (!other.TryGetComponent<IVisitable>(out var visitable)) return;
             damage.damageAmount *= owner.Value.GetCurrentStat(ClassStat.AttackDamage);
             damage.Visit(visitable);

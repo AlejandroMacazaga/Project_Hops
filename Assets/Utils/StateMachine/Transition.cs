@@ -34,6 +34,11 @@ namespace Utils.StateMachine
             if (result.HasValue) {
                 return result.Value;
             }
+            
+            result = (Condition as ActionWithFuncPredicate)?.Evaluate();
+            if (result.HasValue) {
+                return result.Value;
+            }
 
             // Check if the condition variable is an IPredicate and call the Evaluate method if it is not null
             result = (Condition as IPredicate)?.Evaluate();
@@ -70,6 +75,24 @@ namespace Utils.StateMachine
             bool result = Flag;
             Flag = false;
             return result;
+        }
+    }
+
+    public class ActionWithFuncPredicate : IPredicate
+    {
+        public bool Flag;
+        private readonly Func<bool> _func;
+
+        public ActionWithFuncPredicate(ref Action eventReaction, Func<bool> func)
+        {
+            _func = func; 
+            eventReaction += () => { Flag = true; };
+        }
+        
+        public bool Evaluate() {
+            bool result = Flag;
+            Flag = false;
+            return result && _func.Invoke();
         }
     }
 }

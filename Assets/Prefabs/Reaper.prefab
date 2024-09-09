@@ -226,23 +226,23 @@ MonoBehaviour:
     - Key: 0
       Value:
         animation: {fileID: 0}
-        hitbox: {fileID: 567831999866274689}
-        duration: 0
+        hitbox: {fileID: 8089817367140238036}
+        duration: 0.1
     - Key: 1
       Value:
         animation: {fileID: 0}
-        hitbox: {fileID: 567831999866274689}
-        duration: 0
+        hitbox: {fileID: 8089817367140238036}
+        duration: 0.1
     - Key: 2
       Value:
         animation: {fileID: 0}
-        hitbox: {fileID: 3105727398778491219}
-        duration: 0
+        hitbox: {fileID: 5136367280001312595}
+        duration: 0.2
     - Key: 3
       Value:
         animation: {fileID: 0}
-        hitbox: {fileID: 3105727398778491219}
-        duration: 0
+        hitbox: {fileID: 5136367280001312595}
+        duration: 0.2
     - Key: 4
       Value:
         animation: {fileID: 0}
