@@ -1,3 +1,4 @@
+using Player.States;
 using UnityEngine;
 using Utils.StateMachine;
 using Utils.Timers;
@@ -47,6 +48,7 @@ namespace Player.Classes.Reaper
     public class ReaperPrimaryAttackChargingState : ReaperState
     {
         public CountdownTimer CanBeCanceledTimer;
+        private IState _currentMovementState;
         public ReaperPrimaryAttackChargingState(ReaperClass owner) : base(owner)
         {
             CanBeCanceledTimer = new CountdownTimer(0.1f);
@@ -54,16 +56,15 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
-            Debug.Log("Current State: " + ToString());
             Owner.isLeftAttack = !Owner.isLeftAttack;
             Owner.isAttacking = true;
             CanBeCanceledTimer.Start();
             Owner.GetClassData().AddModifier(ClassStat.Speed, Owner.ChargeSlowdown);
+            _currentMovementState = Owner.mover.MovementStateMachine.CurrentState;
         }
 
         public override void Update()
         {
-            // noop
         }
 
         public override void FixedUpdate()
@@ -75,7 +76,7 @@ namespace Player.Classes.Reaper
         {
             
             if(!Owner.HoldAttackTimer.IsFinished()) Owner.HoldAttackTimer.Stop();
-            if (!CanBeCanceledTimer.IsFinished()) CanBeCanceledTimer.Stop();
+            if(!CanBeCanceledTimer.IsFinished()) CanBeCanceledTimer.Stop();
             Owner.GetClassData().RemoveModifier(ClassStat.Speed, Owner.ChargeSlowdown);
         }
 

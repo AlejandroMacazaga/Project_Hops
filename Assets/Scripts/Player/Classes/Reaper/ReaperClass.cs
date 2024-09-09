@@ -71,6 +71,7 @@ namespace Player.Classes.Reaper
             #endregion
 
             inputReader.PrimaryAttack += OnPrimaryAttack;
+            inputReader.Dash += OnDash;
             inputReader.EnablePlayerActions();
             
             HoldAttackTimer = new CountdownTimer(1f);
@@ -82,7 +83,6 @@ namespace Player.Classes.Reaper
 
         private void OnHoldTick()
         {
-            Debug.Log("Tick");
             _holdEvent.Progress = HoldAttackTimer.Progress;
             EventBus<AttackHoldEvent>.Raise(_holdEvent);
         }
