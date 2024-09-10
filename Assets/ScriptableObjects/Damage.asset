@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6706ba7059d84359aeb518de05c6a0f6, type: 3}
   m_Name: Damage
   m_EditorClassIdentifier: 
-  amount: 1
+  damageAmount: 100
+  pushbackAngle: {x: 0, y: 0, z: 0}
+  force: 0
   team: 0

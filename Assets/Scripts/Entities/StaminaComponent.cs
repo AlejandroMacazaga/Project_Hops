@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MEC;
 using Player.Events;
 using UnityEngine;
+using UnityEngine.Events;
 using Utils.EventBus;
 
 namespace Entities
@@ -16,11 +17,14 @@ namespace Entities
         [SerializeField] public float staminaRegeneration;
 
         private CoroutineHandle _regenHandler;
+        private CoroutineHandle _useHandler;
+
 
         void Start()
         {
-            
+
         }
+
         public void SetValues(StaminaData data)
         {
             staminaPoints = data.staminaPoints;
@@ -30,7 +34,7 @@ namespace Entities
 
         public bool UseStamina(float amount)
         {
-            
+    
             if (staminaPoints > amount) staminaPoints -= amount;
             else return false;
             EventBus<PlayerStaminaChange>.Raise(new PlayerStaminaChange()
@@ -41,10 +45,34 @@ namespace Entities
             _regenHandler = Timing.RunCoroutine(RegenerateStamina(0.8f));
             return true;
         }
-        
+
+        public void UseContinuously(float usePerSecond)
+        {
+            Timing.RunCoroutine(DrainStamina(usePerSecond));
+        }
+
+        public void StopUseContinously()
+        {
+
+        }
+
+
+
         public void Accept(IVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        IEnumerator<float> DrainStamina(float usePerSecond)
+        {
+            while (staminaPoints > 0)
+            {
+                staminaPoints -= usePerSecond * Time.deltaTime;
+                RaiseEvent();
+                yield return Timing.WaitForOneFrame;
+            }
+            staminaPoints = 0;
+            RaiseEvent();
         }
 
         IEnumerator<float> RegenerateStamina(float delay)
@@ -57,20 +85,23 @@ namespace Entities
             while (staminaPoints < maxStaminaPoints)
             {
                 staminaPoints += staminaRegeneration * Time.deltaTime;
-                EventBus<PlayerStaminaChange>.Raise(new PlayerStaminaChange()
-                {
-                    Current = staminaPoints
-                });
+                RaiseEvent();
                 yield return Timing.WaitForOneFrame;
             }
+
             staminaPoints = maxStaminaPoints;
+            RaiseEvent();
+        }
+
+        private void RaiseEvent()
+        {
             EventBus<PlayerStaminaChange>.Raise(new PlayerStaminaChange()
             {
                 Current = staminaPoints
             });
         }
     }
-    
+
     [Serializable]
     public struct StaminaData
     {

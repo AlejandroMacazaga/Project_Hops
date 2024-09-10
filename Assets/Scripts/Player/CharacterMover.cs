@@ -21,6 +21,14 @@ namespace Player
         [SerializeField, Self] public CeilingDetector ceilingDetector;
         [SerializeField, Self] public GroundChecker groundChecker;
 
+        [SerializeField, HideInInspector, Self]
+        private Transform tr;
+        /*
+        public float lastYRotation;
+        private bool _wasTooSharp = false;
+        public float rotationThresholdPerSecond = 90f;
+        
+        */
         public StateMachine MovementStateMachine
         {
             get;
@@ -35,7 +43,7 @@ namespace Player
         [SerializeField] public Vector2 currentDirection;
         [SerializeField] public Vector2 currentSpeed;
         [SerializeField] public bool isBodyLocked = false;
-
+        [SerializeField] public bool isMovementLocked = false;
         public GroundedState GroundedState;
         public JumpingState JumpingState;
         public AirborneState AirborneState;
@@ -50,16 +58,35 @@ namespace Player
             MovementStateMachine.AddTransition(GroundedState, AirborneState,
                 new FuncPredicate(() => !characterController.isGrounded), _coyoteTimer.Start);
             MovementStateMachine.AddTransition(GroundedState, JumpingState,
-                new FuncPredicate(() => characterController.isGrounded && isPressingJump));
+                new FuncPredicate(() => characterController.isGrounded && isPressingJump && !isMovementLocked));
             MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(() => characterController.isGrounded));
-            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump));
+            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump && !isMovementLocked));
             MovementStateMachine.AddTransition(JumpingState, AirborneState, new FuncPredicate(() => JumpingState.IsGracePeriodOver));
             
             MovementStateMachine.SetState(AirborneState);
+            /* lastYRotation = tr.eulerAngles.y; */
         }
+
+        /* private void HandleRotation()
+        {
+            var currentYRotation =  tr.eulerAngles.y;
+            var rotationDelta = Mathf.DeltaAngle(lastYRotation, currentYRotation);
+
+            if (rotationDelta != 0f)
+            {
+
+                float rotationDeltad = rotationDelta * Time.deltaTime;
+
+
+                _wasTooSharp = rotationDeltad > rotationThresholdPerSecond * Time.deltaTime;
+            }
+            
+            lastYRotation = currentYRotation;
+        } */
         
         private void Update()
         {
+           // HandleRotation();
             HandleGravity();
             MovementStateMachine.Update();
         }
@@ -82,14 +109,14 @@ namespace Player
         
         public void HandleAirMovement()
         {
-            currentSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.x),
+            var incrementedSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.x),
                 (currentDirection.y != 0f ? currentSpeed.y + (currentDirection.y * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.y));
-            currentSpeed = Vector2.ClampMagnitude(currentSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
+            currentSpeed = Vector2.ClampMagnitude(incrementedSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
             var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
             move = transform.TransformDirection(move);
             move *= characterClass.Value.GetCurrentStat(ClassStat.Speed);
+            // if (_wasTooSharp) move = new Vector3(0, 0, 0);
             move.y = currentVelocity;
-
             characterController.Move(move * Time.deltaTime);
         }
         

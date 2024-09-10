@@ -115,7 +115,7 @@ namespace Player.Classes
             ReloadSpeed,
             DashSpeed,
             DashDuration,
-            DashCooldown,
+            DashCooldown
         }
      
         [Serializable]
