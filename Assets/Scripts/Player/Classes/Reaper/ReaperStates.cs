@@ -109,7 +109,7 @@ namespace Player.Classes.Reaper
                 ? Owner.attacks[ReaperAction.FastPrimaryAttackLeft]
                 : Owner.attacks[ReaperAction.FastPrimaryAttackRight];
             _hitboxDuration.Start();
-            // Start animation
+            Owner.AnimationSystem.PlayOneShot(_attack.animation);
         }
 
         public override void Update()
@@ -142,7 +142,6 @@ namespace Player.Classes.Reaper
             };
             
             _hitboxDuration.OnTimerStart += () => _attack.hitbox.Activate();
-            // Start animation
         }
 
         public override void OnEnter()
@@ -152,6 +151,7 @@ namespace Player.Classes.Reaper
                 ? Owner.attacks[ReaperAction.ChargedPrimaryAttackLeft]
                 : Owner.attacks[ReaperAction.ChargedPrimaryAttackRight];
             _hitboxDuration.Start();
+            Owner.AnimationSystem.PlayOneShot(_attack.animation);
         }
 
         public override void Update()

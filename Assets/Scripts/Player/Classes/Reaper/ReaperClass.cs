@@ -9,6 +9,7 @@ using Player.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Utils.AnimationSystem;
 using Utils.EventBus;
 using Utils.StateMachine;
 using Utils.Timers;
@@ -27,6 +28,10 @@ namespace Player.Classes.Reaper
         public ReaperChargedPrimaryAttackState ChargedPrimaryAttackState;
         
         public readonly StateMachine CombatStateMachine = new();
+
+        [SerializeField] public AnimatorConfig animatorConfig;
+        [SerializeField] public AudioConfig audioConfig;
+        public AnimationSystem AnimationSystem;
         
         private bool _isPressingDash, _hasStartedPrimaryAttack;
         public bool isAttacking = false;
@@ -43,6 +48,8 @@ namespace Player.Classes.Reaper
         public override void Start()
         {
             base.Start();
+
+            AnimationSystem = new AnimationSystem(animatorConfig, audioConfig);
             #region MovementStateMachine
             DashingState = new(this);
             DashCooldown = new PlayerCooldownTimer(data, ClassStat.DashCooldown);

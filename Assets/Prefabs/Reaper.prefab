@@ -221,6 +221,13 @@ MonoBehaviour:
   fpCamera: {fileID: 1279542631014774438}
   health: {fileID: 5834397659306214140}
   stamina: {fileID: 6583395224607541328}
+  animatorConfig:
+    animator: {fileID: 0}
+    idleAnimation: {fileID: 0}
+    movingAnimation: {fileID: 0}
+  audioConfig:
+    audioSource: {fileID: 0}
+    movementSounds: []
   isAttacking: 0
   isPressingPrimaryAttack: 0
   isLeftAttack: 0
@@ -256,7 +263,6 @@ MonoBehaviour:
         animation: {fileID: 0}
         hitbox: {fileID: 0}
         duration: 0
-  weapon: {fileID: 1929028464780193500}
 --- !u!114 &1279542631014774438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,41 +666,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 239853859058618281}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
 --- !u!4 &1265117352826467430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
   m_PrefabInstance: {fileID: 1586429230895993741}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1929028464780193500 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  m_PrefabInstance: {fileID: 1586429230895993741}
-  m_PrefabAsset: {fileID: 0}
---- !u!111 &239853859058618281
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1929028464780193500}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: -6053928871919859544, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  - {fileID: 1714644263038740798, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  - {fileID: 5946007843478316329, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  - {fileID: 1714644263038740798, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  - {fileID: -4715662357533900689, guid: 6615493e0bae7dd45a42f0def8af0032, type: 3}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1001 &9117742480753346115
 PrefabInstance:
   m_ObjectHideFlags: 0
