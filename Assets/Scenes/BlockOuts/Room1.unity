@@ -555,6 +555,14 @@ PrefabInstance:
       value: Reaper
       objectReference: {fileID: 0}
     - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 782610828}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 782610828}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: animatorConfig.animator
       value: 
       objectReference: {fileID: 2029616386}

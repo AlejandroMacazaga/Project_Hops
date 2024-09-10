@@ -7,7 +7,9 @@ using Input;
 using KBCore.Refs;
 using Player.States;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
@@ -30,8 +32,9 @@ namespace Player.Classes.Reaper
         public readonly StateMachine CombatStateMachine = new();
 
         [SerializeField] public AnimatorConfig animatorConfig;
-        [SerializeField] public AudioConfig audioConfig;
         public AnimationSystem AnimationSystem;
+        PlayableGraph _playableGraph;
+        
         
         private bool _isPressingDash, _hasStartedPrimaryAttack;
         public bool isAttacking = false;
@@ -48,8 +51,7 @@ namespace Player.Classes.Reaper
         public override void Start()
         {
             base.Start();
-
-            AnimationSystem = new AnimationSystem(animatorConfig, audioConfig);
+            AnimationSystem = new AnimationSystem(animatorConfig);
             #region MovementStateMachine
             DashingState = new(this);
             DashCooldown = new PlayerCooldownTimer(data, ClassStat.DashCooldown);
@@ -86,6 +88,7 @@ namespace Player.Classes.Reaper
             
             
         }
+        
         
 
         private void OnHoldTick()
