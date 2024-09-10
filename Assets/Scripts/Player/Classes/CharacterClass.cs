@@ -14,12 +14,13 @@ namespace Player.Classes
     public class CharacterClass : ValidatedMonoBehaviour, ICharacterClass
     {
         [SerializeField] public ClassData data;
-        [SerializeField, Self] public CharacterMover mover;
+        [SerializeField, Self, HideInInspector] public CharacterMover mover;
         [SerializeField] protected InputReader inputReader;
-        [SerializeField, Self] public SearchInteractable searcher;
-        [SerializeField, Self] public CinemachineFirstPerson fpCamera;
-        [SerializeField, Self] public HealthComponent health;
-        [SerializeField, Self] public StaminaComponent stamina;
+        [SerializeField, Self, HideInInspector] public SearchInteractable searcher;
+        [SerializeField, Self, HideInInspector] public CinemachineFirstPerson fpCamera;
+        [SerializeField, Self, HideInInspector] public Animator animator;
+        [SerializeField, Self, HideInInspector] public HealthComponent health;
+        [SerializeField, Self, HideInInspector] public StaminaComponent stamina;
         public virtual void Start()
         {
             health.SetValues(new HealthData()

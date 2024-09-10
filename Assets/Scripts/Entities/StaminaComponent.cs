@@ -34,7 +34,7 @@ namespace Entities
 
         public bool UseStamina(float amount)
         {
-
+    
             if (staminaPoints > amount) staminaPoints -= amount;
             else return false;
             EventBus<PlayerStaminaChange>.Raise(new PlayerStaminaChange()

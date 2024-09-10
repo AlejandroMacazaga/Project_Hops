@@ -16,13 +16,6 @@ namespace Utils.AnimationSystem
         public AnimationClip movingAnimation;
     }
 
-    [Serializable]
-    public struct AudioConfig
-    {
-        public AudioSource audioSource;
-        public AudioClip[] movementSounds;
-    }
-
     public class AnimationSystem
     {
         PlayableGraph _playableGraph;
@@ -34,7 +27,7 @@ namespace Utils.AnimationSystem
         CoroutineHandle _blendInHandle;
         CoroutineHandle _blendOutHandle;
 
-        public AnimationSystem(AnimatorConfig animatorConfig, AudioConfig audioConfig)
+        public AnimationSystem(AnimatorConfig animatorConfig)
         {
             _playableGraph = PlayableGraph.Create("AnimationSystem");
 

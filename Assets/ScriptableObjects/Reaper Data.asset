@@ -25,7 +25,7 @@ MonoBehaviour:
     - Key: 4
       Value: 3
     - Key: 5
-      Value: 3
+      Value: 1.2
     - Key: 6
       Value: 7
     - Key: 7
@@ -109,7 +109,7 @@ MonoBehaviour:
     - Key: 5
       Value:
         needsUpdate: 0
-        value: 3
+        value: 1.2
     - Key: 6
       Value:
         needsUpdate: 0
