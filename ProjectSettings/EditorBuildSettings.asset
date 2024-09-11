@@ -14,5 +14,26 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: d6bd950fd63309e438ca85ca7e3fe9cb
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room2.unity
+    guid: f19c68f1882a5ce418675fbd80e7babd
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Combined.unity
+    guid: 25634bea4a112524dadc0ef4afa2f631
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room3.unity
+    guid: 392371b8c6583b7498798fff1c7159e9
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room4.unity
+    guid: 7d89fa3c63a14c9418c6c2de5fa82278
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room5.unity
+    guid: 0589941fb1258c74191a48aa2f0a83f3
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room6.unity
+    guid: f6ce0fd3dc5297841a0a253546735e77
+  - enabled: 1
+    path: Assets/Scenes/BlockOuts/Room7.unity
+    guid: fe363b06d2c1993478359bb56fd51c85
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e49b735d103ca4c43ac286de1b41e2d4, type: 2}
