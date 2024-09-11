@@ -33,5 +33,10 @@ namespace Entities.Traps
                 yield return Timing.WaitForSeconds(rateOfFire);
             }
         }
+
+        private void OnDestroy()
+        {
+            Timing.KillCoroutines(_handler);
+        }
     }
 }
