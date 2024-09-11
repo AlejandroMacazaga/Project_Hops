@@ -16,6 +16,6 @@ MonoBehaviour:
   prefab: {fileID: 4375108616942057391, guid: a46e48334638ad44e8a3021b072a7b8b, type: 3}
   toIgnore:
     serializedVersion: 2
-    m_Bits: 192
-  despawnDelay: 5
-  speed: 50
+    m_Bits: 0
+  despawnDelay: 2
+  speed: 3

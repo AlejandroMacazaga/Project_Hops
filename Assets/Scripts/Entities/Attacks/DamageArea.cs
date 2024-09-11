@@ -1,7 +1,6 @@
-using Entities.Attacks;
 using UnityEngine;
 
-namespace Entities
+namespace Entities.Attacks
 {
     
     public class DamageArea : MonoBehaviour

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using KBCore.Refs;
+using MEC;
 using Utils.EventBus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,7 +18,6 @@ namespace Utils.MultiSceneSystem
         public ZoneData[] zones;
         
         private readonly HashSet<int> _loadedScenes = new HashSet<int>();
-        
         void Start()
         {
             StartCoroutine(CheckZones());

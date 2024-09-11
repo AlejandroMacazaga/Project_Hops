@@ -552,7 +552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 87962104}
   loadDistance: 300
-  unloadDistance: 520
+  unloadDistance: 320
   zones:
   - {fileID: 11400000, guid: 82fca3cf1b182c842b2eca35390c231c, type: 2}
   - {fileID: 11400000, guid: d840ce1dc68a18743affe2996d169c72, type: 2}

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using Entities;
+using Entities.Attacks;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utils;
