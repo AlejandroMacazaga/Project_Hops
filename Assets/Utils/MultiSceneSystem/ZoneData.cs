@@ -10,9 +10,15 @@ namespace Utils.MultiSceneSystem
         public Vector3 zonePosition;
     }
 
-    [CreateAssetMenu(menuName = "ZoneData")]
+    [CreateAssetMenu(menuName = "Levels/GroupOfZones")]
     public class GroupOfZones : ScriptableObject
     {
         public int[] sceneIds;
+    }
+
+    [CreateAssetMenu(menuName = "Levels/Level")]
+    public class LevelZones : ScriptableObject
+    {
+        public GroupOfZones[] zonesInLevel;
     }
 }

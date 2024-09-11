@@ -104,6 +104,19 @@ namespace Utils.StateMachine
 
             return node;
         }
+
+        public void RemoveState(IState state)
+        {
+            var node = _nodes.GetValueOrDefault(state.GetType());
+
+            if (node != null)
+            {
+                _nodes.Remove(state.GetType());
+            }
+
+            _anyTransitions.RemoveWhere((transition => transition.To == state));
+        }
+        
         
         private class StateNode
         {
