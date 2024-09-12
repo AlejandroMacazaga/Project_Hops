@@ -23,7 +23,7 @@ MonoBehaviour:
     - Key: 3
       Value: 7
     - Key: 18
-      Value: 1
+      Value: 7
     - Key: 4
       Value: 3
     - Key: 5
@@ -169,4 +169,4 @@ MonoBehaviour:
     - Key: 18
       Value:
         needsUpdate: 0
-        value: 1
+        value: 7

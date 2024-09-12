@@ -142,7 +142,7 @@ namespace Player
 
             // Apply the clamped acceleration while allowing momentum to persist
             currentSpeed = (currentSpeed.magnitude > characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed))
-                ? newSpeed    // Preserve momentum (if already faster)
+                ? currentSpeed    // Preserve momentum (if already faster)
                 : clampedSpeed;  // Apply clamped acceleration if below MaxAirSpeed
 
             // Convert 2D speed into 3D movement

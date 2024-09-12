@@ -152,7 +152,7 @@ namespace Player
         {
             
             CharClass.fpCamera.IsBodyLocked = false;
-            CharClass.mover.currentSpeed = new Vector2(_direction.x, _direction.y) * 1.5f;
+            CharClass.mover.currentSpeed = new Vector2(_direction.x, _direction.y) * (CharClass.GetCurrentStat(ClassStat.DashSpeed) * 0.7F);;
             CharClass.GetClassData().RemoveModifier(ClassStat.Gravity, StatModifier.Zero);
             Timer.Stop();
             EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
