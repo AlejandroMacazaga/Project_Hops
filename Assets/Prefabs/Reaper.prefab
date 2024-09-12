@@ -197,7 +197,7 @@ MonoBehaviour:
   groundChecker: {fileID: 7307138033555690682}
   tr: {fileID: 5236084403923663278}
   coyoteTime: 0.2
-  isPressingJump: 0
+  currentAmountOfAirJumps: 0
   currentVelocity: 0
   currentDirection: {x: 0, y: 0}
   currentSpeed: {x: 0, y: 0}
@@ -549,7 +549,7 @@ Transform:
   m_GameObject: {fileID: 8690988938018932286}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44, z: 0.32}
+  m_LocalPosition: {x: 0, y: 0.44, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -581,7 +581,7 @@ Transform:
   m_GameObject: {fileID: 9055263461432310223}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44000244, z: 0.32000732}
+  m_LocalPosition: {x: 0, y: 0.43999994, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -682,6 +682,26 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
       propertyPath: m_Name
       value: scythe
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 994083272370081453, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905609870639353253, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8719771546195959716, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
