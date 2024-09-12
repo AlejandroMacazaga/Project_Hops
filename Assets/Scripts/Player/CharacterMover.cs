@@ -2,7 +2,6 @@ using System;
 using Input;
 using KBCore.Refs;
 using Player.Classes;
-using Player.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -38,14 +37,13 @@ namespace Player
         [SerializeField] private float coyoteTime = 0.2f;
         private CountdownTimer _coyoteTimer;
         
-        [SerializeField] public bool isPressingJump = false;
+        [SerializeField] public int currentAmountOfAirJumps = 0;
         [SerializeField] public float currentVelocity;
         [SerializeField] public Vector2 currentDirection;
         [SerializeField] public Vector2 currentSpeed;
         [SerializeField] public bool isBodyLocked = false;
         [SerializeField] public bool isMovementLocked = false;
         public GroundedState GroundedState;
-        public JumpingState JumpingState;
         public AirborneState AirborneState;
         
         void Awake()
@@ -53,16 +51,12 @@ namespace Player
             _coyoteTimer = new CountdownTimer(coyoteTime);
             MovementStateMachine = new StateMachine();
             GroundedState = new GroundedState(characterClass.Value);
-            JumpingState = new JumpingState(characterClass.Value);
-            AirborneState = new AirborneState(characterClass.Value);
+            AirborneState = new AirborneState(characterClass.Value, _coyoteTimer);
             MovementStateMachine.AddTransition(GroundedState, AirborneState,
-                new FuncPredicate(() => !characterController.isGrounded), _coyoteTimer.Start);
-            MovementStateMachine.AddTransition(GroundedState, JumpingState,
-                new FuncPredicate(() => characterController.isGrounded && isPressingJump && !isMovementLocked));
+                new FuncPredicate(() => !characterController.isGrounded));
+            MovementStateMachine.AddTransition(GroundedState, AirborneState, new FuncPredicate(() => !characterController.isGrounded));
             MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(() => characterController.isGrounded));
-            MovementStateMachine.AddTransition(AirborneState, JumpingState, new FuncPredicate(() => (_coyoteTimer.IsRunning) && isPressingJump && !isMovementLocked));
-            MovementStateMachine.AddTransition(JumpingState, AirborneState, new FuncPredicate(() => JumpingState.IsGracePeriodOver));
-            
+            currentAmountOfAirJumps = (int) characterClass.Value.GetCurrentStat(ClassStat.MaxAirJumps);
             MovementStateMachine.SetState(AirborneState);
             /* lastYRotation = tr.eulerAngles.y; */
         }
@@ -95,6 +89,31 @@ namespace Player
         {
             MovementStateMachine.FixedUpdate();
         }
+
+        public void Jump()
+        {
+            if (MovementStateMachine.CurrentState is not IJumpCancelable) return;
+            currentSpeed = currentDirection;
+            if (MovementStateMachine.CurrentState is GroundedState)
+            {
+                currentVelocity = characterClass.Value.GetCurrentStat(ClassStat.JumpForce);
+                return;
+            }
+
+            if (MovementStateMachine.CurrentState is AirborneState && currentAmountOfAirJumps > 0)
+            {
+                currentAmountOfAirJumps--;
+                currentVelocity = characterClass.Value.GetCurrentStat(ClassStat.JumpForce);
+                return;
+            }
+
+            if (MovementStateMachine.CurrentState is DashingState state)
+            {
+                if (state.AirborneDash && currentAmountOfAirJumps <= 0) return;
+                state.Timer.Stop();
+                currentVelocity = characterClass.Value.GetCurrentStat(ClassStat.JumpForce);
+            }
+        }
         
         public void HandleMovement()
         {
@@ -109,14 +128,34 @@ namespace Player
         
         public void HandleAirMovement()
         {
-            var incrementedSpeed = new Vector2((currentDirection.x != 0f ? currentSpeed.x + (currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.x),
-                (currentDirection.y != 0f ? currentSpeed.y + (currentDirection.y * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime) : currentSpeed.y));
-            currentSpeed = Vector2.ClampMagnitude(incrementedSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
-            var move = new Vector3(currentSpeed.x, 0 , currentSpeed.y);
+            // Calculate the desired acceleration based on input
+            var acceleration = new Vector2(
+                currentDirection.x != 0f ? currentDirection.x * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime : 0f,
+                currentDirection.y != 0f ? currentDirection.y * characterClass.Value.GetCurrentStat(ClassStat.AirAcceleration) * Time.deltaTime : 0f
+            );
+
+            // Combine the current speed and acceleration
+            var newSpeed = currentSpeed + acceleration;
+
+            // Clamp the acceleration effect (ignoring current momentum) to MaxAirSpeed
+            var clampedSpeed = Vector2.ClampMagnitude(newSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
+
+            // Apply the clamped acceleration while allowing momentum to persist
+            currentSpeed = (currentSpeed.magnitude > characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed))
+                ? newSpeed    // Preserve momentum (if already faster)
+                : clampedSpeed;  // Apply clamped acceleration if below MaxAirSpeed
+
+            // Convert 2D speed into 3D movement
+            var move = new Vector3(currentSpeed.x, 0, currentSpeed.y);
             move = transform.TransformDirection(move);
+    
+            // Scale movement by the character's overall speed factor
             move *= characterClass.Value.GetCurrentStat(ClassStat.Speed);
-            // if (_wasTooSharp) move = new Vector3(0, 0, 0);
+
+            // Maintain the y-axis (falling) velocity
             move.y = currentVelocity;
+
+            // Apply movement to the character controller
             characterController.Move(move * Time.deltaTime);
         }
         

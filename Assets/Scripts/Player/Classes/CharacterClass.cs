@@ -56,18 +56,17 @@ namespace Player.Classes
         {
             return data;
         }
-        
-        private void OnJump(ActionState action, IInputInteraction interaction)
+
+        protected virtual void OnJump(ActionState action, IInputInteraction interaction)
         {
             switch (action)
             {
                 case ActionState.Press:
-                    mover.isPressingJump = true;
+                    mover.Jump();
                     break;
                 case ActionState.Hold:
                     break;
                 case ActionState.Release:
-                    mover.isPressingJump = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);

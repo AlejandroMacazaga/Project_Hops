@@ -22,6 +22,8 @@ MonoBehaviour:
       Value: 30
     - Key: 3
       Value: 7
+    - Key: 18
+      Value: 1
     - Key: 4
       Value: 3
     - Key: 5
@@ -48,6 +50,8 @@ MonoBehaviour:
       Value: 0.15
     - Key: 16
       Value: 0.5
+    - Key: 17
+      Value: 1
   modifiers:
     _serializedList:
     - Key: 0
@@ -83,6 +87,10 @@ MonoBehaviour:
     - Key: 15
       Value: []
     - Key: 16
+      Value: []
+    - Key: 17
+      Value: []
+    - Key: 18
       Value: []
   cachedModifiedValues:
     _serializedList:
@@ -154,3 +162,11 @@ MonoBehaviour:
       Value:
         needsUpdate: 0
         value: 0.5
+    - Key: 17
+      Value:
+        needsUpdate: 0
+        value: 1
+    - Key: 18
+      Value:
+        needsUpdate: 0
+        value: 1

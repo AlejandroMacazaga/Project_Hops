@@ -1,4 +1,3 @@
-using System;
 using Player.Classes;
 using Player.Events;
 using UnityEngine;
@@ -6,7 +5,7 @@ using Utils.EventBus;
 using Utils.StateMachine;
 using Utils.Timers;
 
-namespace Player.States
+namespace Player
 {
 
     public abstract class GenericMovementState : IState
@@ -22,10 +21,11 @@ namespace Player.States
         public abstract void FixedUpdate();
         public abstract void OnExit();
     }
-    public class GroundedState : GenericMovementState
+    public class GroundedState : GenericMovementState, IJumpCancelable
     {
         public override void OnEnter()
         {
+            CharClass.mover.currentAmountOfAirJumps = (int) CharClass.GetCurrentStat(ClassStat.MaxAirJumps);
         }
 
         public override void Update()
@@ -83,10 +83,13 @@ namespace Player.States
         }
     }
     
-    public class AirborneState : GenericMovementState {
+    public class AirborneState : GenericMovementState, IJumpCancelable
+    {
+
+        private readonly CountdownTimer _coyoteTime;
         public override void OnEnter()
         {
-            
+            _coyoteTime.Start();
         }
 
         public override void Update()
@@ -104,20 +107,21 @@ namespace Player.States
             // noop
         }
 
-        public AirborneState(CharacterClass cc) : base(cc)
+        public AirborneState(CharacterClass cc, CountdownTimer coyoteTime) : base(cc)
         {
-            
+            _coyoteTime = coyoteTime;
         }
     }
 
-    public class DashingState : GenericMovementState
+    public class DashingState : GenericMovementState, IJumpCancelable
     {
         private Vector2 _direction;
-        private readonly PlayerCooldownTimer _timer;
+        public readonly PlayerCooldownTimer Timer;
         public bool IsFinished = true;
+        public bool AirborneDash = false;
         public override void OnEnter()
         {
-            _timer.Start();
+            Timer.Start();
             CharClass.fpCamera.IsBodyLocked = true;
             _direction =  CharClass.mover.currentDirection;
             CharClass.mover.currentVelocity = 0f;
@@ -148,10 +152,9 @@ namespace Player.States
         {
             
             CharClass.fpCamera.IsBodyLocked = false;
-            CharClass.mover.currentSpeed = new Vector3(_direction.x, 0, _direction.y);
-            
+            CharClass.mover.currentSpeed = new Vector2(_direction.x, _direction.y) * 1.5f;
             CharClass.GetClassData().RemoveModifier(ClassStat.Gravity, StatModifier.Zero);
-            _timer.Stop();
+            Timer.Stop();
             EventBus<PlayerIsGoingFast>.Raise(new PlayerIsGoingFast()
             {
                 IsGoingFast = false
@@ -161,10 +164,41 @@ namespace Player.States
         public DashingState(CharacterClass cc) : base(cc)
         {
             _direction = new Vector2();
-            _timer = new PlayerCooldownTimer(CharClass.GetClassData(), ClassStat.DashDuration);
-            _timer.OnTimerStart += () => IsFinished = false;
-            _timer.OnTimerStop += () => IsFinished = true;
+            Timer = new PlayerCooldownTimer(CharClass.GetClassData(), ClassStat.DashDuration);
+            Timer.OnTimerStart += () => IsFinished = false;
+            Timer.OnTimerStop += () => IsFinished = true;
         }
     }
     
+    public class DashedAirborneState : GenericMovementState
+    {
+        public DashedAirborneState(CharacterClass cc) : base(cc)
+        {
+        }
+
+        public override void OnEnter()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void FixedUpdate()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnExit()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public interface IJumpCancelable
+    {
+        
+    }
 }

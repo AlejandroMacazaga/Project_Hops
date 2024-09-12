@@ -5,7 +5,6 @@ using AYellowpaper.SerializedCollections;
 using Entities.Attacks;
 using Input;
 using KBCore.Refs;
-using Player.States;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
@@ -55,8 +54,8 @@ namespace Player.Classes.Reaper
             #region MovementStateMachine
             DashingState = new(this);
             DashCooldown = new PlayerCooldownTimer(data, ClassStat.DashCooldown);
-            mover.MovementStateMachine.AddTransition(mover.GroundedState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished() && stamina.UseStamina(50)));
-            mover.MovementStateMachine.AddTransition(mover.AirborneState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished()));
+            mover.MovementStateMachine.AddTransition(mover.GroundedState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished() && stamina.UseStamina(50)), () => DashingState.AirborneDash = false);
+            mover.MovementStateMachine.AddTransition(mover.AirborneState, DashingState, new FuncPredicate(() => _isPressingDash && DashCooldown.IsFinished() && stamina.UseStamina(50)), () => DashingState.AirborneDash = true);
 
             mover.MovementStateMachine.AddTransition(DashingState, mover.GroundedState,
                 new FuncPredicate(() => DashingState.IsFinished && mover.characterController.isGrounded), () => DashCooldown.Start());
