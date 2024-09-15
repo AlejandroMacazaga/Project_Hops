@@ -134,9 +134,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reaper
       objectReference: {fileID: 0}
+    - target: {fileID: 604416214313072745, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -252
+      value: -352.6
       objectReference: {fileID: 0}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalPosition.y
@@ -144,7 +148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.8
+      value: -14.3
       objectReference: {fileID: 0}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalRotation.w
@@ -179,6 +183,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+--- !u!4 &92053962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+  m_PrefabInstance: {fileID: 92053961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1509159334
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +199,7 @@ GameObject:
   - component: {fileID: 1509159335}
   - component: {fileID: 1509159336}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: LevelLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,9 +232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e229dc1598b5a94aaec5028791ae7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  loadDistance: 50
-  unloadDistance: 60
+  player: {fileID: 92053962}
+  loadDistance: 300
+  unloadDistance: 400
   zones:
   - {fileID: 11400000, guid: 82fca3cf1b182c842b2eca35390c231c, type: 2}
   - {fileID: 11400000, guid: d840ce1dc68a18743affe2996d169c72, type: 2}
@@ -429,7 +438,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &2134780407
 AudioListener:
   m_ObjectHideFlags: 0
@@ -498,7 +507,7 @@ Transform:
   m_GameObject: {fileID: 2134780406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -252, y: 1.142, z: -14.91}
+  m_LocalPosition: {x: -360.3, y: 24.01, z: -10.509999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

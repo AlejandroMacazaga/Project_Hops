@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7a27e9f65c4f05a9203f3f208ad790, type: 3}
   m_Name: Zone 1
   m_EditorClassIdentifier: 
-  sceneBuildIndex: 4
-  zonePosition: {x: -350.3, y: -1.72, z: -11.7}
+  sceneBuildIndex: 10
+  zonePosition: {x: 0.6563, y: -6.664, z: -11.7}
