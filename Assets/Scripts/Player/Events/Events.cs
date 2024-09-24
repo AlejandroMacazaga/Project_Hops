@@ -21,4 +21,9 @@ namespace Player.Events
     {
         public int Current;
     }
+
+    public struct KickScreen : IEvent
+    {
+        public float Amount;
+    }
 }

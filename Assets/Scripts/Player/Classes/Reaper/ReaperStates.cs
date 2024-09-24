@@ -1,4 +1,6 @@
+using Player.Events;
 using UnityEngine;
+using Utils.EventBus;
 using Utils.StateMachine;
 using Utils.Timers;
 
@@ -184,6 +186,7 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
+            Owner.fpCamera.KickScreen(5f);
             Debug.Log("Current State: " + ToString());
             Owner.isAttacking = true;
             _canAct.Start();

@@ -1,7 +1,9 @@
 using Cinemachine;
 using Input;
 using KBCore.Refs;
+using Player.Events;
 using UnityEngine;
+using Utils.EventBus;
 using Utils.Timers;
 
 namespace Player
@@ -11,7 +13,7 @@ namespace Player
         public CinemachineVirtualCamera virtualCamera;
         [SerializeField] private InputReader inputs;
         [SerializeField] private float mouseSensitivity;
-        private float _xRotation, _yRotation;
+        [SerializeField] private float _xRotation, _yRotation;
         [SerializeField] private Transform bodyOrientation;
         [SerializeField, Self] private CharacterMover mover;
         public bool IsBodyLocked
@@ -27,16 +29,23 @@ namespace Player
         }
 
         private CountdownTimer _timer;
-
+        
         private void OnEnable()
-        {
+        {   
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             mover.isBodyLocked = false;
             inputs.EnablePlayerActions();
         }
-        
-        
+
+        private void OnDisable()
+        {
+        }
+
+        public void KickScreen(float amount)
+        {
+            _xRotation -= amount;
+        }
 
         private void LateUpdate()
         {
