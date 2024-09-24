@@ -16,4 +16,9 @@ namespace Player.Events
     {
         public bool IsGoingFast;
     }
+
+    public struct ReaperBloodChange : IEvent
+    {
+        public int Current;
+    }
 }

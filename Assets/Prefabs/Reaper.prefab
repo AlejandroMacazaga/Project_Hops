@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 5834397659306214140}
   - component: {fileID: 6583395224607541328}
   - component: {fileID: 3851985991746406670}
+  - component: {fileID: 1955347330380507209}
   m_Layer: 6
   m_Name: Reaper
   m_TagString: Player
@@ -223,6 +224,11 @@ MonoBehaviour:
   animator: {fileID: 3851985991746406670}
   health: {fileID: 5834397659306214140}
   stamina: {fileID: 6583395224607541328}
+  bloodResourceComponent: {fileID: 1955347330380507209}
+  pelletDamage: {fileID: 11400000, guid: 5c9a3ca671c7edf4d86aa59f6a2ca005, type: 2}
+  secondaryAttackSettings: {fileID: 11400000, guid: cc3c1db91583dfc4189eac95e35e1bf8, type: 2}
+  bulletSpawnTransform: {fileID: 2290145177150909854}
+  bulletTravelDuration: 0.1
   animatorConfig:
     animator: {fileID: 3446355883412582046}
     idleAnimation: {fileID: -7326629596636413363, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
@@ -230,6 +236,10 @@ MonoBehaviour:
   isAttacking: 0
   isPressingPrimaryAttack: 0
   isLeftAttack: 0
+  spreadAngle: 4
+  secondaryAttackLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   attacks:
     _serializedList:
     - Key: 0
@@ -343,6 +353,51 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1955347330380507209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604416214313072745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ee76708f734f08a2a4577ce3e4b089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentBloodPoints: 10
+  maxBloodPoints: 10
+--- !u!1 &1741293366876776394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2290145177150909854}
+  m_Layer: 6
+  m_Name: BulletTraceSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2290145177150909854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741293366876776394}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.066, y: 0, z: 0.744}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1299089929221537712}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3105727398778491219
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,6 +645,7 @@ Transform:
   - {fileID: 791564144326638035}
   - {fileID: 1880410257214344232}
   - {fileID: 5805106256891965249}
+  - {fileID: 2290145177150909854}
   m_Father: {fileID: 5236084403923663278}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5303316383713428378

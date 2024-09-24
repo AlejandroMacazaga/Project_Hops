@@ -48,12 +48,12 @@ namespace Entities
 
         public void UseContinuously(float usePerSecond)
         {
-            Timing.RunCoroutine(DrainStamina(usePerSecond));
+            _useHandler = Timing.RunCoroutine(DrainStamina(usePerSecond));
         }
 
         public void StopUseContinously()
         {
-
+            Timing.KillCoroutines(_useHandler);
         }
 
 

@@ -170,28 +170,39 @@ namespace Player.Classes.Reaper
 
     public class ReaperSecondaryAttackState : ReaperState
     {
+        private ReaperAttack _attack;
+        private readonly CountdownTimer _canAct;
         public ReaperSecondaryAttackState(ReaperClass owner) : base(owner)
         {
+            _canAct = new CountdownTimer(Owner.attacks[ReaperAction.SecondaryAttack].duration);
+            _canAct.OnTimerStop += () =>
+            {
+                Owner.isAttacking = false;
+            };
+            
         }
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Current State: " + ToString());
+            Owner.isAttacking = true;
+            _canAct.Start();
+            Owner.HandleSecondaryAttack();
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            // noop
         }
 
         public override void FixedUpdate()
         {
-            throw new System.NotImplementedException();
+            // noop
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            // noop
         }
     }
 }

@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6706ba7059d84359aeb518de05c6a0f6, type: 3}
-  m_Name: Damage
+  m_Script: {fileID: 11500000, guid: 6a76f97020ca4d1faef1d0db6159d41c, type: 3}
+  m_Name: BloodBulletTrail
   m_EditorClassIdentifier: 
-  damageAmount: 5
+  type: BloodBullet
+  prefab: {fileID: 1255643375451940170, guid: 5f561d26588b60a40a1bedb2a0373861, type: 3}
+  despawnTime: 0.3

@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using Entities;
 using Entities.Attacks;
 using Input;
 using KBCore.Refs;
+using Projectiles;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
@@ -12,12 +14,15 @@ using UnityEngine.Playables;
 using UnityEngine.Serialization;
 using Utils.AnimationSystem;
 using Utils.EventBus;
+using Utils.Flyweight;
 using Utils.StateMachine;
 using Utils.Timers;
 using Weapons;
+using Random = UnityEngine.Random;
 
 namespace Player.Classes.Reaper
 {
+    [RequireComponent(typeof(BloodResourceComponent))]
     public class ReaperClass : CharacterClass
     {
         public DashingState DashingState;
@@ -27,9 +32,18 @@ namespace Player.Classes.Reaper
         public ReaperPrimaryAttackChargingState ChargingState;
         public ReaperFastPrimaryAttackState FastPrimaryAttackState;
         public ReaperChargedPrimaryAttackState ChargedPrimaryAttackState;
+        public ReaperSecondaryAttackState SecondaryAttackState;
         
-        public readonly StateMachine CombatStateMachine = new();
-
+        public readonly StateMachine CombatStateMachine = new(); 
+        
+        [Header("Secondary Attack")]
+        [SerializeField, Self, HideInInspector] public BloodResourceComponent bloodResourceComponent;
+        [SerializeField] public DamageComponent pelletDamage;
+        [SerializeField] public BulletTrailSettings secondaryAttackSettings;
+        [SerializeField] public Transform bulletSpawnTransform;
+        public float bulletTravelDuration = 0.1f;
+        
+        
         [SerializeField] public AnimatorConfig animatorConfig;
         public AnimationSystem AnimationSystem;
         PlayableGraph _playableGraph;
@@ -40,13 +54,17 @@ namespace Player.Classes.Reaper
         public bool isPressingPrimaryAttack = false;
         public bool isLeftAttack = false;
         public CountdownTimer HoldAttackTimer;
+        public float spreadAngle;
+        public LayerMask secondaryAttackLayerMask;
         private AttackHoldEvent _holdEvent;
-
+        
         public readonly StatModifier ChargeSlowdown = new StatModifier(ModifierType.Multiplier, 0.5f);
         
         [SerializeField] public SerializedDictionary<ReaperAction, ReaperAttack> attacks;
-
+        
         private Action _primaryAttackStart;
+        private Action _secondaryAttackStart;
+        private Camera _cam;
         public override void Start()
         {
             base.Start();
@@ -68,6 +86,7 @@ namespace Player.Classes.Reaper
             ChargingState = new ReaperPrimaryAttackChargingState(this);
             FastPrimaryAttackState = new ReaperFastPrimaryAttackState(this);
             ChargedPrimaryAttackState = new ReaperChargedPrimaryAttackState(this);
+            SecondaryAttackState = new ReaperSecondaryAttackState(this);
             
             CombatStateMachine.AddAnyTransition(NoAttackState, new FuncPredicate(() => !isAttacking));
             CombatStateMachine.AddTransition(NoAttackState, ChargingState, new ActionPredicate(ref _primaryAttackStart));
@@ -75,17 +94,21 @@ namespace Player.Classes.Reaper
                 new FuncPredicate(() => !isPressingPrimaryAttack && HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
             CombatStateMachine.AddTransition(ChargingState, ChargedPrimaryAttackState, 
                 new FuncPredicate(() => !isPressingPrimaryAttack && !HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
+            CombatStateMachine.AddTransition(NoAttackState, SecondaryAttackState, new ActionPredicate(ref _secondaryAttackStart));
+            CombatStateMachine.AddTransition(ChargingState, SecondaryAttackState, new ActionPredicate(ref _secondaryAttackStart));
             CombatStateMachine.SetState(NoAttackState);
             #endregion
 
             inputReader.PrimaryAttack += OnPrimaryAttack;
+            inputReader.SecondaryAttack += OnSecondaryAttack;
             inputReader.Dash += OnDash;
             inputReader.EnablePlayerActions();
             
             HoldAttackTimer = new CountdownTimer(1f);
             HoldAttackTimer.OnTimerTick += OnHoldTick;
-            
-            
+            _cam = Camera.main;
+
+
         }
         
         
@@ -132,7 +155,29 @@ namespace Player.Classes.Reaper
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
         }
-
+        
+        private void OnSecondaryAttack(ActionState action, IInputInteraction interaction)
+        {
+            switch (action)
+            {
+                case ActionState.Press:
+                    if (bloodResourceComponent.currentBloodPoints > 0)
+                    {
+                        _secondaryAttackStart?.Invoke();
+                    }
+                    else
+                    {
+                        // TODO: Throw something that tells us there is no blood
+                    }
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+        }
         void Update()
         {
             CombatStateMachine.Update();
@@ -141,6 +186,73 @@ namespace Player.Classes.Reaper
         void FixedUpdate()
         {
             CombatStateMachine.FixedUpdate();
+        }
+
+        public void HandleSecondaryAttack()
+        {
+            var amountOfBullets = bloodResourceComponent.Use();
+            Dictionary<IVisitable, int> toDamage = new();
+            for (var i = 0; i < amountOfBullets; i++)
+            {
+                Vector3 spreadDirection =
+                    GenerateRandomDirection(_cam.transform.forward, spreadAngle);
+
+                Vector3 endPoint;
+                if (!Physics.Raycast(_cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), spreadDirection,
+                        out var hit, 50))
+                {
+                    // If the raycast doesn't hit anything
+                    // Debug.DrawRay(_cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), spreadDirection * 99,
+                        //Color.blue, 10.0f);
+                    endPoint = bulletSpawnTransform.position + spreadDirection * 50;
+                    DrawBulletTrail(bulletSpawnTransform.position, endPoint);
+                    continue;
+                }
+                //Debug.DrawRay(_cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), spreadDirection * hit.distance,
+                    //Color.red, 10.0f);
+                endPoint = hit.point;
+                DrawBulletTrail(bulletSpawnTransform.position, endPoint);
+                // If you hit something, stack damage
+                if (!hit.transform.TryGetComponent<IVisitable>(out var visitable)) continue;
+                if (toDamage.TryGetValue(visitable, out var amount))
+                {
+                    toDamage[visitable] = amount + 1;
+                }
+                else
+                {
+                    toDamage.Add(visitable, 1);
+                }
+            }
+
+            foreach (var visitable in toDamage.Keys)
+            {
+                var start = pelletDamage.damageAmount;
+                Debug.Log(start);
+                pelletDamage.damageAmount *= toDamage[visitable];
+                Debug.Log("lets damage " + pelletDamage.damageAmount);
+                pelletDamage.Visit(visitable);
+                pelletDamage.damageAmount = start;
+            }
+        }
+
+        Vector3 GenerateRandomDirection(Vector3 forward, float angle)
+        {
+            // Convert the spread angle to radians
+            float spreadInRadians = angle * Mathf.Deg2Rad;
+
+            // Generate random angles in spherical coordinates
+            float randomPitch = Random.Range(-spreadInRadians, spreadInRadians);  // Vertical (pitch)
+            float randomYaw = Random.Range(-spreadInRadians, spreadInRadians);    // Horizontal (yaw)
+
+            // Apply the random pitch and yaw to the forward direction
+            Quaternion rotation = Quaternion.Euler(randomPitch * Mathf.Rad2Deg, randomYaw * Mathf.Rad2Deg, 0);
+            return rotation * forward;
+        }
+        
+        void DrawBulletTrail(Vector3 start, Vector3 end)
+        {
+            var instance = (BulletTrail) FlyweightManager.Spawn(secondaryAttackSettings);
+            instance.SetPosition(start, end);
         }
     }
     

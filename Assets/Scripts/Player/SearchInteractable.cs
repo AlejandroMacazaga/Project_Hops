@@ -14,9 +14,10 @@ namespace Player
         public IInteractable CurrentInteractable;
         [SerializeField, Self] private CharacterClass owner;
         [SerializeField] private float interactableRange;
-        
+        private Camera cam;
         public virtual void OnEnable()
         {
+            cam = Camera.main;
             StartCoroutine(nameof(HandleInteractableSearch));
         }
 
@@ -29,7 +30,6 @@ namespace Player
         {
             while (enabled)
             {
-                var cam = Camera.main;
                 if(cam && Physics.Raycast(
                        cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)),
                        cam.transform.forward,
