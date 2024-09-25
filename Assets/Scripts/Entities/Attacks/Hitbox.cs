@@ -18,7 +18,11 @@ namespace Entities.Attacks
         {
             if (!other.TryGetComponent<IVisitable>(out var visitable)) return;
             damage.damageAmount *= owner.Value.GetCurrentStat(ClassStat.AttackDamage);
-            damage.Visit(visitable);
+            var damaged = other.GetComponents<IVisitable>();
+            foreach (var dam in damaged)
+            {
+                damage.Visit(dam);
+            }
         }
 
         public void Activate()

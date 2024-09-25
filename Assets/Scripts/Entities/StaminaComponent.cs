@@ -32,6 +32,14 @@ namespace Entities
             staminaRegeneration = data.staminaRegeneration;
         }
 
+        public void Regenerate(float amount)
+        {
+            staminaPoints += amount;
+            if (staminaPoints > maxStaminaPoints) staminaPoints = maxStaminaPoints;
+
+            RaiseEvent();
+        }
+
         public bool UseStamina(float amount)
         {
     
@@ -99,6 +107,11 @@ namespace Entities
             {
                 Current = staminaPoints
             });
+        }
+
+        public void Accept(object visitor)
+        {
+            throw new NotImplementedException();
         }
     }
 

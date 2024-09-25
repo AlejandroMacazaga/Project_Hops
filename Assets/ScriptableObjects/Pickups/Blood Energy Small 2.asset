@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a76f97020ca4d1faef1d0db6159d41c, type: 3}
-  m_Name: BloodBulletTrail
+  m_Script: {fileID: 11500000, guid: 3773b50ef330496a8214ee93f4b8e267, type: 3}
+  m_Name: Blood Energy Small 2
   m_EditorClassIdentifier: 
-  type: BloodBullet
-  prefab: {fileID: 1255643375451940170, guid: 5f561d26588b60a40a1bedb2a0373861, type: 3}
-  despawnTime: 0.7
+  itemName: Blood Large
+  sprite: {fileID: 0}
+  type: 2
+  amount: 3

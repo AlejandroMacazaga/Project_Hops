@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a76f97020ca4d1faef1d0db6159d41c, type: 3}
-  m_Name: BloodBulletTrail
+  m_Script: {fileID: 11500000, guid: 36ad1cf6ffb74cda90747d78435415b1, type: 3}
+  m_Name: Blood
   m_EditorClassIdentifier: 
-  type: BloodBullet
-  prefab: {fileID: 1255643375451940170, guid: 5f561d26588b60a40a1bedb2a0373861, type: 3}
-  despawnTime: 0.7
+  type: Energy Pickup
+  prefab: {fileID: 5774526942636967068, guid: 3ad3792d45b0e594483cee4e31c70946, type: 3}
+  item: {fileID: 11400000, guid: e7e086a6ac4267a4f913099d0f8b0b64, type: 2}

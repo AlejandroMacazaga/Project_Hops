@@ -1,3 +1,4 @@
+using Items;
 using Utils.EventBus;
 
 namespace Player.Events
@@ -26,4 +27,17 @@ namespace Player.Events
     {
         public float Amount;
     }
+
+    public struct ItemPickupEvent : IEvent
+    {
+        public BaseItem Item;
+    }
+
+    public struct EnergyPickupEvent : IEvent
+    {
+        public EnergyItem Item;
+    }
+    
+    
+    
 }

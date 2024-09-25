@@ -1,5 +1,6 @@
 using Player.Events;
 using UnityEngine;
+using UnityUtils;
 using Utils.EventBus;
 using Utils.StateMachine;
 using Utils.Timers;
@@ -186,6 +187,8 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
+            var direction = -Owner.fpCamera.virtualCamera.transform.forward;
+            Owner.mover.ApplyForce(new Vector3(0f, direction.y,  direction.x), 20f);
             Owner.fpCamera.KickScreen(5f);
             Debug.Log("Current State: " + ToString());
             Owner.isAttacking = true;

@@ -1,5 +1,6 @@
 using Entities;
 using Items;
+using Player.Classes.Reaper;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,5 +10,6 @@ namespace Enemies
     public class BasicEnemyData : EntityData
     {
         public PickupSettings pickupSettings;
+        public EnergyPickupSettings energyPickupSettings;
     }
 }

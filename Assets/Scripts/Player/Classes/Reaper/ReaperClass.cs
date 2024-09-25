@@ -5,7 +5,9 @@ using AYellowpaper.SerializedCollections;
 using Entities;
 using Entities.Attacks;
 using Input;
+using Items;
 using KBCore.Refs;
+using Player.Events;
 using Projectiles;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -36,8 +38,9 @@ namespace Player.Classes.Reaper
         
         public readonly StateMachine CombatStateMachine = new(); 
         
+        [FormerlySerializedAs("bloodResourceComponent")]
         [Header("Secondary Attack")]
-        [SerializeField, Self, HideInInspector] public BloodResourceComponent bloodResourceComponent;
+        [SerializeField, Self, HideInInspector] public BloodResourceComponent blood;
         [SerializeField] public DamageComponent pelletDamage;
         [SerializeField] public BulletTrailSettings secondaryAttackSettings;
         [SerializeField] public Transform bulletSpawnTransform;
@@ -107,11 +110,27 @@ namespace Player.Classes.Reaper
             HoldAttackTimer = new CountdownTimer(1f);
             HoldAttackTimer.OnTimerTick += OnHoldTick;
             _cam = Camera.main;
-
+            EventBus<EnergyPickupEvent>.Register(new EventBinding<EnergyPickupEvent>(OnEnergyPickup));
 
         }
-        
-        
+
+        private void OnEnergyPickup(EnergyPickupEvent @event)
+        {
+            switch (@event.Item.type)
+            {
+                case EnergyType.Health:
+                    health.HealReceived(@event.Item.amount);
+                    break;
+                case EnergyType.Stamina:
+                    stamina.Regenerate(@event.Item.amount);
+                    break;
+                case EnergyType.Blood:
+                    blood.Add(@event.Item.amount);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         private void OnHoldTick()
         {
@@ -161,7 +180,7 @@ namespace Player.Classes.Reaper
             switch (action)
             {
                 case ActionState.Press:
-                    if (bloodResourceComponent.currentBloodPoints > 0)
+                    if (blood.currentBloodPoints > 0)
                     {
                         _secondaryAttackStart?.Invoke();
                     }
@@ -190,7 +209,7 @@ namespace Player.Classes.Reaper
 
         public void HandleSecondaryAttack()
         {
-            var amountOfBullets = bloodResourceComponent.Use();
+            var amountOfBullets = blood.Use();
             Dictionary<IVisitable, int> toDamage = new();
             for (var i = 0; i < amountOfBullets; i++)
             {
@@ -227,9 +246,7 @@ namespace Player.Classes.Reaper
             foreach (var visitable in toDamage.Keys)
             {
                 var start = pelletDamage.damageAmount;
-                Debug.Log(start);
                 pelletDamage.damageAmount *= toDamage[visitable];
-                Debug.Log("lets damage " + pelletDamage.damageAmount);
                 pelletDamage.Visit(visitable);
                 pelletDamage.damageAmount = start;
             }

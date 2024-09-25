@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Player;
 using UnityEngine;
 
 namespace Entities.Attacks
@@ -29,7 +30,14 @@ namespace Entities.Attacks
 
         public void Visit(HealthComponent healthComponent)
         {
+            Debug.Log("Visit health");
             healthComponent.DamageReceived(damageAmount);
+        }
+
+        public void Visit(OnHitDropComponent drop)
+        {
+            Debug.Log("Visit drop");
+            drop.Drop();
         }
         
         

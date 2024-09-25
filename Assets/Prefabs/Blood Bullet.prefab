@@ -84,8 +84,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.031007517
-        value: 0.28898716
+        time: 0.03488325
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -93,22 +93,22 @@ LineRenderer:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.27893987
-        value: 1
-        inSlope: 0.20301256
-        outSlope: 0.20301256
+        time: 0.25180975
+        value: 0.82110023
+        inSlope: -1.5033113
+        outSlope: -1.5033113
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.8332438
-        outWeight: 0.33333334
+        outWeight: 0.5693172
       - serializedVersion: 3
-        time: 0.67634225
-        value: 1
-        inSlope: -0.18206003
-        outSlope: -0.18206003
+        time: 0.6162684
+        value: 0.35321045
+        inSlope: -1.5702584
+        outSlope: -1.5702584
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0.53419113
         outWeight: 0.54493034
       - serializedVersion: 3
         time: 1
@@ -125,22 +125,22 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 0.5424528, g: 0.031175448, b: 0, a: 0.990421}
-      key1: {r: 1, g: 0.6462264, b: 0.6462264, a: 0.40784314}
-      key2: {r: 0, g: 0, b: 0, a: 0.40784314}
+      key1: {r: 0.5424528, g: 0.031175448, b: 0, a: 0.40784314}
+      key2: {r: 1, g: 0.6462264, b: 0.6462264, a: 0.40784314}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 29202
-      ctime1: 65535
-      ctime2: 0
+      ctime0: 4048
+      ctime1: 45682
+      ctime2: 65535
       ctime3: 0
       ctime4: 0
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 38743
+      atime0: 29491
       atime1: 54548
       atime2: 65535
       atime3: 0
@@ -150,7 +150,7 @@ LineRenderer:
       atime7: 0
       m_Mode: 0
       m_ColorSpace: 0
-      m_NumColorKeys: 2
+      m_NumColorKeys: 3
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0

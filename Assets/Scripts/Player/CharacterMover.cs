@@ -158,6 +158,31 @@ namespace Player
             // Apply movement to the character controller
             characterController.Move(move * Time.deltaTime);
         }
+
+        public void ApplyForce(Vector3 direction, float force)
+        {
+            // Decompose the direction into horizontal and vertical components
+            Vector2 horizontalDirection = new Vector2(direction.x, direction.z).normalized;  // x and z are horizontal
+            float verticalDirection = direction.y;  // y is vertical
+
+            // Apply force to the horizontal direction (x and z components)
+            Vector2 horizontalForce = horizontalDirection * force;
+            currentSpeed += horizontalForce;
+
+            // Clamp the horizontal speed to the max air speed defined in the character class
+            currentSpeed = Vector2.ClampMagnitude(currentSpeed, characterClass.Value.GetCurrentStat(ClassStat.MaxAirSpeed));
+
+            // Apply force to the vertical velocity (y component)
+            float verticalForce = verticalDirection * force;
+            currentVelocity += verticalForce;
+
+            // Ensure vertical velocity doesn't exceed the max velocity (falling speed)
+            float maxVelocity = characterClass.Value.GetCurrentStat(ClassStat.MaxVelocity);
+            if (currentVelocity > maxVelocity)
+                currentVelocity = maxVelocity;
+            else if (currentVelocity < -maxVelocity)
+                currentVelocity = -maxVelocity;
+        }
         
         public void HandleGravity()
         {
