@@ -19,12 +19,19 @@ namespace Items
       private void Start()
       {
          system ??= GetComponent<ParticleSystem>();
+         system.trigger.AddCollider(GameObject.FindWithTag("PickupArea").transform);
+         system.emission.SetBurst(0, new ParticleSystem.Burst()
+         {
+            cycleCount = 1,
+            count = new ParticleSystem.MinMaxCurve(settings.amountOfParticles)
+         });
       }
 
       void OnEnable()
       {
          system.Play();
       }
+      
       void OnValidate()
       {
          this.ValidateRefs();
@@ -33,14 +40,12 @@ namespace Items
       
       void OnParticleTrigger()
       {
-         Debug.Log("TriggerEnter");
          int triggeredParticles = system.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, _particles);
 
          for (var i = 0; i < triggeredParticles; i++)
          {
             ParticleSystem.Particle p = _particles[i];
             p.remainingLifetime = 0f;
-            Debug.Log("PickupIsBeingCollected");
             EventBus<EnergyPickupEvent>.Raise(new EnergyPickupEvent()
             {
                Item = settings.item
@@ -49,6 +54,8 @@ namespace Items
          }
       
          system.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _particles);
+         
+         if (_particles.Count == settings.amountOfParticles)  FlyweightManager.ReturnToPool(this);
       }
    }
 }

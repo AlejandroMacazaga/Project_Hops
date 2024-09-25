@@ -15,3 +15,4 @@ MonoBehaviour:
   type: Energy Pickup
   prefab: {fileID: 5774526942636967068, guid: 3ad3792d45b0e594483cee4e31c70946, type: 3}
   item: {fileID: 11400000, guid: e7e086a6ac4267a4f913099d0f8b0b64, type: 2}
+  amountOfParticles: 5

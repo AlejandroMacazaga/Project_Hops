@@ -9,7 +9,6 @@ namespace Entities.Attacks
     public class DamageComponent : ScriptableObject, IVisitor
     {
         public float damageAmount;
-        
         public void Visit(object o)
         {
             MethodInfo damageMethod = GetType().GetMethod("Visit", new Type[] { o.GetType() });

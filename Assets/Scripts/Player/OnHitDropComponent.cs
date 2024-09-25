@@ -16,7 +16,6 @@ namespace Player
 
         public void Drop()
         {
-            Debug.Log("Drop");
             EnergyPickup pickup = (EnergyPickup) FlyweightManager.Spawn(energy);
             pickup.transform.position = transform.position;
             pickup.transform.rotation = transform.rotation;

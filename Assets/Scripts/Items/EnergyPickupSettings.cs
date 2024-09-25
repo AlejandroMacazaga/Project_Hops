@@ -9,7 +9,7 @@ namespace Player.Classes.Reaper
     public class EnergyPickupSettings : FlyweightSettings
     {
         public EnergyItem item;
-        
+        public int amountOfParticles;
         public override Flyweight Create()
         {
             var go = Instantiate(prefab);
