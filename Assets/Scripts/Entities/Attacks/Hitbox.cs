@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using KBCore.Refs;
+using MEC;
 using Player.Classes;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -12,7 +14,8 @@ namespace Entities.Attacks
         [SerializeField, Anywhere] private InterfaceRef<CharacterClass> owner;
         [SerializeField] public DamageComponent damage;
         [SerializeField, Self] private BoxCollider box;
-        
+        private CoroutineHandle _activeHandle;
+        public event Action<bool> ActiveChange = delegate {};
         void Start() {}
         private void OnTriggerEnter(Collider other)
         {
@@ -25,14 +28,18 @@ namespace Entities.Attacks
             }
         }
 
-        public void Activate()
+        public void ActivateHitbox(float activeTime)
         {
-            box.enabled = true;
+            _activeHandle = Timing.RunCoroutine(Activate(activeTime));
         }
 
-        public void Deactivate()
+        private IEnumerator<float> Activate(float activeTime)
         {
+            box.enabled = true;
+            ActiveChange?.Invoke(box.enabled);
+            yield return Timing.WaitForSeconds(activeTime);
             box.enabled = false;
+            ActiveChange?.Invoke(box.enabled);
         }
     }
 }

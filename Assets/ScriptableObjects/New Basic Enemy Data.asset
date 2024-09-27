@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: New Basic Enemy Data
   m_EditorClassIdentifier: 
   healthData:
-    healthPoints: 20
-    maxHealthPoints: 20
+    healthPoints: 1000
+    maxHealthPoints: 1000
   team: 2
   pickupSettings: {fileID: 11400000, guid: 5c72537df5b9fc045a291f0310b817b8, type: 2}
   energyPickupSettings: {fileID: 11400000, guid: af45259ec876cc14fbfbcb62ae01eaac, type: 2}

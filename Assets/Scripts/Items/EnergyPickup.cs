@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using KBCore.Refs;
+using MEC;
 using Player.Classes.Reaper;
 using Player.Events;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Items
    
       [SerializeField, HideInInspector, Self] private ParticleSystem system;
       private readonly List<ParticleSystem.Particle> _particles = new();
-
+      private CoroutineHandle _forcesHandle;
       private void Start()
       {
          system ??= GetComponent<ParticleSystem>();
@@ -25,11 +26,19 @@ namespace Items
             cycleCount = 1,
             count = new ParticleSystem.MinMaxCurve(settings.amountOfParticles)
          });
+         var forces = system.externalForces;
+         forces.enabled = false;
       }
 
       void OnEnable()
       {
          system.Play();
+         _forcesHandle = Timing.RunCoroutine(ActivateForce());
+      }
+
+      void OnDisable()
+      {
+         Timing.KillCoroutines(_forcesHandle);
       }
       
       void OnValidate()
@@ -37,6 +46,12 @@ namespace Items
          this.ValidateRefs();
       }
 
+      IEnumerator<float> ActivateForce()
+      {
+         yield return Timing.WaitForSeconds(0.5f);
+         var forces = system.externalForces;
+         forces.enabled = true;
+      }
       
       void OnParticleTrigger()
       {

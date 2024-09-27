@@ -10,11 +10,14 @@ namespace Player.Classes.Reaper
     public abstract class ReaperState : IState
     {
         protected readonly ReaperClass Owner;
-
-        protected ReaperState(ReaperClass owner)
+        public ReaperAttack AttackData;
+        protected abstract void ChangeData(ReaperAttack data);
+        protected ReaperState(ReaperClass owner, ReaperAttack attack = default)
         {
             Owner = owner;
+            AttackData = attack;
         }
+        
         public abstract void OnEnter();
         public abstract void Update();
         public abstract void FixedUpdate();
@@ -25,6 +28,11 @@ namespace Player.Classes.Reaper
     {
         public ReaperNoAttackState(ReaperClass owner) : base(owner)
         {
+        }
+
+        protected override void ChangeData(ReaperAttack data)
+        {
+            // noop
         }
 
         public override void OnEnter()
@@ -49,11 +57,15 @@ namespace Player.Classes.Reaper
     }
     public class ReaperPrimaryAttackChargingState : ReaperState
     {
-        public CountdownTimer CanBeCanceledTimer;
-        private IState _currentMovementState;
+        public readonly CountdownTimer CanBeCanceledTimer;
         public ReaperPrimaryAttackChargingState(ReaperClass owner) : base(owner)
         {
             CanBeCanceledTimer = new CountdownTimer(0.1f);
+        }
+
+        protected override void ChangeData(ReaperAttack data)
+        {
+            // noop
         }
 
         public override void OnEnter()
@@ -62,7 +74,6 @@ namespace Player.Classes.Reaper
             Owner.isAttacking = true;
             CanBeCanceledTimer.Start();
             Owner.GetClassData().AddModifier(ClassStat.Speed, Owner.ChargeSlowdown);
-            _currentMovementState = Owner.mover.MovementStateMachine.CurrentState;
         }
 
         public override void Update()
@@ -90,28 +101,28 @@ namespace Player.Classes.Reaper
 
     public class ReaperFastPrimaryAttackState : ReaperState
     {
-
-        private ReaperAttack _attack;
+        
         private readonly CountdownTimer _hitboxDuration;
-        public ReaperFastPrimaryAttackState(ReaperClass owner) : base(owner)
+        public ReaperFastPrimaryAttackState(ReaperClass owner, ReaperAttack attack) : base(owner)
         {
-            Debug.Log("Current State: " + ToString());
-            _hitboxDuration = new CountdownTimer(Owner.attacks[ReaperAction.FastPrimaryAttackLeft].duration);
-            _hitboxDuration.OnTimerStop += () =>  {
-                _attack.hitbox.Deactivate();
-                Owner.isAttacking = !Owner.isAttacking;
-            };
-            _hitboxDuration.OnTimerStart += () => _attack.hitbox.Activate();
+            AttackData = attack;
+            AttackData.hitbox.ActiveChange += OnActiveChange;
+        }
+        
+        private void OnActiveChange(bool enabled)
+        {
+            Owner.isAttacking = enabled;
+        }
+
+        protected override void ChangeData(ReaperAttack data)
+        {
+            AttackData = data;
         }
 
         public override void OnEnter()
         {
-            Debug.Log("Current State: " + ToString());
-            _attack = Owner.isLeftAttack
-                ? Owner.attacks[ReaperAction.FastPrimaryAttackLeft]
-                : Owner.attacks[ReaperAction.FastPrimaryAttackRight];
-            _hitboxDuration.Start();
-            Owner.AnimationSystem.PlayOneShot(_attack.animation);
+            Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
+            AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }
 
         public override void Update()
@@ -132,28 +143,23 @@ namespace Player.Classes.Reaper
 
     public class ReaperChargedPrimaryAttackState : ReaperState
     {
-        private ReaperAttack _attack;
-        private readonly CountdownTimer _hitboxDuration;
-        public ReaperChargedPrimaryAttackState(ReaperClass owner) : base(owner)
+        public ReaperChargedPrimaryAttackState(ReaperClass owner, ReaperAttack attack) : base(owner, attack)
         {
-            _hitboxDuration = new CountdownTimer(Owner.attacks[ReaperAction.FastPrimaryAttackLeft].duration);
-            _hitboxDuration.OnTimerStop += () =>
-            {
-                _attack.hitbox.Deactivate();
-                Owner.isAttacking = !Owner.isAttacking;
-            };
-            
-            _hitboxDuration.OnTimerStart += () => _attack.hitbox.Activate();
+            AttackData = attack;
+            AttackData.hitbox.ActiveChange += OnActiveChange;
         }
+
+        protected override void ChangeData(ReaperAttack data) => AttackData = data;
 
         public override void OnEnter()
         {
-            Debug.Log("Current State: " + ToString());
-            _attack = Owner.isLeftAttack
-                ? Owner.attacks[ReaperAction.ChargedPrimaryAttackLeft]
-                : Owner.attacks[ReaperAction.ChargedPrimaryAttackRight];
-            _hitboxDuration.Start();
-            Owner.AnimationSystem.PlayOneShot(_attack.animation);
+            Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
+            AttackData.hitbox.ActivateHitbox(AttackData.duration);
+        }
+
+        private void OnActiveChange(bool enabled)
+        {
+            Owner.isAttacking = enabled;
         }
 
         public override void Update()
@@ -177,7 +183,7 @@ namespace Player.Classes.Reaper
         private readonly CountdownTimer _canAct;
         public ReaperSecondaryAttackState(ReaperClass owner) : base(owner)
         {
-            _canAct = new CountdownTimer(Owner.attacks[ReaperAction.SecondaryAttack].duration);
+            _canAct = new CountdownTimer(Owner.attacks[ReaperAction.SecondaryAttack].recovery);
             _canAct.OnTimerStop += () =>
             {
                 Owner.isAttacking = false;
@@ -185,12 +191,16 @@ namespace Player.Classes.Reaper
             
         }
 
+        protected override void ChangeData(ReaperAttack data)
+        {
+            _attack = data;
+        }
+
         public override void OnEnter()
         {
             var direction = -Owner.fpCamera.virtualCamera.transform.forward;
             Owner.mover.ApplyForce(new Vector3(0f, direction.y,  direction.x), 20f);
             Owner.fpCamera.KickScreen(5f);
-            Debug.Log("Current State: " + ToString());
             Owner.isAttacking = true;
             _canAct.Start();
             Owner.HandleSecondaryAttack();
@@ -209,6 +219,42 @@ namespace Player.Classes.Reaper
         public override void OnExit()
         {
             // noop
+        }
+    }
+
+    public class ReaperReloadAttackState : ReaperState
+    {
+        private readonly CountdownTimer _startupTimer, _activeTimer;
+        public ReaperReloadAttackState(ReaperClass owner, ReaperAttack data) : base(owner, data)
+        {
+            
+        }
+
+        protected override void ChangeData(ReaperAttack data)
+        {
+            
+        }
+
+        public override void OnEnter()
+        {
+            _startupTimer.Start();
+            Owner.isAttacking = true;
+        }
+
+        public override void Update()
+        {
+            
+        }
+
+        public override void FixedUpdate()
+        {
+            
+        }
+
+        public override void OnExit()
+        {
+            _startupTimer.Stop();
+            _activeTimer.Stop();
         }
     }
 }

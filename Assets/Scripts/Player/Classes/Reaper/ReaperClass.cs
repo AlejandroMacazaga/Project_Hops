@@ -87,8 +87,8 @@ namespace Player.Classes.Reaper
             
             NoAttackState = new ReaperNoAttackState(this);
             ChargingState = new ReaperPrimaryAttackChargingState(this);
-            FastPrimaryAttackState = new ReaperFastPrimaryAttackState(this);
-            ChargedPrimaryAttackState = new ReaperChargedPrimaryAttackState(this);
+            FastPrimaryAttackState = new ReaperFastPrimaryAttackState(this, attacks[ReaperAction.FastPrimaryAttack]);
+            ChargedPrimaryAttackState = new ReaperChargedPrimaryAttackState(this,  attacks[ReaperAction.ChargedPrimaryAttack]);
             SecondaryAttackState = new ReaperSecondaryAttackState(this);
             
             CombatStateMachine.AddAnyTransition(NoAttackState, new FuncPredicate(() => !isAttacking));
@@ -276,10 +276,8 @@ namespace Player.Classes.Reaper
     
     public enum ReaperAction
     {
-        FastPrimaryAttackLeft,
-        FastPrimaryAttackRight,
-        ChargedPrimaryAttackLeft,
-        ChargedPrimaryAttackRight,
+        FastPrimaryAttack,
+        ChargedPrimaryAttack,
         SecondaryAttack,
         ReloadAttack,
     }
@@ -287,8 +285,9 @@ namespace Player.Classes.Reaper
     [System.Serializable]
     public struct ReaperAttack
     {
-        public AnimationClip animation;
+        public List<AnimationClip> animations;
         public Hitbox hitbox;
-        public float duration;
+        public float startup, duration, recovery;
     }
+    
 }

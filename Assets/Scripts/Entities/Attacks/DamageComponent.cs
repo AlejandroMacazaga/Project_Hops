@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Items;
 using Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Entities.Attacks
 {
@@ -9,6 +12,7 @@ namespace Entities.Attacks
     public class DamageComponent : ScriptableObject, IVisitor
     {
         public float damageAmount;
+        public List<AttackEffect> effects = new();
         public void Visit(object o)
         {
             MethodInfo damageMethod = GetType().GetMethod("Visit", new Type[] { o.GetType() });
@@ -35,8 +39,7 @@ namespace Entities.Attacks
 
         public void Visit(OnHitDropComponent drop)
         {
-            Debug.Log("Visit drop");
-            drop.Drop();
+            if (effects.Contains(AttackEffect.Bleed) && drop.energy.item.type == EnergyType.Blood) drop.Drop();
         }
         
         
@@ -46,5 +49,11 @@ namespace Entities.Attacks
             return true;
             // TODO : Add checks for what can damage what
         }
+    }
+
+    public enum AttackEffect
+    {
+        Stun,
+        Bleed,
     }
 }

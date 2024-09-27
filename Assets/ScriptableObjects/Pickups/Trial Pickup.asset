@@ -15,4 +15,5 @@ MonoBehaviour:
   type: Test
   prefab: {fileID: 8856902621907673268, guid: ca95bb490253ba144aac335505ed9fb2, type: 3}
   item: {fileID: 11400000, guid: 7b92f78bd38d4b846b9597340f339c80, type: 2}
+  amountOfParticles: 1
   despawnDelay: 20
