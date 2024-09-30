@@ -39,7 +39,13 @@ namespace Entities.Attacks
 
         public void Visit(OnHitDropComponent drop)
         {
-            if (effects.Contains(AttackEffect.Bleed) && drop.energy.item.type == EnergyType.Blood) drop.Drop();
+            if (effects.Contains(AttackEffect.Bleed) && drop.energy.item.type == EnergyType.Blood) drop.Drop(damageAmount);
+        }
+
+        public void Visit(RecollectComponent collect)
+        {
+            Debug.Log("Recollecting");
+            if (effects.Contains(collect.vulnerability)) collect.Collect();
         }
         
         
@@ -55,5 +61,7 @@ namespace Entities.Attacks
     {
         Stun,
         Bleed,
+        Cut,
+        
     }
 }

@@ -2,13 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using KBCore.Refs;
 using MEC;
-using Player;
-using Player.Classes;
-using Player.Events;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils;
-using Utils.EventBus;
 using Utils.Flyweight;
 
 namespace Items
@@ -17,29 +12,24 @@ namespace Items
     {
         new PickupSettings settings => (PickupSettings)base.settings;
 
-        [SerializeField, HideInInspector, Self]
+        [SerializeField, Self]
         private ParticleSystem system;
 
         private readonly List<ParticleSystem.Particle> _particles = new();
         private CoroutineHandle _forcesHandle;
-
-        private void Start()
-        {
-            system ??= GetComponent<ParticleSystem>();
-            system.trigger.AddCollider(GameObject.FindWithTag("PickupArea").transform);
-            system.emission.SetBurst(0, new ParticleSystem.Burst()
-            {
-                cycleCount = 1,
-                count = new ParticleSystem.MinMaxCurve(settings.amountOfParticles)
-            });
-            var forces = system.externalForces;
-            forces.enabled = false;
-        }
+        private int _amount = 1;
 
         void OnEnable()
         {
-            system.Play();
+            system.trigger.AddCollider(GameObject.FindWithTag("PickupArea").transform);
+            _amount = Random.Range(settings.min, settings.max + 1);
+            system.emission.SetBurst(0, new ParticleSystem.Burst()
+            {
+                cycleCount = 1,
+                count = new ParticleSystem.MinMaxCurve(_amount)
+            });
             _forcesHandle = Timing.RunCoroutine(ActivateForce());
+            system.Play();
         }
 
         void OnDisable()
@@ -54,7 +44,7 @@ namespace Items
 
         IEnumerator<float> ActivateForce()
         {
-            yield return Timing.WaitForSeconds(0.5f);
+            yield return Timing.WaitForSeconds(1.5f);
             var forces = system.externalForces;
             forces.enabled = true;
         }
@@ -85,7 +75,7 @@ namespace Items
 
             system.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _particles);
 
-            if (_particles.Count == settings.amountOfParticles) FlyweightManager.ReturnToPool(this);
+            if (_particles.Count == _amount) FlyweightManager.ReturnToPool(this);
         }
 
         IEnumerator DespawnAfterDelay(float delay)

@@ -142,6 +142,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reaper
       objectReference: {fileID: 0}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[0].Value.damageComponent
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b7f72addf0a9b24584fea2fe1f7d84e, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[1].Value.damageComponent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a9e738c06020404dbe6bec8a23501d9, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[2].Value.damageComponent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c9a3ca671c7edf4d86aa59f6a2ca005, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[3].Value.damageComponent
+      value: 
+      objectReference: {fileID: 11400000, guid: 3fc177f879160794d9e51ee20c420e41, type: 2}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalPosition.x
       value: -252
@@ -529,7 +545,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 3575
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

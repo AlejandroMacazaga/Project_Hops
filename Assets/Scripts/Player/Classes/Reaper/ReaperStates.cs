@@ -122,6 +122,7 @@ namespace Player.Classes.Reaper
         public override void OnEnter()
         {
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
+            AttackData.hitbox.damage = AttackData.damageComponent;
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }
 
@@ -153,6 +154,7 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
+            AttackData.hitbox.damage = AttackData.damageComponent;
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4961775434152953521}
   - component: {fileID: 6625327997690927546}
   - component: {fileID: 1390714274882862773}
-  - component: {fileID: 7112606813873025745}
+  - component: {fileID: 5321809109728675574}
   m_Layer: 8
   m_Name: ExamplePickup
   m_TagString: Pickup
@@ -4908,7 +4908,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &7112606813873025745
+--- !u!114 &5321809109728675574
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

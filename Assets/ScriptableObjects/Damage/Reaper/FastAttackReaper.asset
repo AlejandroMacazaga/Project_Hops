@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: FastAttackReaper
   m_EditorClassIdentifier: 
   damageAmount: 10
-  effects: 01000000
+  effects: 0100000002000000

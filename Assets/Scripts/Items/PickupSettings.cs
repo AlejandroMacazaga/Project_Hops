@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utils.Extensions;
@@ -9,8 +10,7 @@ namespace Items
     public class PickupSettings : FlyweightSettings
     {
         public BaseItem item;
-        public int amountOfParticles;
-        public float despawnDelay = 5f;
+        public int min, max;
         public override Flyweight Create()
         {
             var go = Instantiate(prefab);

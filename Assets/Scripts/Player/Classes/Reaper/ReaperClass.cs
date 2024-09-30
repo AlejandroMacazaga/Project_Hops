@@ -41,7 +41,6 @@ namespace Player.Classes.Reaper
         [FormerlySerializedAs("bloodResourceComponent")]
         [Header("Secondary Attack")]
         [SerializeField, Self, HideInInspector] public BloodResourceComponent blood;
-        [SerializeField] public DamageComponent pelletDamage;
         [SerializeField] public BulletTrailSettings secondaryAttackSettings;
         [SerializeField] public Transform bulletSpawnTransform;
         public float bulletTravelDuration = 0.1f;
@@ -245,10 +244,11 @@ namespace Player.Classes.Reaper
 
             foreach (var visitable in toDamage.Keys)
             {
-                var start = pelletDamage.damageAmount;
-                pelletDamage.damageAmount *= toDamage[visitable];
-                pelletDamage.Visit(visitable);
-                pelletDamage.damageAmount = start;
+                var damageComponent = attacks[ReaperAction.SecondaryAttack].damageComponent;
+                var start = damageComponent.damageAmount;
+                damageComponent.damageAmount *= toDamage[visitable];
+                damageComponent.Visit(visitable);
+                damageComponent.damageAmount = start;
             }
         }
 
@@ -287,6 +287,7 @@ namespace Player.Classes.Reaper
     {
         public List<AnimationClip> animations;
         public Hitbox hitbox;
+        public DamageComponent damageComponent;
         public float startup, duration, recovery;
     }
     

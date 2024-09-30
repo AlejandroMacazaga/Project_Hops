@@ -48,7 +48,7 @@ namespace Items
 
       IEnumerator<float> ActivateForce()
       {
-         yield return Timing.WaitForSeconds(0.5f);
+         yield return Timing.WaitForSeconds(1.5f);
          var forces = system.externalForces;
          forces.enabled = true;
       }

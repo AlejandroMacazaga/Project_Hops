@@ -14,7 +14,7 @@ namespace Player
             visitor.Visit(this);
         }
 
-        public void Drop()
+        public void Drop(float multiplier)
         {
             EnergyPickup pickup = (EnergyPickup) FlyweightManager.Spawn(energy);
             pickup.transform.position = transform.position;
