@@ -158,6 +158,10 @@ PrefabInstance:
       propertyPath: attacks._serializedList.Array.data[3].Value.damageComponent
       value: 
       objectReference: {fileID: 11400000, guid: 3fc177f879160794d9e51ee20c420e41, type: 2}
+    - target: {fileID: 4993138374698677863, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5236084403923663278, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_LocalPosition.x
       value: -252

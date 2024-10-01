@@ -21,7 +21,6 @@ namespace Items
 
         void OnEnable()
         {
-            if (!settings) return;
             system.trigger.AddCollider(GameObject.FindWithTag("PickupArea").transform);
             _amount = Random.Range(settings.min, settings.max + 1);
             system.emission.SetBurst(0, new ParticleSystem.Burst()
