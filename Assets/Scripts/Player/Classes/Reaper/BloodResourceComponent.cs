@@ -32,6 +32,7 @@ namespace Player.Classes.Reaper
 
         public void Add(int blood)
         {
+            if (currentBloodPoints >= maxBloodPoints) return;
             currentBloodPoints += blood;
             RaiseEvent();
         }

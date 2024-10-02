@@ -12,7 +12,7 @@ namespace Entities.Attacks
     public class Hitbox : ValidatedMonoBehaviour
     {
         [SerializeField, Anywhere] private InterfaceRef<CharacterClass> owner;
-        [SerializeField] public DamageComponent damage;
+        [SerializeField] public Damage damage;
         [SerializeField, Self] private BoxCollider box;
         private CoroutineHandle _activeHandle;
         public event Action<bool> ActiveChange = delegate {};

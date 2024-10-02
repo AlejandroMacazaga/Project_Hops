@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Entities.Enemies;
 using Items;
 using Player;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Entities.Attacks
 {
-    [CreateAssetMenu(menuName = "Entities/DamageComponent")]
-    public class DamageComponent : ScriptableObject, IVisitor
+    [CreateAssetMenu(menuName = "Visitors/Damage")]
+    public class Damage : ScriptableObject, IVisitor
     {
         public float damageAmount;
+        public float stunAmount = 0f;
+        public Vector3 force = Vector3.zero;
+
+        private Transform _tr;
         public List<AttackEffect> effects = new();
         public void Visit(object o)
         {
@@ -33,7 +37,6 @@ namespace Entities.Attacks
 
         public void Visit(HealthComponent healthComponent)
         {
-            Debug.Log("Visit health");
             healthComponent.DamageReceived(damageAmount);
         }
 
@@ -44,8 +47,19 @@ namespace Entities.Attacks
 
         public void Visit(RecollectComponent collect)
         {
-            Debug.Log("Recollecting");
             if (effects.Contains(collect.vulnerability)) collect.Collect();
+        }
+
+        public void Visit(StunComponent stun)
+        {
+            stun.Stun(stunAmount);
+        }
+
+        public void Visit(PushComponent push)
+        {
+            var forward = _tr.forward;
+            forward.Normalize();
+            push.Push(force.magnitude * forward);
         }
         
         
@@ -54,6 +68,11 @@ namespace Entities.Attacks
         {
             return true;
             // TODO : Add checks for what can damage what
+        }
+
+        public void SetOwnerTransform(Transform tr)
+        {
+            _tr = tr;
         }
     }
 

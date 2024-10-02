@@ -27,7 +27,7 @@ namespace Projectiles
         void OnEnable() {
             StartCoroutine(DespawnAfterDelay(settings.despawnDelay));
             _lastPosition = transform.position;
-            _hitbox.damageComponent.damageAmount = currentDamage;
+            _hitbox.damage.damageAmount = currentDamage;
         }
         
         void FixedUpdate() {

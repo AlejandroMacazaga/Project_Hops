@@ -244,7 +244,7 @@ namespace Player.Classes.Reaper
 
             foreach (var visitable in toDamage.Keys)
             {
-                var damageComponent = attacks[ReaperAction.SecondaryAttack].damageComponent;
+                var damageComponent = attacks[ReaperAction.SecondaryAttack].damage;
                 var start = damageComponent.damageAmount;
                 damageComponent.damageAmount *= toDamage[visitable];
                 damageComponent.Visit(visitable);
@@ -287,7 +287,7 @@ namespace Player.Classes.Reaper
     {
         public List<AnimationClip> animations;
         public Hitbox hitbox;
-        public DamageComponent damageComponent;
+        [FormerlySerializedAs("damageComponent")] public Damage damage;
         public float startup, duration, recovery;
     }
     

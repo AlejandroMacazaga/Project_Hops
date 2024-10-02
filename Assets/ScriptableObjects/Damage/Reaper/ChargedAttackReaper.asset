@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: ChargedAttackReaper
   m_EditorClassIdentifier: 
   damageAmount: 50
+  stunAmount: 0.5
+  force: {x: 2, y: 2, z: 2}
   effects: 0100000002000000

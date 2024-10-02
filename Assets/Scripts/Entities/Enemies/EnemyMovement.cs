@@ -44,11 +44,15 @@ namespace Entities.Enemies
             
             MovementStateMachine.SetState(GroundedState);
         }
-        
+
+        void Update() => MovementStateMachine.Update();
         void FixedUpdate()
         {
-            if (navAgent.isOnNavMesh) Debug.Log("Is in nav mesh");
-            if (target) navAgent.SetDestination(target.position);
+            // if (navAgent.isOnNavMesh) Debug.Log("Is in nav mesh");
+            if (target && !(MovementStateMachine.CurrentState is StunnedState))
+                navAgent.SetDestination(target.position);
+            else navAgent.SetDestination(transform.position);
+            
             Vector3 targetPosition = navAgent.transform.position;
             
             Vector3 direction = (targetPosition - transform.position).normalized;
@@ -57,22 +61,18 @@ namespace Entities.Enemies
             if (MovementStateMachine.CurrentState is GroundedState)
             {
                 rb.MovePosition(transform.position + direction * (movementSpeed * Time.fixedDeltaTime));
-                if (direction != Vector3.zero)
-                {
-                    Quaternion toRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 0.1f);
-                }
             }
 
             if (MovementStateMachine.CurrentState is StunnedState)
             {
-                
+                rb.velocity = Vector3.zero;
             }
         }
 
         public void Push(Vector3 force)
         {
-            rb.AddForce(force);
+            Debug.Log(force);
+            rb.AddForce(force, ForceMode.Force);
         }
 
         public void Stun(float time)

@@ -107,6 +107,7 @@ namespace Player.Classes.Reaper
         {
             AttackData = attack;
             AttackData.hitbox.ActiveChange += OnActiveChange;
+            attack.damage.SetOwnerTransform(owner.transform);
         }
         
         private void OnActiveChange(bool enabled)
@@ -122,7 +123,7 @@ namespace Player.Classes.Reaper
         public override void OnEnter()
         {
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
-            AttackData.hitbox.damage = AttackData.damageComponent;
+            AttackData.hitbox.damage = AttackData.damage;
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }
 
@@ -154,7 +155,7 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
-            AttackData.hitbox.damage = AttackData.damageComponent;
+            AttackData.hitbox.damage = AttackData.damage;
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }

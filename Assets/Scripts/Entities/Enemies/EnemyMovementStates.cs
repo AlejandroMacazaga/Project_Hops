@@ -1,3 +1,4 @@
+using UnityEngine;
 using Utils.StateMachine;
 
 namespace Entities.Enemies
@@ -5,22 +6,22 @@ namespace Entities.Enemies
     public class BaseEnemyState : IState
     {
         
-        public void OnEnter()
+        public virtual void OnEnter()
         {
             // NOOP
         }
 
-        public void Update()
+        public virtual void Update()
         {
             // NOOP
         }
 
-        public void FixedUpdate()
+        public virtual void FixedUpdate()
         {
             // NOOP
         }
 
-        public void OnExit()
+        public virtual void OnExit()
         {
             // NOOP
         }
