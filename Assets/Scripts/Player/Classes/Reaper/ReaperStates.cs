@@ -149,6 +149,7 @@ namespace Player.Classes.Reaper
         {
             AttackData = attack;
             AttackData.hitbox.ActiveChange += OnActiveChange;
+            attack.damage.SetOwnerTransform(owner.transform);
         }
 
         protected override void ChangeData(ReaperAttack data) => AttackData = data;

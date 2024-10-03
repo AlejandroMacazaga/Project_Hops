@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1.7696533, y: 0.3082428, z: 2.644867}
-  m_Center: {x: 0, y: 0, z: 0.8}
+  m_Size: {x: 1.7696533, y: 0.92762864, z: 3.371892}
+  m_Center: {x: -1.3518053e-16, y: 0.016233295, z: 0.43648744}
 --- !u!114 &8089817367140238036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +225,6 @@ MonoBehaviour:
   health: {fileID: 5834397659306214140}
   stamina: {fileID: 6583395224607541328}
   blood: {fileID: 1955347330380507209}
-  pelletDamage: {fileID: 11400000, guid: 5c9a3ca671c7edf4d86aa59f6a2ca005, type: 2}
   secondaryAttackSettings: {fileID: 11400000, guid: cc3c1db91583dfc4189eac95e35e1bf8, type: 2}
   bulletSpawnTransform: {fileID: 2290145177150909854}
   bulletTravelDuration: 2
@@ -248,6 +247,7 @@ MonoBehaviour:
         - {fileID: 8032911428634527938, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
         - {fileID: -8014510594710598287, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
         hitbox: {fileID: 8089817367140238036}
+        damage: {fileID: 0}
         startup: 0
         duration: 0.1
         recovery: 0
@@ -257,6 +257,7 @@ MonoBehaviour:
         - {fileID: -8608270099687912265, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
         - {fileID: 6118812654210010263, guid: 23a8d841c7bf716428060f6f38e28c01, type: 3}
         hitbox: {fileID: 5136367280001312595}
+        damage: {fileID: 0}
         startup: 0
         duration: 0.2
         recovery: 0
@@ -264,6 +265,7 @@ MonoBehaviour:
       Value:
         animations: []
         hitbox: {fileID: 0}
+        damage: {fileID: 0}
         startup: 0
         duration: 0.05
         recovery: 0
@@ -271,6 +273,7 @@ MonoBehaviour:
       Value:
         animations: []
         hitbox: {fileID: 5649827828150145084}
+        damage: {fileID: 0}
         startup: 0
         duration: 0.7
         recovery: 0
@@ -423,8 +426,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 2.575863, y: 0.2746582, z: 6.6502914}
-  m_Center: {x: -0.0000014305115, y: 3.930087e-15, z: 3.5751152}
+  m_Size: {x: 2.575863, y: 1.0009859, z: 8.230091}
+  m_Center: {x: -0.0000014305115, y: -0.0685904, z: 2.7852154}
 --- !u!114 &5649827828150145084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,8 +527,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 4.575863, y: 0.2746582, z: 3.500061}
-  m_Center: {x: 0, y: 0, z: 2}
+  m_Size: {x: 4.575863, y: 1.039101, z: 5.095044}
+  m_Center: {x: -3.2729675e-15, y: 0.09001124, z: 1.2025084}
 --- !u!114 &5136367280001312595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1206,7 +1209,7 @@ Transform:
   m_GameObject: {fileID: 9055263461432310223}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.43999994, z: -0.11}
+  m_LocalPosition: {x: 0, y: 0.43999994, z: -0.10999966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
