@@ -37,6 +37,11 @@ namespace Entities.Enemies
         public GroundedState(EnemyMovement owner) : base(owner)
         {
         }
+
+        public override void OnEnter()
+        {
+            Owner.TryRelocateNavigator();
+        }
     }
     
     public class AirborneState : BaseEnemyState

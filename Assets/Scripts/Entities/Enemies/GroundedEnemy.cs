@@ -8,7 +8,7 @@ namespace Entities.Enemies
     [RequireComponent(typeof(PushComponent))]
     [RequireComponent(typeof(StunComponent))]
     [RequireComponent(typeof(EnemyMovement))]
-    public class ChaseEnemy : ValidatedMonoBehaviour, IEnemy, IStunned, IPushed
+    public class ChaseEnemy : ValidatedMonoBehaviour, IEnemy, IStunned, IPushed, IEntity
     {
         [SerializeField, HideInInspector, Self]
         private Transform tr;
@@ -17,6 +17,7 @@ namespace Entities.Enemies
         [SerializeField, HideInInspector, Self]
         public EnemyMovement enemyMovement;
 
+        public EntityTeam team;
 
         public void Stun(float time)
         {
@@ -28,15 +29,29 @@ namespace Entities.Enemies
             return true;
         }
 
+        public bool IsStunned()
+        {
+            return enemyMovement.MovementStateMachine.CurrentState is StunnedState;
+        }
+
         public void Push(Vector3 force)
         {
-            Debug.Log("Lets push");
             enemyMovement.Push(force);
         }
 
         public bool CanBePushed()
         {
             return true;
+        }
+
+        public float GetStat(EnemyStat stat)
+        {
+            return 1f;
+        }
+
+        public EntityTeam GetTeam()
+        {
+            return team;
         }
     }
 }

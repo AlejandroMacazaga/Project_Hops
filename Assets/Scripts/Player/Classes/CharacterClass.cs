@@ -11,7 +11,7 @@ namespace Player.Classes
     [RequireComponent(typeof(StaminaComponent))]
     [RequireComponent(typeof(CharacterMover))]
     [RequireComponent(typeof(CinemachineFirstPerson))]
-    public class CharacterClass : ValidatedMonoBehaviour, ICharacterClass
+    public class CharacterClass : ValidatedMonoBehaviour, ICharacterClass, IEntity
     {
         [SerializeField] public ClassData data;
         [SerializeField, Self, HideInInspector] public CharacterMover mover;
@@ -92,6 +92,11 @@ namespace Player.Classes
         private void OnMove(Vector2 dir)
         {
             mover.currentDirection = dir;
+        }
+
+        public EntityTeam GetTeam()
+        {
+            return EntityTeam.Player;
         }
     }
     public interface ICharacterClass

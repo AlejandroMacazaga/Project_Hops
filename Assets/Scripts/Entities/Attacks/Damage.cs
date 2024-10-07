@@ -13,8 +13,8 @@ namespace Entities.Attacks
     {
         public float damageAmount;
         public float stunAmount = 0f;
-        public Vector3 force = Vector3.zero;
-
+        public int force = 0;
+        public PushDirection direction = PushDirection.Forward;
         private Transform _tr;
         public List<AttackEffect> effects = new();
         public void Visit(object o)
@@ -37,6 +37,7 @@ namespace Entities.Attacks
 
         public void Visit(HealthComponent healthComponent)
         {
+            if (!CanDamage(healthComponent.team)) return;
             healthComponent.DamageReceived(damageAmount);
         }
 
@@ -52,14 +53,18 @@ namespace Entities.Attacks
 
         public void Visit(StunComponent stun)
         {
+            if (!effects.Contains(AttackEffect.Stun)) return;
+            if (!CanDamage(stun.team)) return;
             stun.Stun(stunAmount);
         }
 
         public void Visit(PushComponent push)
         {
-            var forward = _tr.forward;
-            forward.Normalize();
-            push.Push(force.magnitude * forward);
+            if (force <= 0) return;
+            if (!CanDamage(push.team)) return;
+            var where = GetDirection(direction);
+            where.Normalize();
+            push.Push(force * where);
         }
         
         
@@ -74,6 +79,18 @@ namespace Entities.Attacks
         {
             _tr = tr;
         }
+
+        private Vector3 GetDirection(PushDirection d)
+        {
+            return d switch
+            {
+                PushDirection.Forward => _tr.forward,
+                PushDirection.Backward => -_tr.forward,
+                PushDirection.Left => -_tr.right,
+                PushDirection.Right => _tr.right,
+                _ => throw new ArgumentOutOfRangeException(nameof(d), d, null)
+            };
+        }
     }
 
     public enum AttackEffect
@@ -82,5 +99,13 @@ namespace Entities.Attacks
         Bleed,
         Cut,
         
+    }
+
+    public enum PushDirection
+    {
+        Forward,
+        Backward,
+        Left,
+        Right
     }
 }

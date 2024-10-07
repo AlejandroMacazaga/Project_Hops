@@ -58,7 +58,7 @@ namespace Entities.Enemies
             StunnedState = new StunnedState(this);
             
             MovementStateMachine.AddTransition(GroundedState, AirborneState, new FuncPredicate(() => !IsGrounded()));
-            MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(() => IsGrounded()));
+            MovementStateMachine.AddTransition(AirborneState, GroundedState, new FuncPredicate(IsGrounded));
             MovementStateMachine.AddTransition(StunnedState, GroundedState, new FuncPredicate(() => _stunnedTimer.IsFinished() && IsGrounded()));
             MovementStateMachine.AddTransition(StunnedState, AirborneState, new FuncPredicate(() => _stunnedTimer.IsFinished() && !IsGrounded()));
             MovementStateMachine.AddAnyTransition(StunnedState,new FuncPredicate(() => _stunnedTimer.IsRunning));
@@ -103,7 +103,6 @@ namespace Entities.Enemies
 
         public void Push(Vector3 force)
         {
-            Debug.Log(force);
             rb.AddForce(force, ForceMode.Force);
         }
 
@@ -117,18 +116,16 @@ namespace Entities.Enemies
         private void SpawnNavigator()
         {
             NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
-            NavMeshHit hit;
-            if (!NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas)) return;
+            if (!NavMesh.SamplePosition(transform.position, out var hit, 1.0f, NavMesh.AllAreas)) return;
             navAgent = Instantiate(prefab).GetComponent<NavMeshAgent>();
             navAgent.Warp(hit.position);
             navAgent.speed = movementSpeed;
         }
 
-        public bool RealocateNavigator()
+        public bool TryRelocateNavigator()
         {
             NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
-            NavMeshHit hit;
-            if (!NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas)) return false;
+            if (!NavMesh.SamplePosition(transform.position, out var hit, 1.0f, NavMesh.AllAreas)) return false;
 
             navAgent.Warp(hit.position);
             navAgent.speed = movementSpeed;

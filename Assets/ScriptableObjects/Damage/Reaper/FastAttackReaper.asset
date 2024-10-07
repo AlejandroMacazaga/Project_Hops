@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 10
   stunAmount: 0.1
-  force: {x: 200, y: 200, z: 200}
+  force: 0
+  direction: 0
   effects: 0100000002000000

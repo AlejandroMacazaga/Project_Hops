@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: ReloadAttackComponent
   m_EditorClassIdentifier: 
   damageAmount: 5
-  effects: 00000000
+  stunAmount: 1
+  force: 500
+  direction: 1
+  effects: 0000000002000000

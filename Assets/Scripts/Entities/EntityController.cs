@@ -25,12 +25,4 @@ namespace Entities {
             Health.SetValues(data.healthData);
         }
     }
-    
-    public enum EntityTeam
-    {
-        Player,
-        Ally,
-        Enemy,
-        Environment
-    }
 }

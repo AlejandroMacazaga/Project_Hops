@@ -143,6 +143,22 @@ PrefabInstance:
       value: Reaper
       objectReference: {fileID: 0}
     - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[0].Value.damage
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b7f72addf0a9b24584fea2fe1f7d84e, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[1].Value.damage
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a9e738c06020404dbe6bec8a23501d9, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[2].Value.damage
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c9a3ca671c7edf4d86aa59f6a2ca005, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[3].Value.damage
+      value: 
+      objectReference: {fileID: 11400000, guid: 3fc177f879160794d9e51ee20c420e41, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: attacks._serializedList.Array.data[0].Value.damageComponent
       value: 
       objectReference: {fileID: 11400000, guid: 2b7f72addf0a9b24584fea2fe1f7d84e, type: 2}
@@ -158,6 +174,14 @@ PrefabInstance:
       propertyPath: attacks._serializedList.Array.data[3].Value.damageComponent
       value: 
       objectReference: {fileID: 11400000, guid: 3fc177f879160794d9e51ee20c420e41, type: 2}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[3].Value.animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 908081886920626695, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
+      propertyPath: attacks._serializedList.Array.data[3].Value.animations.Array.data[0]
+      value: 
+      objectReference: {fileID: -4515138451556410625, guid: 0fc4e96c39b4ebc4c9ce565ef815dd7e, type: 3}
     - target: {fileID: 4993138374698677863, guid: 096ec1be28a6e4943b1c22732585c648, type: 3}
       propertyPath: m_IsActive
       value: 1

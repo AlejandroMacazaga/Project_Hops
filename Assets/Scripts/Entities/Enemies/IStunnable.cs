@@ -4,5 +4,6 @@ namespace Entities.Enemies
     {
         void Stun(float time);
         bool CanBeStunned();
+        bool IsStunned();
     }
 }
