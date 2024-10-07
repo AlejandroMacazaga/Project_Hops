@@ -35,6 +35,7 @@ namespace Player.Classes.Reaper
         public ReaperFastPrimaryAttackState FastPrimaryAttackState;
         public ReaperChargedPrimaryAttackState ChargedPrimaryAttackState;
         public ReaperSecondaryAttackState SecondaryAttackState;
+        public ReaperReloadAttackState ReloadAttackState;
         
         public readonly StateMachine CombatStateMachine = new(); 
         
@@ -54,6 +55,7 @@ namespace Player.Classes.Reaper
         private bool _isPressingDash, _hasStartedPrimaryAttack;
         public bool isAttacking = false;
         public bool isPressingPrimaryAttack = false;
+        public bool isPressingReload = false;
         public bool isLeftAttack = false;
         public CountdownTimer HoldAttackTimer;
         public float spreadAngle;
@@ -64,8 +66,8 @@ namespace Player.Classes.Reaper
         
         [SerializeField] public SerializedDictionary<ReaperAction, ReaperAttack> attacks;
         
-        private Action _primaryAttackStart;
-        private Action _secondaryAttackStart;
+        private Action _primaryAttackStart, _secondaryAttackStart, _reload;
+        
         private Camera _cam;
         public override void Start()
         {
@@ -89,22 +91,27 @@ namespace Player.Classes.Reaper
             FastPrimaryAttackState = new ReaperFastPrimaryAttackState(this, attacks[ReaperAction.FastPrimaryAttack]);
             ChargedPrimaryAttackState = new ReaperChargedPrimaryAttackState(this,  attacks[ReaperAction.ChargedPrimaryAttack]);
             SecondaryAttackState = new ReaperSecondaryAttackState(this);
-            
+            ReloadAttackState = new ReaperReloadAttackState(this, attacks[ReaperAction.ReloadAttack]);
             CombatStateMachine.AddAnyTransition(NoAttackState, new FuncPredicate(() => !isAttacking));
             CombatStateMachine.AddTransition(NoAttackState, ChargingState, new ActionPredicate(ref _primaryAttackStart));
+            CombatStateMachine.AddTransition(NoAttackState, ChargingState, new FuncPredicate(() => isPressingPrimaryAttack));
             CombatStateMachine.AddTransition(ChargingState, FastPrimaryAttackState,
                 new FuncPredicate(() => !isPressingPrimaryAttack && HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
             CombatStateMachine.AddTransition(ChargingState, ChargedPrimaryAttackState, 
                 new FuncPredicate(() => !isPressingPrimaryAttack && !HoldAttackTimer.IsRunning && ChargingState.CanBeCanceled()));
             CombatStateMachine.AddTransition(NoAttackState, SecondaryAttackState, new ActionPredicate(ref _secondaryAttackStart));
             CombatStateMachine.AddTransition(ChargingState, SecondaryAttackState, new ActionPredicate(ref _secondaryAttackStart));
+            CombatStateMachine.AddTransition(NoAttackState, ReloadAttackState, new ActionPredicate(ref _reload));
             CombatStateMachine.SetState(NoAttackState);
             #endregion
 
+            #region Inputs
             inputReader.PrimaryAttack += OnPrimaryAttack;
             inputReader.SecondaryAttack += OnSecondaryAttack;
+            inputReader.Reload += OnReload;
             inputReader.Dash += OnDash;
             inputReader.EnablePlayerActions();
+            #endregion
             
             HoldAttackTimer = new CountdownTimer(1f);
             HoldAttackTimer.OnTimerTick += OnHoldTick;
@@ -161,8 +168,8 @@ namespace Player.Classes.Reaper
             {
                 case ActionState.Press:
                     isPressingPrimaryAttack = true;
+                    if (isAttacking) return;
                     _primaryAttackStart?.Invoke();
-                    HoldAttackTimer.Start();
                     break;
                 case ActionState.Hold:
                     break;
@@ -187,6 +194,23 @@ namespace Player.Classes.Reaper
                     {
                         // TODO: Throw something that tells us there is no blood
                     }
+                    break;
+                case ActionState.Hold:
+                    break;
+                case ActionState.Release:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+        }
+        
+        private void OnReload(ActionState action, IInputInteraction interaction)
+        {
+            switch (action)
+            {
+                case ActionState.Press:
+                    isPressingReload = true;
+                    _reload?.Invoke();
                     break;
                 case ActionState.Hold:
                     break;
@@ -244,7 +268,7 @@ namespace Player.Classes.Reaper
 
             foreach (var visitable in toDamage.Keys)
             {
-                var damageComponent = attacks[ReaperAction.SecondaryAttack].damageComponent;
+                var damageComponent = attacks[ReaperAction.SecondaryAttack].damage;
                 var start = damageComponent.damageAmount;
                 damageComponent.damageAmount *= toDamage[visitable];
                 damageComponent.Visit(visitable);
@@ -287,7 +311,7 @@ namespace Player.Classes.Reaper
     {
         public List<AnimationClip> animations;
         public Hitbox hitbox;
-        public DamageComponent damageComponent;
+        [FormerlySerializedAs("damageComponent")] public Damage damage;
         public float startup, duration, recovery;
     }
     

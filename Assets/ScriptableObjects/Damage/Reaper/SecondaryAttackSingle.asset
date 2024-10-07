@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: SecondaryAttackSingle
   m_EditorClassIdentifier: 
   damageAmount: 2
+  stunAmount: 0.15
+  force: 100
+  direction: 0
+  effects: 00000000

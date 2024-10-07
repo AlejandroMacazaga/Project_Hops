@@ -8,6 +8,6 @@ namespace Weapons
     public class RaycastWeaponSettings : WeaponSettings
     {
         [Range(1f, 999f)] public float range;
-        public DamageComponent damage;
+        public Damage damage;
     }
 }

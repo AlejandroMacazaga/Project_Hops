@@ -1,44 +1,51 @@
 using System;
 using System.Collections.Generic;
+using Entities.Enemies;
 using KBCore.Refs;
 using MEC;
-using Player.Classes;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Utils.Timers;
 
 namespace Entities.Attacks
 {
-    public class Hitbox : ValidatedMonoBehaviour
+    public class EnemyHitbox : ValidatedMonoBehaviour
     {
-        [SerializeField, Anywhere] private InterfaceRef<CharacterClass> owner;
+        [SerializeField, Anywhere] public InterfaceRef<IEnemy> owner; 
         [SerializeField] public Damage damage;
         [SerializeField, Self] private BoxCollider box;
-        private CoroutineHandle _activeHandle;
         public event Action<bool> ActiveChange = delegate {};
+        private CoroutineHandle _activeHandle;
         private void OnTriggerEnter(Collider other)
         {
+            if ((owner.Value as IStunned)!.IsStunned())
+            {
+                DeactivateAndActivate(owner.Value.GetStat(EnemyStat.AttackSpeed));
+                return;
+            }
             if (!other.TryGetComponent<IVisitable>(out var visitable)) return;
-            damage.damageAmount *= owner.Value.GetCurrentStat(ClassStat.AttackDamage);
+            damage.damageAmount *= owner.Value.GetStat(EnemyStat.AttackDamage);
             var damaged = other.GetComponents<IVisitable>();
             foreach (var dam in damaged)
             {
                 damage.Visit(dam);
             }
-        }
 
-        public void ActivateHitbox(float activeTime)
+            DeactivateAndActivate(owner.Value.GetStat(EnemyStat.AttackSpeed));
+        }
+        
+        public void DeactivateAndActivate(float activeTime)
         {
             _activeHandle = Timing.RunCoroutine(Activate(activeTime));
         }
-
+        
         private IEnumerator<float> Activate(float activeTime)
         {
-            box.enabled = true;
-            ActiveChange?.Invoke(box.enabled);
-            yield return Timing.WaitForSeconds(activeTime);
             box.enabled = false;
             ActiveChange?.Invoke(box.enabled);
+            yield return Timing.WaitForSeconds(activeTime);
+            box.enabled = true;
+            ActiveChange?.Invoke(box.enabled);
         }
+        
+        
     }
 }

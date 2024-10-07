@@ -1,18 +1,19 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Entities.Attacks
 {
     
     public class DamageArea : MonoBehaviour
     {
-        public DamageComponent damageComponent;
+        [FormerlySerializedAs("damageComponent")] public Damage damage;
         
         void OnTriggerEnter (Collider other)
         {
             Debug.Log("Just collided");
             if (other.TryGetComponent<IVisitable>(out var visitable))
             {
-                visitable.Accept(damageComponent);
+                visitable.Accept(damage);
             }
         }
         

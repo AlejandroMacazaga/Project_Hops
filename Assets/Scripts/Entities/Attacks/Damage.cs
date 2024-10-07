@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Entities.Enemies;
 using Items;
 using Player;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Entities.Attacks
 {
-    [CreateAssetMenu(menuName = "Entities/DamageComponent")]
-    public class DamageComponent : ScriptableObject, IVisitor
+    [CreateAssetMenu(menuName = "Visitors/Damage")]
+    public class Damage : ScriptableObject, IVisitor
     {
         public float damageAmount;
+        public float stunAmount = 0f;
+        public int force = 0;
+        public PushDirection direction = PushDirection.Forward;
+        private Transform _tr;
         public List<AttackEffect> effects = new();
         public void Visit(object o)
         {
@@ -33,7 +37,7 @@ namespace Entities.Attacks
 
         public void Visit(HealthComponent healthComponent)
         {
-            Debug.Log("Visit health");
+            if (!CanDamage(healthComponent.team)) return;
             healthComponent.DamageReceived(damageAmount);
         }
 
@@ -44,8 +48,23 @@ namespace Entities.Attacks
 
         public void Visit(RecollectComponent collect)
         {
-            Debug.Log("Recollecting");
             if (effects.Contains(collect.vulnerability)) collect.Collect();
+        }
+
+        public void Visit(StunComponent stun)
+        {
+            if (!effects.Contains(AttackEffect.Stun)) return;
+            if (!CanDamage(stun.team)) return;
+            stun.Stun(stunAmount);
+        }
+
+        public void Visit(PushComponent push)
+        {
+            if (force <= 0) return;
+            if (!CanDamage(push.team)) return;
+            var where = GetDirection(direction);
+            where.Normalize();
+            push.Push(force * where);
         }
         
         
@@ -55,6 +74,23 @@ namespace Entities.Attacks
             return true;
             // TODO : Add checks for what can damage what
         }
+
+        public void SetOwnerTransform(Transform tr)
+        {
+            _tr = tr;
+        }
+
+        private Vector3 GetDirection(PushDirection d)
+        {
+            return d switch
+            {
+                PushDirection.Forward => _tr.forward,
+                PushDirection.Backward => -_tr.forward,
+                PushDirection.Left => -_tr.right,
+                PushDirection.Right => _tr.right,
+                _ => throw new ArgumentOutOfRangeException(nameof(d), d, null)
+            };
+        }
     }
 
     public enum AttackEffect
@@ -63,5 +99,13 @@ namespace Entities.Attacks
         Bleed,
         Cut,
         
+    }
+
+    public enum PushDirection
+    {
+        Forward,
+        Backward,
+        Left,
+        Right
     }
 }

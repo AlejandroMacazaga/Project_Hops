@@ -14,6 +14,8 @@ namespace Entities
         float maxHealthPoints;
 
         public bool IsDead => healthPoints <= 0;
+
+        public EntityTeam team;
         public event UnityAction OnDeath;
 
         public event UnityAction<float> OnOverheal;

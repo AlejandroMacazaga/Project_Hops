@@ -70,6 +70,7 @@ namespace Player.Classes.Reaper
 
         public override void OnEnter()
         {
+            Owner.HoldAttackTimer.Start();
             Owner.isLeftAttack = !Owner.isLeftAttack;
             Owner.isAttacking = true;
             CanBeCanceledTimer.Start();
@@ -107,6 +108,7 @@ namespace Player.Classes.Reaper
         {
             AttackData = attack;
             AttackData.hitbox.ActiveChange += OnActiveChange;
+            attack.damage.SetOwnerTransform(owner.transform);
         }
         
         private void OnActiveChange(bool enabled)
@@ -122,7 +124,7 @@ namespace Player.Classes.Reaper
         public override void OnEnter()
         {
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
-            AttackData.hitbox.damage = AttackData.damageComponent;
+            AttackData.hitbox.damage = AttackData.damage;
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }
 
@@ -148,13 +150,14 @@ namespace Player.Classes.Reaper
         {
             AttackData = attack;
             AttackData.hitbox.ActiveChange += OnActiveChange;
+            attack.damage.SetOwnerTransform(owner.transform);
         }
 
         protected override void ChangeData(ReaperAttack data) => AttackData = data;
 
         public override void OnEnter()
         {
-            AttackData.hitbox.damage = AttackData.damageComponent;
+            AttackData.hitbox.damage = AttackData.damage;
             Owner.AnimationSystem.PlayOneShot(Owner.isLeftAttack ? AttackData.animations[0] : AttackData.animations[1]);
             AttackData.hitbox.ActivateHitbox(AttackData.duration);
         }
@@ -229,7 +232,15 @@ namespace Player.Classes.Reaper
         private readonly CountdownTimer _startupTimer, _activeTimer;
         public ReaperReloadAttackState(ReaperClass owner, ReaperAttack data) : base(owner, data)
         {
-            
+            _startupTimer = new CountdownTimer(data.startup);
+            _activeTimer = new CountdownTimer(data.duration);
+            AttackData.damage.SetOwnerTransform(owner.transform);   
+            _startupTimer.OnTimerStop += () =>
+            {
+                _activeTimer?.Start();
+                AttackData.hitbox.ActivateHitbox(AttackData.duration);
+            };
+            _activeTimer.OnTimerStop += () => Owner.isAttacking = false;
         }
 
         protected override void ChangeData(ReaperAttack data)
@@ -241,6 +252,8 @@ namespace Player.Classes.Reaper
         {
             _startupTimer.Start();
             Owner.isAttacking = true;
+            Owner.AnimationSystem.PlayOneShot(AttackData.animations[0]);
+            AttackData.hitbox.damage = AttackData.damage;
         }
 
         public override void Update()
