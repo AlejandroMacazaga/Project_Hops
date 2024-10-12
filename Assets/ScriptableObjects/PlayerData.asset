@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2516c3d5e77ec3a4c8ce3aa83767c951, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  baseStats:
+    _serializedList:
+    - Key: 0
+      Value: 100
+    - Key: 1
+      Value: 7
+    - Key: 2
+      Value: 7
+    - Key: 3
+      Value: 10
+    - Key: 4
+      Value: 50
+    - Key: 5
+      Value: 1
+    - Key: 6
+      Value: 1
+    - Key: 7
+      Value: 1
+    - Key: 8
+      Value: 1
+    - Key: 10
+      Value: 4
+    - Key: 11
+      Value: 0.15
+    - Key: 12
+      Value: 2
+    - Key: 9
+      Value: 2
+  modifiers:
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
+    - Key: 5
+      Value: []
+    - Key: 6
+      Value: []
+    - Key: 7
+      Value: []
+    - Key: 8
+      Value: []
+    - Key: 9
+      Value: []
+    - Key: 10
+      Value: []
+    - Key: 11
+      Value: []
+    - Key: 12
+      Value: []
+  cachedModifiedValues:
+    _serializedList:
+    - Key: 0
+      Value:
+        needsUpdate: 0
+        value: 100
+    - Key: 1
+      Value:
+        needsUpdate: 0
+        value: 7
+    - Key: 2
+      Value:
+        needsUpdate: 0
+        value: 7
+    - Key: 3
+      Value:
+        needsUpdate: 0
+        value: 10
+    - Key: 4
+      Value:
+        needsUpdate: 0
+        value: 50
+    - Key: 5
+      Value:
+        needsUpdate: 0
+        value: 1
+    - Key: 6
+      Value:
+        needsUpdate: 0
+        value: 1
+    - Key: 7
+      Value:
+        needsUpdate: 0
+        value: 1
+    - Key: 8
+      Value:
+        needsUpdate: 0
+        value: 1
+    - Key: 9
+      Value:
+        needsUpdate: 0
+        value: 2
+    - Key: 10
+      Value:
+        needsUpdate: 0
+        value: 4
+    - Key: 11
+      Value:
+        needsUpdate: 0
+        value: 0.15
+    - Key: 12
+      Value:
+        needsUpdate: 0
+        value: 2

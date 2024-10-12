@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26fb7a588889a74b9ad0b9e8b301ef4, type: 3}
+  m_Name: dialogues
+  m_EditorClassIdentifier: 
+  items:
+  - idText: taberna.conversacionprueba.1
+    character: prota
+    position: left
+    langEs: Hola!
+    langEn: Hi
+    langCat: Hola
+    langEus: Kaixo
+    langChi: "\u4F60\u597D"
+  - idText: taberna.conversacionprueba.2
+    character: npc
+    position: right
+    langEs: Buenas tardes
+    langEn: Good afternoon
+    langCat: Boa tarda
+    langEus: Arratsalde on
+    langChi: "\u4E0B\u5348\u597D"
+  - idText: taberna.conversacionprueba.3
+    character: prota
+    position: left
+    langEs: "\xBFQue cerveza quieres?"
+    langEn: What beer do you want?
+    langCat: Quina cervesa vols?
+    langEus: Zein garagardo nahi duzu?
+    langChi: "\u4F60\u60F3\u8981\u4EC0\u4E48\u5564\u9152?"
+  - idText: taberna.conversacionprueba.4
+    character: npc
+    position: right
+    langEs: "No se... \xBFcu\xE1l me recomiendas?"
+    langEn: I don't know... which one do you recommend?
+    langCat: "No s\xE9... quin em recomanes?"
+    langEus: Ez dakit... zein gomendatzen duzu?
+    langChi: "\u4E0D\u77E5\u9053\u2026\u2026\u4F60\u63A8\u8350\u54EA\u4E00\u6B3E?"
+  - idText: taberna.conversacionprueba.5
+    character: prota
+    position: left
+    langEs: "Pues mi \xFAltima creaci\xF3n, la doble IPA de raiz cavernosa"
+    langEn: Well, my latest creation, the cavernous root double IPA
+    langCat: "Doncs la meva darrera creaci\xF3, la doble IPA d'arrel cavernosa"
+    langEus: Beno, nire azken sorkuntza, kobazuloko sustraia bikoitza IPA
+    langChi: "\u55EF\uFF0C\u6211\u7684\u6700\u65B0\u521B\u4F5C\uFF0C\u6D77\u7EF5\u6839\u53CCIPA"
+  - idText: taberna.conversacionprueba.6
+    character: prota
+    position: left
+    langEs: Si no te convence te puedo poner una "birria"
+    langEn: If you're not convinced I can give you a "birria"
+    langCat: "Si no et conven\xE7 et puc posar una \"birria\""
+    langEus: Ez bazaude konbentzituta "birria" bat eman diezazuket
+    langChi: "\u5982\u679C\u4F60\u4E0D\u76F8\u4FE1\u6211\u53EF\u4EE5\u7ED9\u4F60\u4E00\u4E2A\u201Cbirria\u201D"
+  - idText: taberna.conversacionprueba.7
+    character: npc
+    position: right
+    langEs: La doble IPA me ha convencido, sirveme esa
+    langEn: The double IPA has convinced me, serve me that
+    langCat: "La doble IPA m'ha conven\xE7ut, serveix-me aquesta"
+    langEus: IPA bikoitzak konbentzitu nau, zerbitzatu
+    langChi: "\u53CC IPA \u5DF2\u7ECF\u8BF4\u670D\u4E86\u6211\uFF0C\u4E3A\u6211\u670D\u52A1"

@@ -1,4 +1,6 @@
 using System;
+using Player;
+using Player.Classes;
 using UnityEngine;
 
 namespace Utils.Timers
@@ -14,10 +16,50 @@ namespace Utils.Timers
             {
                 CurrentTime -= Time.deltaTime;
             }
+
+            OnTimerTick.Invoke();
             
             if (IsRunning && CurrentTime <= 0)
             {
                 Stop();
+            }
+        }
+
+        public override bool IsFinished() => CurrentTime <= 0;
+    }
+
+    public class PlayerCooldownTimer : Timer
+    {
+        private readonly ClassData _stats;
+        private readonly ClassStat _stat;
+        public PlayerCooldownTimer(ClassData stats, ClassStat stat)
+        {
+            _stat = stat;
+            _stats = stats;
+            CurrentTime = 0f;
+        }
+
+        public override void Tick()
+        {
+            if (IsRunning && CurrentTime > 0)
+            {
+                CurrentTime -= Time.deltaTime;
+            }
+            
+            if (IsRunning && CurrentTime <= 0)
+            {
+                Stop();
+            }
+        }
+        
+        public override void Start()
+        {
+            CurrentTime = _stats.GetStat(_stat);
+            if (!IsRunning)
+            {
+                IsRunning = true;
+                TimerManager.RegisterTimer(this);
+                OnTimerStart.Invoke();
             }
         }
 
@@ -33,6 +75,7 @@ namespace Utils.Timers
             if (IsRunning)
             {
                 CurrentTime += Time.deltaTime;
+                OnTimerTick.Invoke();
                 return;
             }
             
@@ -46,22 +89,23 @@ namespace Utils.Timers
     public abstract class Timer : IDisposable
     {
         public float CurrentTime { get; protected set; }
-        public bool IsRunning { get; private set; }
+        public bool IsRunning { get; protected set; }
 
-        protected float InitialTime;
+        public float InitialTime;
 
         public virtual float Progress => Mathf.Clamp(CurrentTime / InitialTime, 0, 1);
         
         public Action OnTimerStart = delegate {  };
         public Action OnTimerStop = delegate {  };
+        public Action OnTimerTick = delegate { };
         
         protected Timer(float time = 0f)
         {
             InitialTime = time;
-            CurrentTime = time;
+            CurrentTime = 0f;
         }
 
-        public void Start()
+        public virtual void Start()
         {
             CurrentTime = InitialTime;
             if (!IsRunning)
@@ -72,7 +116,7 @@ namespace Utils.Timers
             }
         }
         
-        public void Stop()
+        public virtual void Stop()
         {
             if (IsRunning)
             {

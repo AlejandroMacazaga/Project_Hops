@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93968f0833034bbeb9ac4c5f3256452c, type: 3}
+  m_Name: New Basic Enemy Data
+  m_EditorClassIdentifier: 
+  healthData:
+    healthPoints: 1000
+    maxHealthPoints: 1000
+  team: 2
+  pickupSettings: {fileID: 11400000, guid: 5c72537df5b9fc045a291f0310b817b8, type: 2}
+  energyPickupSettings: {fileID: 11400000, guid: af45259ec876cc14fbfbcb62ae01eaac, type: 2}

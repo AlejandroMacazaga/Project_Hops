@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a76f97020ca4d1faef1d0db6159d41c, type: 3}
+  m_Name: BloodBulletTrail
+  m_EditorClassIdentifier: 
+  type: BloodBullet
+  prefab: {fileID: 1255643375451940170, guid: 5f561d26588b60a40a1bedb2a0373861, type: 3}
+  despawnTime: 0.7
